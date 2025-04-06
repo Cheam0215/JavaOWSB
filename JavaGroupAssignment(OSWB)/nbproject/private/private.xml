@@ -5,16 +5,13 @@
         <group>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/PurchaseManager.java</file>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/PurchaseRequisition.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Item.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Administrator.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/FinanceManager.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Supplier.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/PurchaseOrder.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/SalesData.java</file>
-            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Utility/FileManager.java</file>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/InventoryManager.java</file>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Inventory.java</file>
+            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Administrator.java</file>
+            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/FinanceManager.java</file>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/SalesManager.java</file>
+            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/PurchaseOrder.java</file>
+            <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/Supplier.java</file>
             <file>file:/C:/Users/Sheng%20Ting/Documents/NetBeansProjects/JavaGroupAssignment(OSWB)/src/Entities/User.java</file>
         </group>
     </open-files>

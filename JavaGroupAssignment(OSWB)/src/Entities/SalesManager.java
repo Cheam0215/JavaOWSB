@@ -97,18 +97,18 @@ public class SalesManager extends User {
         // Add logic to save sales data and update stock
     }
 
-    public void createPR(String prId, String itemCode, int quantity, String requiredDate) {
+    public void createPurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate) {
         System.out.println("Creating PR: " + prId + ", " + itemCode + ", " + quantity + ", " + requiredDate);
         // Add logic to save PR to file
     }
 
-    public List<String> viewPRs() {
+    public List<String> viewPurchaseRequisition() {
         System.out.println("Viewing all PRs...");
-        return List.of(); // Placeholder, replace with actual PR retrieval
+        return List.of();
     }
 
-    public List<String> viewPOs() {
+    public List<String> viewPurchaseOrder() {
         System.out.println("Viewing all POs...");
-        return List.of(); // Placeholder, replace with actual PO retrieval
+        return List.of(); 
     }
 }

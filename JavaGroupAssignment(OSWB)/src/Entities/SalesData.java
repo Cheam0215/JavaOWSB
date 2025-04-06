@@ -11,3 +11,4 @@ package Entities;
 public class SalesData {
     
 }
+    

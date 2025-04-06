@@ -10,6 +10,10 @@ package Entities;
  */
 public class Administrator extends User{
     
+    public Administrator(String userId, String username, String password) {
+       super(userId, username, password, "FINANCE_MANAGER");
+   }
+    
     public void registerUser(){
         
     }

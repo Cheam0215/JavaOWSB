@@ -13,11 +13,11 @@ import java.util.function.Function;
  * @author Sheng Ting
  */
 public class FileManager {
-    private String userFilePath = "users.txt";
-    private String itemFilePath = "items.txt";
-    private String supplierFilePath = "suppliers.txt";
-    private String prFilePath = "purchase_requisitions.txt"; /** Purchase Requisition file path */
-    private String poFilePath = "purchase_orders.txt"; /** Purchase Order file path */
+    final String userFilePath     = "userFile.txt";
+    final String itemFilePath     = "itemFile.txt";
+    final String supplierFilePath = "supplierFile.txt";
+    final String prFilePath       = "purchaseRequisitionFile.txt"; /** Purchase Requisition file path */
+    final String poFilePath       = "purchaseOrderFile.txt"; /** Purchase Order file path */
 
     // Write an entity to a file, checking for duplicates
     public <T> boolean writeToFile(T entity, String filePath, 

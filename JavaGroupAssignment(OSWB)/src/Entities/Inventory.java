@@ -4,10 +4,28 @@
  */
 package Entities;
 
+import java.util.List;
+
 /**
  *
  * @author Sheng Ting
  */
 public class Inventory {
+    private static final int LOW_STOCK_THRESHOLD = 100; // Low stock threshold
     
+    public List<Item> viewItems () {
+        return null;
+    }
+    
+    public boolean updateStock() {
+        return true;
+    }
+    
+    public boolean checkLowStock() {
+        return true;
+    }
+    
+    public String generateStockReport () {
+        return null;
+    }
 }
