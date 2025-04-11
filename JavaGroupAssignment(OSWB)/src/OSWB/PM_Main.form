@@ -48,11 +48,11 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="sideBarMenu" min="-2" max="-2" attributes="0"/>
+                          <Component id="sideBarMenu5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="mainMenuPagePanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="tittle" pref="1043" max="32767" attributes="0"/>
+                      <Component id="tittle" pref="1049" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -63,9 +63,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="tittle" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="mainMenuPagePanel" max="32767" attributes="0"/>
-                      <Component id="sideBarMenu" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="mainMenuPagePanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="sideBarMenu5" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -133,79 +133,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="sideBarMenu">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="33" green="33" red="33" type="rgb"/>
-            </Property>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="supplierPageButton" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
-                          <Component id="purchaseOrderPageButton" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
-                          <Component id="itemsListPageButton" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
-                          <Component id="profilePageButton" min="-2" pref="111" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                      <Component id="profilePageButton" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
-                      <Component id="itemsListPageButton" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
-                      <Component id="supplierPageButton" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace pref="129" max="32767" attributes="0"/>
-                      <Component id="purchaseOrderPageButton" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JButton" name="itemsListPageButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Items"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemsListPageButtonActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="supplierPageButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Supplier"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierPageButtonActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="purchaseOrderPageButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Purchase Order"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="purchaseOrderPageButtonActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="profilePageButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Profile"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profilePageButtonActionPerformed"/>
-              </Events>
-            </Component>
-          </SubComponents>
-        </Container>
         <Container class="javax.swing.JPanel" name="mainMenuPagePanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -221,10 +148,72 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="613" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
+        </Container>
+        <Container class="javax.swing.JPanel" name="sideBarMenu5">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="33" green="33" red="33" type="rgb"/>
+            </Property>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="supplierPageButton5" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
+                          <Component id="purchaseOrderPageButton5" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
+                          <Component id="itemsListPageButton5" alignment="1" min="-2" pref="111" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="37" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
+                      <Component id="itemsListPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
+                      <EmptySpace pref="128" max="32767" attributes="0"/>
+                      <Component id="supplierPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="126" max="-2" attributes="0"/>
+                      <Component id="purchaseOrderPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="144" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JButton" name="itemsListPageButton5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Items"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemsListPageButton5ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="supplierPageButton5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Supplier"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierPageButton5ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="purchaseOrderPageButton5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Purchase Order"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="purchaseOrderPageButton5ActionPerformed"/>
+              </Events>
+            </Component>
+          </SubComponents>
         </Container>
       </SubComponents>
     </Container>

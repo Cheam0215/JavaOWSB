@@ -34,18 +34,19 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         supplierPageButton3 = new javax.swing.JButton();
         purchaseOrderPageButton3 = new javax.swing.JButton();
         profilePageButton3 = new javax.swing.JButton();
+        saveButton2 = new javax.swing.JButton();
         tittle4 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
         homeButton4 = new javax.swing.JButton();
-        sideBarMenu4 = new javax.swing.JPanel();
-        itemsListPageButton4 = new javax.swing.JButton();
-        supplierPageButton4 = new javax.swing.JButton();
-        purchaseOrderPageButton4 = new javax.swing.JButton();
-        profilePageButton4 = new javax.swing.JButton();
         purchaseOrderListTablePanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         purchaseOrderTable = new javax.swing.JTable();
+        editButton = new javax.swing.JButton();
+        sideBarMenu5 = new javax.swing.JPanel();
+        itemsListPageButton5 = new javax.swing.JButton();
+        supplierPageButton5 = new javax.swing.JButton();
+        purchaseOrderPageButton5 = new javax.swing.JButton();
 
         tittle3.setBackground(new java.awt.Color(0, 102, 255));
 
@@ -141,6 +142,9 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addGap(68, 68, 68))
         );
 
+        saveButton2.setText("Save");
+        saveButton2.setToolTipText("");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tittle4.setBackground(new java.awt.Color(0, 102, 255));
@@ -181,63 +185,6 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                         .addGap(45, 45, 45))))
         );
 
-        sideBarMenu4.setBackground(new java.awt.Color(51, 51, 51));
-
-        itemsListPageButton4.setText("Items");
-        itemsListPageButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemsListPageButton4ActionPerformed(evt);
-            }
-        });
-
-        supplierPageButton4.setText("Supplier");
-        supplierPageButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierPageButton4ActionPerformed(evt);
-            }
-        });
-
-        purchaseOrderPageButton4.setText("Purchase Order");
-        purchaseOrderPageButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                purchaseOrderPageButton4ActionPerformed(evt);
-            }
-        });
-
-        profilePageButton4.setText("Profile");
-        profilePageButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                profilePageButton4ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout sideBarMenu4Layout = new javax.swing.GroupLayout(sideBarMenu4);
-        sideBarMenu4.setLayout(sideBarMenu4Layout);
-        sideBarMenu4Layout.setHorizontalGroup(
-            sideBarMenu4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sideBarMenu4Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(sideBarMenu4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(supplierPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(profilePageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
-        );
-        sideBarMenu4Layout.setVerticalGroup(
-            sideBarMenu4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sideBarMenu4Layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(profilePageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103)
-                .addComponent(itemsListPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(99, 99, 99)
-                .addComponent(supplierPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68))
-        );
-
         purchaseOrderListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
 
         backButton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -262,18 +209,30 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(purchaseOrderTable);
 
+        editButton.setText("Edit");
+        editButton.setToolTipText("");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout purchaseOrderListTablePanelLayout = new javax.swing.GroupLayout(purchaseOrderListTablePanel);
         purchaseOrderListTablePanel.setLayout(purchaseOrderListTablePanelLayout);
         purchaseOrderListTablePanelLayout.setHorizontalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(806, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(806, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39))))
         );
         purchaseOrderListTablePanelLayout.setVerticalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,8 +240,57 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+        );
+
+        sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
+
+        itemsListPageButton5.setText("Items");
+        itemsListPageButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemsListPageButton5ActionPerformed(evt);
+            }
+        });
+
+        supplierPageButton5.setText("Supplier");
+        supplierPageButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierPageButton5ActionPerformed(evt);
+            }
+        });
+
+        purchaseOrderPageButton5.setText("Purchase Order");
+        purchaseOrderPageButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseOrderPageButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout sideBarMenu5Layout = new javax.swing.GroupLayout(sideBarMenu5);
+        sideBarMenu5.setLayout(sideBarMenu5Layout);
+        sideBarMenu5Layout.setHorizontalGroup(
+            sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sideBarMenu5Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        sideBarMenu5Layout.setVerticalGroup(
+            sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sideBarMenu5Layout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(126, 126, 126)
+                .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(144, 144, 144))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -294,8 +302,8 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tittle4, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(sideBarMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sideBarMenu5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(purchaseOrderListTablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -307,7 +315,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(purchaseOrderListTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sideBarMenu4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sideBarMenu5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -338,25 +346,25 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_homeButton4ActionPerformed
 
-    private void itemsListPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_itemsListPageButton4ActionPerformed
-
-    private void supplierPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_supplierPageButton4ActionPerformed
-
-    private void purchaseOrderPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_purchaseOrderPageButton4ActionPerformed
-
-    private void profilePageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePageButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_profilePageButton4ActionPerformed
-
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemsListPageButton5ActionPerformed
+
+    private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierPageButton5ActionPerformed
+
+    private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -395,23 +403,24 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JButton homeButton3;
     private javax.swing.JButton homeButton4;
     private javax.swing.JButton itemsListPageButton3;
-    private javax.swing.JButton itemsListPageButton4;
+    private javax.swing.JButton itemsListPageButton5;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel pageName;
     private javax.swing.JButton profilePageButton3;
-    private javax.swing.JButton profilePageButton4;
     private javax.swing.JPanel purchaseOrderListTablePanel;
     private javax.swing.JButton purchaseOrderPageButton3;
-    private javax.swing.JButton purchaseOrderPageButton4;
+    private javax.swing.JButton purchaseOrderPageButton5;
     private javax.swing.JTable purchaseOrderTable;
+    private javax.swing.JButton saveButton2;
     private javax.swing.JPanel sideBarMenu3;
-    private javax.swing.JPanel sideBarMenu4;
+    private javax.swing.JPanel sideBarMenu5;
     private javax.swing.JButton supplierPageButton3;
-    private javax.swing.JButton supplierPageButton4;
+    private javax.swing.JButton supplierPageButton5;
     private javax.swing.JPanel tittle3;
     private javax.swing.JPanel tittle4;
     // End of variables declaration//GEN-END:variables
