@@ -17,7 +17,7 @@ public class PurchaseOrder {
     private String status;        // e.g., "PENDING", "APPROVED"
     private double paymentAmount;
 
-    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status) {
+    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount) {
         this.poId           = poId;
         this.prId           = prId;
         this.itemCode       = itemCode;
