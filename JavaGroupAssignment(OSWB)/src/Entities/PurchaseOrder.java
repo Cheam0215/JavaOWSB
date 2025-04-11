@@ -15,6 +15,7 @@ public class PurchaseOrder {
     private int quantity;         
     private String supplierCode;  
     private String status;        // e.g., "PENDING", "APPROVED"
+    private double paymentAmount;
 
     public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status) {
         this.poId           = poId;
@@ -23,6 +24,7 @@ public class PurchaseOrder {
         this.quantity       = quantity;
         this.supplierCode   = supplierCode;
         this.status         = status;
+        this.paymentAmount  = paymentAmount;
     }
 
     public String getPoId() {
@@ -72,11 +74,19 @@ public class PurchaseOrder {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
     // For FileManager compatibility
     @Override
     public String toString() {
-        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status;
+        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount;
     }
 
    
