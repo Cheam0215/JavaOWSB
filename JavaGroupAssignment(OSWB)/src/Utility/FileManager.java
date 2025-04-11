@@ -18,6 +18,7 @@ public class FileManager {
     final String supplierFilePath = "supplierFile.txt";
     final String prFilePath       = "purchaseRequisitionFile.txt"; /** Purchase Requisition file path */
     final String poFilePath       = "purchaseOrderFile.txt"; /** Purchase Order file path */
+    final String salesDataFilePath = "salesDataFile.txt"; /** Sales Data file path */ // Added
 
     // Write an entity to a file, checking for duplicates
     public <T> boolean writeToFile(T entity, String filePath, 
@@ -140,10 +141,11 @@ public class FileManager {
         }
     }
 
-    // Getter methods for file paths (optional, for flexibility)
+    // Getter methods for file paths
     public String getUserFilePath() { return userFilePath; }
     public String getItemFilePath() { return itemFilePath; }
     public String getSupplierFilePath() { return supplierFilePath; }
     public String getPrFilePath() { return prFilePath; }
     public String getPoFilePath() { return poFilePath; }
+    public String getSalesDataFilePath() { return salesDataFilePath; } // Added
 }
