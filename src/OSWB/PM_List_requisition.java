@@ -33,6 +33,18 @@ public class PM_List_requisition extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         requisitionTable = new javax.swing.JTable();
+        quantityLabel = new javax.swing.JLabel();
+        requiredDateLabel = new javax.swing.JLabel();
+        purchaseRequisitionIDTxtField = new javax.swing.JTextField();
+        itemCodeTxtField = new javax.swing.JTextField();
+        quantityTxtField = new javax.swing.JTextField();
+        requiredDateTxtField = new javax.swing.JTextField();
+        searchTxtField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        purchaseRequisitionIDLabel = new javax.swing.JLabel();
+        itemCodeLabel = new javax.swing.JLabel();
+        supplierCodeLabel1 = new javax.swing.JLabel();
+        supplierCodeTxtField1 = new javax.swing.JTextField();
         sideBarMenu3 = new javax.swing.JPanel();
         itemsListPageButton3 = new javax.swing.JButton();
         supplierPageButton3 = new javax.swing.JButton();
@@ -63,7 +75,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
                 .addComponent(homeButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
         tittle4Layout.setVerticalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,6 +114,49 @@ public class PM_List_requisition extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(requisitionTable);
 
+        quantityLabel.setText("Quantity :");
+
+        requiredDateLabel.setText("Required Date :");
+
+        purchaseRequisitionIDTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseRequisitionIDTxtFieldActionPerformed(evt);
+            }
+        });
+
+        itemCodeTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCodeTxtFieldActionPerformed(evt);
+            }
+        });
+
+        quantityTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityTxtFieldActionPerformed(evt);
+            }
+        });
+
+        requiredDateTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                requiredDateTxtFieldActionPerformed(evt);
+            }
+        });
+
+        searchButton.setText("Search");
+        searchButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        purchaseRequisitionIDLabel.setText("Purchase Requisition ID :");
+
+        itemCodeLabel.setText("Item Code :");
+
+        supplierCodeLabel1.setText("Supplier Code :");
+
+        supplierCodeTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierCodeTxtField1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout requisitionTablePanelLayout = new javax.swing.GroupLayout(requisitionTablePanel);
         requisitionTablePanel.setLayout(requisitionTablePanelLayout);
         requisitionTablePanelLayout.setHorizontalGroup(
@@ -112,9 +167,39 @@ public class PM_List_requisition extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                        .addGap(259, 259, 259)
+                        .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(47, Short.MAX_VALUE))
+                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                        .addComponent(purchaseRequisitionIDLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(purchaseRequisitionIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, requisitionTablePanelLayout.createSequentialGroup()
+                                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(itemCodeLabel)
+                                            .addComponent(supplierCodeLabel1))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(supplierCodeTxtField1)
+                                            .addComponent(itemCodeTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))))
+                                .addGap(18, 18, 18)
+                                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                        .addComponent(requiredDateLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(requiredDateTxtField))
+                                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                        .addComponent(quantityLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(quantityTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         requisitionTablePanelLayout.setVerticalGroup(
             requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,6 +208,26 @@ public class PM_List_requisition extends javax.swing.JFrame {
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addGap(32, 32, 32)
+                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(purchaseRequisitionIDLabel)
+                    .addComponent(quantityLabel)
+                    .addComponent(purchaseRequisitionIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantityTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(itemCodeLabel)
+                    .addComponent(requiredDateLabel)
+                    .addComponent(itemCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(requiredDateTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supplierCodeLabel1)
+                    .addComponent(supplierCodeTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -221,6 +326,26 @@ public class PM_List_requisition extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton3ActionPerformed
 
+    private void purchaseRequisitionIDTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionIDTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseRequisitionIDTxtFieldActionPerformed
+
+    private void itemCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemCodeTxtFieldActionPerformed
+
+    private void quantityTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTxtFieldActionPerformed
+
+    private void requiredDateTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requiredDateTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_requiredDateTxtFieldActionPerformed
+
+    private void supplierCodeTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierCodeTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierCodeTxtField1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -259,13 +384,25 @@ public class PM_List_requisition extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton homeButton4;
+    private javax.swing.JLabel itemCodeLabel;
+    private javax.swing.JTextField itemCodeTxtField;
     private javax.swing.JButton itemsListPageButton3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel pageName;
     private javax.swing.JButton purchaseOrderPageButton3;
+    private javax.swing.JLabel purchaseRequisitionIDLabel;
+    private javax.swing.JTextField purchaseRequisitionIDTxtField;
+    private javax.swing.JLabel quantityLabel;
+    private javax.swing.JTextField quantityTxtField;
+    private javax.swing.JLabel requiredDateLabel;
+    private javax.swing.JTextField requiredDateTxtField;
     private javax.swing.JTable requisitionTable;
     private javax.swing.JPanel requisitionTablePanel;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTxtField;
     private javax.swing.JPanel sideBarMenu3;
+    private javax.swing.JLabel supplierCodeLabel1;
+    private javax.swing.JTextField supplierCodeTxtField1;
     private javax.swing.JButton supplierPageButton3;
     private javax.swing.JPanel tittle4;
     // End of variables declaration//GEN-END:variables

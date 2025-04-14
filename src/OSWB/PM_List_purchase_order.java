@@ -35,6 +35,16 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         purchaseOrderPageButton3 = new javax.swing.JButton();
         profilePageButton3 = new javax.swing.JButton();
         saveButton2 = new javax.swing.JButton();
+        itemNameLabel = new javax.swing.JLabel();
+        stockLevelLabel = new javax.swing.JLabel();
+        itemCodeTxtField = new javax.swing.JTextField();
+        supplierIDTxtField = new javax.swing.JTextField();
+        itemNameTxtField = new javax.swing.JTextField();
+        stockLevelTxtField = new javax.swing.JTextField();
+        searchTxtField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        itemCodeLabel = new javax.swing.JLabel();
+        supplierIDLabel = new javax.swing.JLabel();
         tittle4 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
         homeButton4 = new javax.swing.JButton();
@@ -43,6 +53,25 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         purchaseOrderTable = new javax.swing.JTable();
         editButton = new javax.swing.JButton();
+        itemCodeLabel1 = new javax.swing.JLabel();
+        quantityLabel = new javax.swing.JLabel();
+        purchaseOrderTxtField1 = new javax.swing.JTextField();
+        purchaseRequisitionIDTxtField1 = new javax.swing.JTextField();
+        itemCodeTxtField1 = new javax.swing.JTextField();
+        quantityTxtField1 = new javax.swing.JTextField();
+        searchTxtField1 = new javax.swing.JTextField();
+        searchButton1 = new javax.swing.JButton();
+        purchaseOrderLabel = new javax.swing.JLabel();
+        purchaseRequisitionIDLabel = new javax.swing.JLabel();
+        supplierIDLabel2 = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
+        paymentAmountLabel = new javax.swing.JLabel();
+        supplierIDTxtField2 = new javax.swing.JTextField();
+        paymentAmountTxtField2 = new javax.swing.JTextField();
+        statusComboBox1 = new javax.swing.JComboBox<>();
+        saveButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         sideBarMenu5 = new javax.swing.JPanel();
         itemsListPageButton5 = new javax.swing.JButton();
         supplierPageButton5 = new javax.swing.JButton();
@@ -145,6 +174,41 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         saveButton2.setText("Save");
         saveButton2.setToolTipText("");
 
+        itemNameLabel.setText("Item Name :");
+
+        stockLevelLabel.setText("Stock Level :");
+
+        itemCodeTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCodeTxtFieldActionPerformed(evt);
+            }
+        });
+
+        supplierIDTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierIDTxtFieldActionPerformed(evt);
+            }
+        });
+
+        itemNameTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemNameTxtFieldActionPerformed(evt);
+            }
+        });
+
+        stockLevelTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stockLevelTxtFieldActionPerformed(evt);
+            }
+        });
+
+        searchButton.setText("Search");
+        searchButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        itemCodeLabel.setText("Item Code :");
+
+        supplierIDLabel.setText("Supplier ID :");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tittle4.setBackground(new java.awt.Color(0, 102, 255));
@@ -217,6 +281,97 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             }
         });
 
+        itemCodeLabel1.setText("Item Code :");
+
+        quantityLabel.setText("Quantity :");
+
+        purchaseOrderTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseOrderTxtField1ActionPerformed(evt);
+            }
+        });
+
+        purchaseRequisitionIDTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseRequisitionIDTxtField1ActionPerformed(evt);
+            }
+        });
+
+        itemCodeTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCodeTxtField1ActionPerformed(evt);
+            }
+        });
+
+        quantityTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityTxtField1ActionPerformed(evt);
+            }
+        });
+
+        searchTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTxtField1ActionPerformed(evt);
+            }
+        });
+
+        searchButton1.setText("Search");
+        searchButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        purchaseOrderLabel.setText("Purchase Order ID :");
+
+        purchaseRequisitionIDLabel.setText("Purchase Requisition ID :");
+
+        supplierIDLabel2.setText("Supplier ID :");
+
+        statusLabel.setText("Status :");
+
+        paymentAmountLabel.setText("Payment Amount :");
+
+        supplierIDTxtField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierIDTxtField2ActionPerformed(evt);
+            }
+        });
+
+        paymentAmountTxtField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentAmountTxtField2ActionPerformed(evt);
+            }
+        });
+
+        statusComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PENDING", "APPROVED" }));
+        statusComboBox1.setSelectedItem(" ");
+        statusComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusComboBox1ActionPerformed(evt);
+            }
+        });
+
+        saveButton.setText("Save");
+        saveButton.setToolTipText("");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
+        addButton.setText("Add");
+        addButton.setToolTipText("");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        deleteButton.setText("Delete");
+        deleteButton.setToolTipText("");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout purchaseOrderListTablePanelLayout = new javax.swing.GroupLayout(purchaseOrderListTablePanel);
         purchaseOrderListTablePanel.setLayout(purchaseOrderListTablePanelLayout);
         purchaseOrderListTablePanelLayout.setHorizontalGroup(
@@ -229,10 +384,58 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                         .addContainerGap(806, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                                .addComponent(purchaseRequisitionIDLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(purchaseRequisitionIDTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                                .addComponent(purchaseOrderLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(purchaseOrderTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(supplierIDLabel2)
+                                                    .addComponent(paymentAmountLabel))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(paymentAmountTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(supplierIDTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGap(18, 18, 18))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(35, 35, 35)))
+                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(quantityLabel)
+                                            .addComponent(statusLabel))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(quantityTxtField1)
+                                            .addComponent(statusComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                        .addComponent(itemCodeLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(itemCodeTxtField1)))))
                         .addGap(39, 39, 39))))
+            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                .addGap(218, 218, 218)
+                .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         purchaseOrderListTablePanelLayout.setVerticalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,10 +443,40 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton1))
+                .addGap(42, 42, 42)
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(purchaseOrderLabel)
+                    .addComponent(itemCodeLabel1)
+                    .addComponent(purchaseOrderTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemCodeTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(purchaseRequisitionIDLabel)
+                    .addComponent(quantityLabel)
+                    .addComponent(purchaseRequisitionIDTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantityTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supplierIDLabel2)
+                    .addComponent(statusLabel)
+                    .addComponent(supplierIDTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(statusComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(paymentAmountLabel)
+                    .addComponent(paymentAmountTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40))
         );
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
@@ -366,6 +599,73 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_editButtonActionPerformed
 
+    private void itemCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemCodeTxtFieldActionPerformed
+
+    private void supplierIDTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierIDTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierIDTxtFieldActionPerformed
+
+    private void itemNameTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemNameTxtFieldActionPerformed
+
+    private void stockLevelTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockLevelTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stockLevelTxtFieldActionPerformed
+
+    private void purchaseOrderTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseOrderTxtField1ActionPerformed
+
+    private void purchaseRequisitionIDTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionIDTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseRequisitionIDTxtField1ActionPerformed
+
+    private void itemCodeTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemCodeTxtField1ActionPerformed
+
+    private void quantityTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityTxtField1ActionPerformed
+
+    private void supplierIDTxtField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierIDTxtField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierIDTxtField2ActionPerformed
+
+    private void paymentAmountTxtField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentAmountTxtField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_paymentAmountTxtField2ActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+//clear all collum first       // TODO add your handling code here:
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+//make a confirmation than delete        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void searchTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTxtField1ActionPerformed
+//make a grey enter item code        // TODO add your handling code here:
+    }//GEN-LAST:event_searchTxtField1ActionPerformed
+
+    private void statusComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_statusComboBox1ActionPerformed
+    public void clearText(){
+        purchaseOrderTxtField1.setText("");  
+        purchaseRequisitionIDTxtField1.setText(""); 
+        supplierIDTxtField2.setText(""); 
+        paymentAmountTxtField2.setText(""); 
+        itemCodeTxtField1.setText(""); 
+        quantityTxtField1.setText(""); 
+    }
     /**
      * @param args the command line arguments
      */
@@ -402,23 +702,52 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JButton backButton;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton homeButton3;
     private javax.swing.JButton homeButton4;
+    private javax.swing.JLabel itemCodeLabel;
+    private javax.swing.JLabel itemCodeLabel1;
+    private javax.swing.JTextField itemCodeTxtField;
+    private javax.swing.JTextField itemCodeTxtField1;
+    private javax.swing.JLabel itemNameLabel;
+    private javax.swing.JTextField itemNameTxtField;
     private javax.swing.JButton itemsListPageButton3;
     private javax.swing.JButton itemsListPageButton5;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel pageName;
+    private javax.swing.JLabel paymentAmountLabel;
+    private javax.swing.JTextField paymentAmountTxtField2;
     private javax.swing.JButton profilePageButton3;
+    private javax.swing.JLabel purchaseOrderLabel;
     private javax.swing.JPanel purchaseOrderListTablePanel;
     private javax.swing.JButton purchaseOrderPageButton3;
     private javax.swing.JButton purchaseOrderPageButton5;
     private javax.swing.JTable purchaseOrderTable;
+    private javax.swing.JTextField purchaseOrderTxtField1;
+    private javax.swing.JLabel purchaseRequisitionIDLabel;
+    private javax.swing.JTextField purchaseRequisitionIDTxtField1;
+    private javax.swing.JLabel quantityLabel;
+    private javax.swing.JTextField quantityTxtField1;
+    private javax.swing.JButton saveButton;
     private javax.swing.JButton saveButton2;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JButton searchButton1;
+    private javax.swing.JTextField searchTxtField;
+    private javax.swing.JTextField searchTxtField1;
     private javax.swing.JPanel sideBarMenu3;
     private javax.swing.JPanel sideBarMenu5;
+    private javax.swing.JComboBox<String> statusComboBox1;
+    private javax.swing.JLabel statusLabel;
+    private javax.swing.JLabel stockLevelLabel;
+    private javax.swing.JTextField stockLevelTxtField;
+    private javax.swing.JLabel supplierIDLabel;
+    private javax.swing.JLabel supplierIDLabel2;
+    private javax.swing.JTextField supplierIDTxtField;
+    private javax.swing.JTextField supplierIDTxtField2;
     private javax.swing.JButton supplierPageButton3;
     private javax.swing.JButton supplierPageButton5;
     private javax.swing.JPanel tittle3;
