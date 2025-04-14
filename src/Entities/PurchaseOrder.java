@@ -10,7 +10,8 @@ package Entities;
  */
 public class PurchaseOrder {
     private String poId;          
-    private String prId;          
+    private String prId;
+    private String raisedBy; // ID of Purhcase's Manager
     private String itemCode;      
     private int quantity;         
     private String supplierCode;  
@@ -43,6 +44,15 @@ public class PurchaseOrder {
         this.prId = prId;
     }
 
+    public String getRaisedBy() {
+        return raisedBy;
+    }
+
+    public void setRaisedBy(String raisedBy) {
+        this.raisedBy = raisedBy;
+    }
+
+    
     public String getItemCode() {
         return itemCode;
     }

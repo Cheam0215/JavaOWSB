@@ -10,7 +10,8 @@ package Entities;
  */
 public class PurchaseRequisition {
     private String prId;          
-    private String itemCode;      
+    private String itemCode;
+    private String requestedBy; // ID of Sale's Manager
     private int quantity;         
     private String requiredDate;  
     private String supplierCode; 
@@ -38,6 +39,16 @@ public class PurchaseRequisition {
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
     }
+
+    public String getRequestedBy() {
+        return requestedBy;
+    }
+
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
+    }
+    
+    
 
     public int getQuantity() {
         return quantity;
