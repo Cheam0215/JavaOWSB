@@ -55,7 +55,7 @@ public class FileManager {
                                     Function<String, T> parser) {
         List<T> dataList = readFile(filePath, parser);
         String entityId = idExtractor.apply(entity);
-        boolean found = false;;
+        boolean found = false;
 
         // Update the list in memory//
         for (int i = 0; i < dataList.size(); i++) {
