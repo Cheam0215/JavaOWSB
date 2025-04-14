@@ -29,25 +29,51 @@ public class SalesData {
         return salesId;
     }
 
+    public void setSalesId(String salesId) {
+        this.salesId = salesId;
+    }
+
     public String getItemCode() {
         return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
     }
 
     public int getQuantitySold() {
         return quantitySold;
     }
 
+    public void setQuantitySold(int quantitySold) {
+        this.quantitySold = quantitySold;
+    }
+
     public double getUnitPrice() {
         return unitPrice;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getDate() {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public double getTotalAmount() {
         return totalAmount;
     }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+   
 
     @Override
     public String toString() {
