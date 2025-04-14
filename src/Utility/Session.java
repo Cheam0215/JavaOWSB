@@ -9,5 +9,20 @@ package Utility;
  * @author Sheng Ting
  */
 public class Session {
+    private String userID;
+
+    public Session(String userID) {
+        this.userID = userID;
+    }
+    
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+    
+    
     
 }
