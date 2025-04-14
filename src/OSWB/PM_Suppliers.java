@@ -41,6 +41,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         supplierListTable = new javax.swing.JTable();
+        itemIDLabel = new javax.swing.JLabel();
+        supplierCodeTxtField = new javax.swing.JTextField();
+        supplierNameTxtField = new javax.swing.JTextField();
+        itemIDTxtField = new javax.swing.JTextField();
+        searchTxtField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        supplierCodeLabel = new javax.swing.JLabel();
+        supplierNameLabel = new javax.swing.JLabel();
         sideBarMenu5 = new javax.swing.JPanel();
         itemsListPageButton5 = new javax.swing.JButton();
         supplierPageButton5 = new javax.swing.JButton();
@@ -203,6 +211,33 @@ public class PM_Suppliers extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(supplierListTable);
 
+        itemIDLabel.setText("Item ID :");
+
+        supplierCodeTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierCodeTxtFieldActionPerformed(evt);
+            }
+        });
+
+        supplierNameTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierNameTxtFieldActionPerformed(evt);
+            }
+        });
+
+        itemIDTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemIDTxtFieldActionPerformed(evt);
+            }
+        });
+
+        searchButton.setText("Search");
+        searchButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        supplierCodeLabel.setText("Supplier Code :");
+
+        supplierNameLabel.setText("Supplier Name :");
+
         javax.swing.GroupLayout supplierListTablePanelLayout = new javax.swing.GroupLayout(supplierListTablePanel);
         supplierListTablePanel.setLayout(supplierListTablePanelLayout);
         supplierListTablePanelLayout.setHorizontalGroup(
@@ -214,7 +249,28 @@ public class PM_Suppliers extends javax.swing.JFrame {
                         .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(supplierListTablePanelLayout.createSequentialGroup()
                         .addGap(39, 39, 39)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addGap(223, 223, 223)
+                                    .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                            .addComponent(supplierNameLabel)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                            .addComponent(supplierCodeLabel)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(18, 18, 18)
+                                    .addComponent(itemIDLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(itemIDTxtField)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
         supplierListTablePanelLayout.setVerticalGroup(
@@ -224,6 +280,20 @@ public class PM_Suppliers extends javax.swing.JFrame {
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addGap(32, 32, 32)
+                .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supplierCodeLabel)
+                    .addComponent(itemIDLabel)
+                    .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supplierNameLabel)
+                    .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -341,6 +411,18 @@ public class PM_Suppliers extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
+    private void supplierCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierCodeTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierCodeTxtFieldActionPerformed
+
+    private void supplierNameTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierNameTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierNameTxtFieldActionPerformed
+
+    private void itemIDTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemIDTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemIDTxtFieldActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -380,6 +462,8 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JButton backButton;
     private javax.swing.JButton homeButton2;
     private javax.swing.JButton homeButton3;
+    private javax.swing.JLabel itemIDLabel;
+    private javax.swing.JTextField itemIDTxtField;
     private javax.swing.JButton itemsListPageButton2;
     private javax.swing.JButton itemsListPageButton5;
     private javax.swing.JLabel jLabel3;
@@ -388,10 +472,16 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JButton profilePageButton2;
     private javax.swing.JButton purchaseOrderPageButton2;
     private javax.swing.JButton purchaseOrderPageButton5;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTxtField;
     private javax.swing.JPanel sideBarMenu2;
     private javax.swing.JPanel sideBarMenu5;
+    private javax.swing.JLabel supplierCodeLabel;
+    private javax.swing.JTextField supplierCodeTxtField;
     private javax.swing.JTable supplierListTable;
     private javax.swing.JPanel supplierListTablePanel;
+    private javax.swing.JLabel supplierNameLabel;
+    private javax.swing.JTextField supplierNameTxtField;
     private javax.swing.JButton supplierPageButton2;
     private javax.swing.JButton supplierPageButton5;
     private javax.swing.JPanel tittle2;
