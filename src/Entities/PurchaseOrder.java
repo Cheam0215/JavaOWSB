@@ -17,8 +17,9 @@ public class PurchaseOrder {
     private String supplierCode;  
     private String status;        // e.g., "PENDING", "APPROVED"
     private double paymentAmount;
+    private String remark;        // eg. ENUM 1. Stock invalid 2. Rejected by Finance Manager
 
-    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount) {
+    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark) {
         this.poId           = poId;
         this.prId           = prId;
         this.itemCode       = itemCode;
@@ -26,6 +27,7 @@ public class PurchaseOrder {
         this.supplierCode   = supplierCode;
         this.status         = status;
         this.paymentAmount  = paymentAmount;
+        this.remark = remark;
     }
 
     public String getPoId() {
@@ -92,6 +94,16 @@ public class PurchaseOrder {
     public void setPaymentAmount(double paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    
+    
 
     // For FileManager compatibility
     @Override

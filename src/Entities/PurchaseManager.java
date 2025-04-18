@@ -90,7 +90,7 @@ public class PurchaseManager extends User{
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]));
+                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7]);
             }
         );
          
