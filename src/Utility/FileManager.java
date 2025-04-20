@@ -96,28 +96,28 @@ public class FileManager {
 
     // Read all entities from a file
     public <T> List<T> readFile(String filePath, Function<String, T> parser) {
-        List<T> dataList = new ArrayList<>();
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filePath)) {
-            if (is == null) {
-                System.out.println("File not found: " + filePath + ". Starting fresh.");
-                return dataList;
-            }
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (!line.trim().isEmpty()) {
-                        T entity = parser.apply(line);
-                        if (entity != null) {
-                            dataList.add(entity);
-                        }
+    List<T> dataList = new ArrayList<>();
+    try {
+        File file = new File(getResourcePath(filePath));
+        System.out.println("Reading file: " + file.getAbsolutePath());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    T entity = parser.apply(line);
+                    if (entity != null) {
+                        dataList.add(entity);
                     }
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading file " + filePath + ": " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filePath + ". Starting fresh.");
         }
-        return dataList;
+    } catch (IOException e) {
+        System.out.println("Error reading file " + filePath + ": " + e.getMessage());
     }
+    return dataList;
+}
 
     // Delete an entity from a file
     public <T> boolean deleteFromFile(String entityId, String filePath, 
