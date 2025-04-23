@@ -18,8 +18,9 @@ public class PurchaseOrder {
     private String status;        // e.g., "PENDING", "APPROVED"
     private double paymentAmount;
     private String date;
+    private String remark;
 
-    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String date) {
+    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark, String date) {
         this.poId           = poId;
         this.prId           = prId;
         this.itemCode       = itemCode;
@@ -28,6 +29,8 @@ public class PurchaseOrder {
         this.status         = status;
         this.paymentAmount  = paymentAmount;
         this.date           = date;
+        this.remark         = remark;
+
     }
 
     public String getPoId() {
@@ -103,10 +106,17 @@ public class PurchaseOrder {
         this.date = date;
     }
 
-    // For FileManager compatibility
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public String toString() {
-        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + date;
+        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + date + "," + remark;
     }
 
    
