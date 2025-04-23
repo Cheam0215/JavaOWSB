@@ -11,15 +11,19 @@ package Entities;
 public class Item {
     private String itemCode;    // Unique identifier for the item
     private String itemName;    // Name of the item
-    private String supplierId;  // ID of the supplier providing this item
+    private String supplierCode;  // ID of the supplier providing this item
     private int stockLevel;     // Current stock quantity
+    private double unitPrice;
+    private double retailPrice;
 
     // Constructor
-    public Item(String itemCode, String itemName, String supplierId, int stockLevel) {
+    public Item(String itemCode, String itemName, String supplierId, int stockLevel, double unitPrice, double retailPrice) {
         this.itemCode = itemCode;
         this.itemName = itemName;
-        this.supplierId = supplierId;
+        this.supplierCode = supplierId;
         this.stockLevel = stockLevel;
+        this.unitPrice = unitPrice;
+        this.retailPrice = retailPrice;
     }
 
     // Getters
@@ -31,12 +35,20 @@ public class Item {
         return itemName;
     }
 
-    public String getSupplierId() {
-        return supplierId;
+    public String getSupplierCode() {
+        return supplierCode;
     }
 
     public int getStockLevel() {
         return stockLevel;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public double getRetailPrice() {
+        return retailPrice;
     }
 
     // Setters
@@ -44,17 +56,25 @@ public class Item {
         this.itemName = itemName;
     }
 
-    public void setSupplierId(String supplierId) {
-        this.supplierId = supplierId;
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
     }
 
     public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
     }
 
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setRetailPrice(double retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
     // For FileManager compatibility (toStringConverter)
     @Override
     public String toString() {
-        return itemCode + "," + itemName + "," + supplierId + "," + stockLevel;
+        return itemCode + "," + itemName + "," + supplierCode + "," + stockLevel + "," + unitPrice + "," + retailPrice;
     }
 }

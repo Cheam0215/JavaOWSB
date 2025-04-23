@@ -15,14 +15,19 @@ public class PurchaseRequisition {
     private int quantity;         
     private String requiredDate;  
     private String supplierCode; 
+    private String requestedDate;
+    private String status;
 
-    public PurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate, String supplierCode) {
+    public PurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate, String supplierCode, String requestedDate, String status) {
         this.prId = prId;
         this.itemCode = itemCode;
         this.quantity = quantity;
         this.requiredDate = requiredDate;
         this.supplierCode = supplierCode;
+        this.requestedDate = requestedDate;
+        this.status = status;
     }
+
 
     public String getPrId() {
         return prId;
@@ -47,8 +52,7 @@ public class PurchaseRequisition {
     public void setRequestedBy(String requestedBy) {
         this.requestedBy = requestedBy;
     }
-    
-    
+     
 
     public int getQuantity() {
         return quantity;
@@ -73,11 +77,30 @@ public class PurchaseRequisition {
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
     }
+
+    public String getRequestedDate() {
+        return requestedDate;
+    }
+
+    public void setRequestedDate(String requestedDate) {
+        this.requestedDate = requestedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
+    
     
     // For FileManager compatibility
     @Override
     public String toString() {
-        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + supplierCode;
+        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + supplierCode + "," + requestedDate + "," + status;
     }
     
 }

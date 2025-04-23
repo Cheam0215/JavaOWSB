@@ -14,12 +14,17 @@ import java.util.List;
 public class Supplier {
     private String supplierCode;
     private String supplierName;
-    private List<String> itemIDs;
+    private List<String> itemCode;
+    private int contactNumber;
+    private String address;
     
-    public Supplier(String supplierCode, String supplierName) {
+    
+    public Supplier(String supplierCode, String supplierName, int contactNumber, String address) {
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
-        this.itemIDs = new ArrayList<>();
+        this.itemCode = new ArrayList<>();
+        this.contactNumber = contactNumber;
+        this.address = address;
     }
 
     // Getters
@@ -32,7 +37,15 @@ public class Supplier {
     }
 
     public List<String> getItemIds() {
-        return new ArrayList<>(itemIDs); // Return a copy to protect encapsulation
+        return new ArrayList<>(itemCode); // Return a copy to protect encapsulation
+    }
+
+    public int getContactNumber() {
+        return contactNumber;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     // Setters
@@ -40,22 +53,30 @@ public class Supplier {
         this.supplierName = supplierName;
     }
 
+    public void setContactNumber(int contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     // Methods to manage itemIds
     public void addItemId(String itemId) {
-        if (!itemIDs.contains(itemId)) {
-            itemIDs.add(itemId);
+        if (!itemCode.contains(itemId)) {
+            itemCode.add(itemId);
         }
     }
 
     public void removeItemId(String itemId) {
-        itemIDs.remove(itemId);
+        itemCode.remove(itemId);
     }
 
     // For FileManager compatibility (toStringConverter)
     @Override
     public String toString() {
-        String items = String.join(";", itemIDs); // Use semicolon to separate item IDs
-        return supplierCode + "," + supplierName + "," + (items.isEmpty() ? "NONE" : items);
+        String items = String.join(";", itemCode); // Use semicolon to separate item IDs
+        return supplierCode + "," + supplierName + "," + (items.isEmpty() ? "NONE" : items + "," + contactNumber + "," + address);
     }
     
 }

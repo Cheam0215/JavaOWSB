@@ -13,16 +13,18 @@ public class SalesData {
     private String itemCode;
     private int quantitySold;
     private double unitPrice;
+    private double retailPrice;
     private String date;
     private double totalAmount;
 
-    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, String date) {
+    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, double retailPrice, String date) {
         this.salesId = salesId;
         this.itemCode = itemCode;
         this.quantitySold = quantitySold;
         this.unitPrice = unitPrice;
+        this.retailPrice = retailPrice;
         this.date = date;
-        this.totalAmount = quantitySold * unitPrice;
+        this.totalAmount = quantitySold * retailPrice;
     }
 
     public String getSalesId() {
@@ -73,11 +75,19 @@ public class SalesData {
         this.totalAmount = totalAmount;
     }
 
+    public double getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(double retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
    
 
     @Override
     public String toString() {
-        return salesId + "," + itemCode + "," + quantitySold + "," + unitPrice + "," + date + "," + totalAmount;
+        return salesId + "," + itemCode + "," + quantitySold + "," + unitPrice + "," + retailPrice + "," + date + "," + totalAmount;
     }
 }
 
