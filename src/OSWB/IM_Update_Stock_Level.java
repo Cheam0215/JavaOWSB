@@ -29,16 +29,12 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
  private final String[] columnNames = {
         "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Status", "Payment Amount, Remarks"
     };
-    /**
-     * Creates new form IM_Update_Stock_Level
-     */
-    
+
     public IM_Update_Stock_Level(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
         this.fileManager = inventoryManager.getFileManager(); // Initialize fileManager
-        initComponents();
         setupTable();
-        loadApprovedPOs();
+        initComponents();
     }
     
     public IM_Update_Stock_Level() {
@@ -61,7 +57,7 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8]);
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
             }
         );
 
