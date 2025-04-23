@@ -10,10 +10,13 @@ import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.function.Function;
+<<<<<<< Updated upstream
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+=======
+>>>>>>> Stashed changes
 
 /**
  *
@@ -26,7 +29,11 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
         
         
  private final String[] columnNames = {
+<<<<<<< Updated upstream
         "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Status", "Payment Amount, Remarks"
+=======
+        "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Status", "Payment Amount"
+>>>>>>> Stashed changes
     };
     /**
      * Creates new form IM_Update_Stock_Level
@@ -34,7 +41,11 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
     
     public IM_Update_Stock_Level(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
+<<<<<<< Updated upstream
         this.fileManager = inventoryManager.getFileManager();
+=======
+        this.fileManager = inventoryManager.getFileManager(); // Initialize fileManager
+>>>>>>> Stashed changes
         initComponents();
         setupTable();
         loadApprovedPOs();
@@ -60,7 +71,11 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
+<<<<<<< Updated upstream
                     data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8]);
+=======
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]));
+>>>>>>> Stashed changes
             }
         );
 
@@ -75,8 +90,12 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
                     po.getQuantity(),
                     po.getSupplierCode(),
                     po.getStatus(),
+<<<<<<< Updated upstream
                     po.getPaymentAmount(),
                     po.getRemark()
+=======
+                    po.getPaymentAmount()
+>>>>>>> Stashed changes
                 });
             }
         }
@@ -96,11 +115,14 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
         tablePo = new javax.swing.JTable();
         btnApproved = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
+<<<<<<< Updated upstream
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+=======
+>>>>>>> Stashed changes
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +156,7 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
             }
         });
 
+<<<<<<< Updated upstream
         jMenu5.setText("File");
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -161,6 +184,8 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
+=======
+>>>>>>> Stashed changes
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -168,6 +193,7 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+<<<<<<< Updated upstream
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 913, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnApproved, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -176,12 +202,23 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(376, 376, 376)
+=======
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnApproved, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 857, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(84, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(350, 350, 350)
+>>>>>>> Stashed changes
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+<<<<<<< Updated upstream
                 .addGap(25, 25, 25)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -191,12 +228,24 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
                     .addComponent(btnReject)
                     .addComponent(btnApproved))
                 .addContainerGap())
+=======
+                .addGap(19, 19, 19)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnReject)
+                    .addComponent(btnApproved))
+                .addContainerGap(14, Short.MAX_VALUE))
+>>>>>>> Stashed changes
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+<<<<<<< Updated upstream
         int selectedRow = tablePo.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a PO to reject.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -227,6 +276,9 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+=======
+        
+>>>>>>> Stashed changes
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnApprovedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApprovedActionPerformed
@@ -244,13 +296,19 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
         try {
             // Update stock using InventoryManager
             inventoryManager.updateStock(itemCode, quantity);
+<<<<<<< Updated upstream
             javax.swing.JOptionPane.showMessageDialog(this, "Stock updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);            
+=======
+            javax.swing.JOptionPane.showMessageDialog(this, "Stock updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+>>>>>>> Stashed changes
             // Refresh table to show only remaining APPROVED POs
             loadApprovedPOs();
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Failed to update stock: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnApprovedActionPerformed
+<<<<<<< Updated upstream
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         IM_MAIN mainPage = new IM_MAIN();
@@ -261,6 +319,8 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
 
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+=======
+>>>>>>> Stashed changes
     
     /**
      * @param args the command line arguments
@@ -301,11 +361,14 @@ public class IM_Update_Stock_Level extends javax.swing.JFrame {
     private javax.swing.JButton btnApproved;
     private javax.swing.JButton btnReject;
     private javax.swing.JLabel jLabel1;
+<<<<<<< Updated upstream
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+=======
+>>>>>>> Stashed changes
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tablePo;
     // End of variables declaration//GEN-END:variables

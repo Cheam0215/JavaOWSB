@@ -28,6 +28,7 @@
               <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jButton2" max="32767" attributes="0"/>
+<<<<<<< Updated upstream
                   <Component id="jButton3" pref="149" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="127" max="32767" attributes="0"/>
@@ -36,6 +37,16 @@
                   <Component id="jButton1" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
+=======
+                  <Component id="jButton3" pref="131" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace pref="145" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jButton1" max="32767" attributes="0"/>
+                  <Component id="jButton4" pref="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="137" max="-2" attributes="0"/>
+>>>>>>> Stashed changes
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,9 +120,12 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="View Item List"/>
       </Properties>
+<<<<<<< Updated upstream
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
       </Events>
+=======
+>>>>>>> Stashed changes
     </Component>
     <Component class="javax.swing.JButton" name="jButton3">
       <Properties>
@@ -125,9 +139,12 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Generate Stock Report"/>
       </Properties>
+<<<<<<< Updated upstream
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
       </Events>
+=======
+>>>>>>> Stashed changes
     </Component>
   </SubComponents>
 </Form>

@@ -21,9 +21,14 @@ public class PurchaseOrder {
     private String remark;
     private String requiredDate;
 
+<<<<<<< Updated upstream
     public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark, String requestedDate, String requiredDate) {
+=======
+    public PurchaseOrder(String poId, String prId, String raisedBy, String itemCode, int quantity, String supplierCode, String status, double paymentAmount) {
+>>>>>>> Stashed changes
         this.poId           = poId;
         this.prId           = prId;
+        this.raisedBy       = raisedBy;
         this.itemCode       = itemCode;
         this.quantity       = quantity;
         this.supplierCode   = supplierCode;
