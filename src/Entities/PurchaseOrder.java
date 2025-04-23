@@ -11,16 +11,17 @@ package Entities;
 public class PurchaseOrder {
     private String poId;          
     private String prId;
-    private String raisedBy; // ID of Purhcase's Manager
+    private String raisedBy; 
     private String itemCode;      
     private int quantity;         
     private String supplierCode;  
-    private String status;        // e.g., "PENDING", "APPROVED"
+    private String status;       
     private double paymentAmount;
-    private String date;
+    private String requestedDate;
     private String remark;
+    private String requiredDate;
 
-    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark, String date) {
+    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark, String requestedDate, String requiredDate) {
         this.poId           = poId;
         this.prId           = prId;
         this.itemCode       = itemCode;
@@ -28,9 +29,9 @@ public class PurchaseOrder {
         this.supplierCode   = supplierCode;
         this.status         = status;
         this.paymentAmount  = paymentAmount;
-        this.date           = date;
+        this.requestedDate  = requestedDate;
         this.remark         = remark;
-
+        this.requiredDate   = requiredDate;
     }
 
     public String getPoId() {
@@ -98,12 +99,12 @@ public class PurchaseOrder {
         this.paymentAmount = paymentAmount;
     }
 
-    public String getDate(){
-        return date;
+    public String getRequestedDate(){
+        return requestedDate;
     }
 
-    public void setDate(String date){
-        this.date = date;
+    public void setRequestedDate(String requestedDate){
+        this.requestedDate = requestedDate;
     }
 
     public String getRemark() {
@@ -114,9 +115,17 @@ public class PurchaseOrder {
         this.remark = remark;
     }
 
+    public String getRequiredDate(){
+        return requestedDate;
+    }
+
+    public void setRequiredDate(String requiredDate){
+        this.requiredDate = requiredDate;
+    }
+
     @Override
     public String toString() {
-        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + date + "," + remark;
+        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + requiredDate + "+" + requestedDate + "," + remark;
     }
 
    
