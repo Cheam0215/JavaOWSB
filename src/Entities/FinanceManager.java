@@ -28,7 +28,7 @@ public class FinanceManager extends User {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
             }
         );
 
@@ -74,7 +74,7 @@ public class FinanceManager extends User {
                         line -> {
                             String[] data = line.split(",");
                             return new PurchaseOrder(data[0], data[1], data[2], 
-                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
                         }
                     );
                 }
@@ -92,7 +92,7 @@ public class FinanceManager extends User {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
             }
         );
 
@@ -125,7 +125,7 @@ public class FinanceManager extends User {
                 line -> {
                     String[] data = line.split(",");
                     return new PurchaseOrder(data[0], data[1], data[2], 
-                        Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                        Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
                 }
             );
 
@@ -139,7 +139,7 @@ public class FinanceManager extends User {
                         line -> {
                             String[] data = line.split(",");
                             return new PurchaseOrder(data[0], data[1], data[2], 
-                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
 
                         }
                     );
@@ -156,7 +156,7 @@ public class FinanceManager extends User {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
             }
         );
 
@@ -208,7 +208,7 @@ public class FinanceManager extends User {
         for (PurchaseOrder po : poList) {
             report.append(String.format("%s | %s | %d | %s | %s | RM%.2f | %s\n",
                 po.getPoId(), po.getItemCode(), po.getQuantity(),
-                po.getSupplierCode(), po.getStatus(), po.getPaymentAmount(), po.getDate()));
+                po.getSupplierCode(), po.getStatus(), po.getPaymentAmount(), po.getRequestedDate()));
         }
 
         return report.toString();
@@ -242,7 +242,7 @@ public class FinanceManager extends User {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8]);
+                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
             }
         );
 
@@ -253,7 +253,7 @@ public class FinanceManager extends User {
         for (PurchaseOrder po : poList) {
             view.append(String.format("%s | %s | %s | %d | %s | %s | RM%.2f | %s\n",
                 po.getPoId(), po.getPrId(), po.getItemCode(), 
-                po.getQuantity(), po.getSupplierCode(), po.getStatus(), po.getPaymentAmount(), po.getDate()));
+                po.getQuantity(), po.getSupplierCode(), po.getStatus(), po.getPaymentAmount(), po.getRequestedDate()));
         }
         return view.toString();
     }
