@@ -17,8 +17,9 @@ public class PurchaseOrder {
     private String supplierCode;  
     private String status;        // e.g., "PENDING", "APPROVED"
     private double paymentAmount;
+    private String date;
 
-    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount) {
+    public PurchaseOrder(String poId, String prId, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String date) {
         this.poId           = poId;
         this.prId           = prId;
         this.itemCode       = itemCode;
@@ -26,6 +27,7 @@ public class PurchaseOrder {
         this.supplierCode   = supplierCode;
         this.status         = status;
         this.paymentAmount  = paymentAmount;
+        this.date           = date;
     }
 
     public String getPoId() {
@@ -77,26 +79,34 @@ public class PurchaseOrder {
         this.supplierCode = supplierCode;
     }
 
-    public String getStatus() {
+    public String getStatus(){
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status){
         this.status = status;
     }
 
-    public double getPaymentAmount() {
+    public double getPaymentAmount(){
         return paymentAmount;
     }
 
-    public void setPaymentAmount(double paymentAmount) {
+    public void setPaymentAmount(double paymentAmount){
         this.paymentAmount = paymentAmount;
+    }
+
+    public String getDate(){
+        return date;
+    }
+
+    public void setDate(String date){
+        this.date = date;
     }
 
     // For FileManager compatibility
     @Override
     public String toString() {
-        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount;
+        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + date;
     }
 
    
