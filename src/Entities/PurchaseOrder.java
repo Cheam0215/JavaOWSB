@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Entities;
-
+import Utility.Date;
+import Utility.Remark;
+import Utility.Status;
 /**
  *
  * @author Sheng Ting
  */
+
 public class PurchaseOrder {
     private String poId;          
     private String prId;
@@ -15,24 +18,26 @@ public class PurchaseOrder {
     private String itemCode;      
     private int quantity;         
     private String supplierCode;  
-    private String status;       
-    private double paymentAmount;
-    private String requestedDate;
-    private String remark;
     private String requiredDate;
+    private String requestedDate;
+    private Status status;
+    private double paymentAmount;
+    private Remark remark;
 
-    public PurchaseOrder(String poId, String prId, String raisedBy, String itemCode, int quantity, String supplierCode, String status, double paymentAmount, String remark, String requestedDate, String requiredDate) {
-        this.poId           = poId;
-        this.prId           = prId;
-        this.raisedBy       = raisedBy;
-        this.itemCode       = itemCode;
-        this.quantity       = quantity;
-        this.supplierCode   = supplierCode;
-        this.status         = status;
-        this.paymentAmount  = paymentAmount;
-        this.requestedDate  = requestedDate;
-        this.remark         = remark;
-        this.requiredDate   = requiredDate;
+
+    public PurchaseOrder(String poId, String prId, String raisedBy, String itemCode, int quantity, String supplierCode, String requiredDate, String requestedDate, Status status, double paymentAmount, Remark remark) {
+        this.poId = poId;
+        this.prId = prId;
+        this.raisedBy = raisedBy;
+        this.itemCode = itemCode;
+        this.quantity = quantity;
+        this.supplierCode = supplierCode;
+        this.requiredDate = requiredDate;
+        this.requestedDate = requestedDate;
+        this.status = status;
+        this.paymentAmount = paymentAmount;
+        this.remark = remark;
+
     }
 
     public String getPoId() {
@@ -59,7 +64,6 @@ public class PurchaseOrder {
         this.raisedBy = raisedBy;
     }
 
-    
     public String getItemCode() {
         return itemCode;
     }
@@ -84,50 +88,52 @@ public class PurchaseOrder {
         this.supplierCode = supplierCode;
     }
 
-    public String getStatus(){
-        return status;
+    public String getRequiredDate() {
+        return requiredDate;
     }
 
-    public void setStatus(String status){
-        this.status = status;
+    public void setRequiredDate(String requiredDate) {
+        this.requiredDate = requiredDate;
     }
 
-    public double getPaymentAmount(){
-        return paymentAmount;
-    }
-
-    public void setPaymentAmount(double paymentAmount){
-        this.paymentAmount = paymentAmount;
-    }
-
-    public String getRequestedDate(){
+    public String getRequestedDate() {
         return requestedDate;
     }
 
-    public void setRequestedDate(String requestedDate){
+    public void setRequestedDate(String requestedDate) {
         this.requestedDate = requestedDate;
     }
 
-    public String getRemark() {
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public Remark getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark) {
+    public void setRemark(Remark remark) {
         this.remark = remark;
-    }
-
-    public String getRequiredDate(){
-        return requestedDate;
-    }
-
-    public void setRequiredDate(String requiredDate){
-        this.requiredDate = requiredDate;
     }
 
     @Override
     public String toString() {
-        return poId + "," + prId + "," + itemCode + "," + quantity + "," + supplierCode + "," + status+ "," + paymentAmount + "," + requiredDate + "+" + requestedDate + "," + remark;
+        return "PurchaseOrder{" + "poId=" + poId + ", prId=" + prId + ", raisedBy=" + raisedBy + ", itemCode=" + itemCode + ", quantity=" + quantity + ", supplierCode=" + supplierCode + ", requiredDate=" + requiredDate + ", requestedDate=" + requestedDate + ", status=" + status + ", paymentAmount=" + paymentAmount + ", remark=" + remark + '}';
     }
+    
+   
 
    
 }

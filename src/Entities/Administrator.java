@@ -4,6 +4,8 @@
  */
 package Entities;
 
+import Utility.UserRoles;
+
 /**
  *
  * @author Sheng Ting
@@ -11,7 +13,7 @@ package Entities;
 public class Administrator extends User{
     
     public Administrator(String userId, String username, String password) {
-       super(userId, username, password, "FINANCE_MANAGER");
+       super(userId, username, password, UserRoles.ADMINISTRATOR);
    }
     
     public void registerUser(){
@@ -25,4 +27,8 @@ public class Administrator extends User{
     public void deleteUser(){
         
     }
+    
+    public void displayMenu() {
+        
+    };
 }

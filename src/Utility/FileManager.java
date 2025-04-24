@@ -14,12 +14,12 @@ import java.util.function.Function;
  */
 public class FileManager {
     // File paths relative to the database package
-    private final String userFilePath = "database/userFile.txt";
-    private final String itemFilePath = "database/itemFile.txt";
-    private final String supplierFilePath = "database/supplierFile.txt";
-    private final String prFilePath = "database/purchaseRequisitionFile.txt";
-    private final String poFilePath = "database/purchaseOrderFile.txt";
-    private final String salesDataFilePath = "database/salesDataFile.txt";
+    private final String userFilePath       = "database/userFile.txt";
+    private final String itemFilePath       = "database/itemFile.txt";
+    private final String supplierFilePath   = "database/supplierFile.txt";
+    private final String prFilePath         = "database/purchaseRequisitionFile.txt";
+    private final String poFilePath         = "database/purchaseOrderFile.txt";
+    private final String salesDataFilePath  = "database/salesDataFile.txt";
 
     // Write an entity to a file, checking for duplicates
     public <T> boolean writeToFile(T entity, String filePath, 

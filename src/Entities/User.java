@@ -4,29 +4,26 @@
  */
 package Entities;
 
+import Utility.UserRoles;
+import Utility.Session;
+
 /**
  *
  * @author Sheng Ting
  */
-public class User {
+public abstract class User {
     private String userID;
     private String username;
     private String password;
-    private String role; // Role (e.g., "ADMIN", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
+    private UserRoles role; // Role (e.g., "ADMINISTRATOR", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
     
-    public User (){
-        
-    }
-
-    public User(String userID, String username, String password, String role) {
+    public User(String userID, String username, String password, UserRoles role) {
         this.userID     = userID;
         this.username   = username;
         this.password   = password;
         this.role       = role;
     }
     
-    
-
     public String getUserID() {
         return userID;
     }
@@ -51,25 +48,44 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRoles getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRoles role) {
         this.role = role;
     }
+
     
-    public boolean login () {
-        return true;
-    }
+    
+    public boolean login(String userID) {
+        
+        if (userID == null || userID.trim().isEmpty()) {
+            return false;
+        }
+    
+        Session loginSession = new Session(userID);
+
+        if (loginSession.getUserID() != null && !loginSession.getUserID().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }   
     
     public boolean logout () {
+        Session logout = new Session();
+        logout.setUserID("");
         return true;
     }
+    
+    public abstract void displayMenu();
+    
     // For FileManager compatibility
     @Override
     public String toString() {
-        return userID + "," + username + "," + password + "," + role;
+        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", role=" + role + '}';
     }
+    
     
 }

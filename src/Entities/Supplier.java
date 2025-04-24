@@ -17,19 +17,25 @@ public class Supplier {
     private List<String> itemCode;
     private int contactNumber;
     private String address;
+    private String bankAccount;
     
     
-    public Supplier(String supplierCode, String supplierName, int contactNumber, String address) {
+    public Supplier(String supplierCode, String supplierName, int contactNumber, String address, String bankAccount) {
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
         this.itemCode = new ArrayList<>();
         this.contactNumber = contactNumber;
         this.address = address;
-    }
+        this.bankAccount = bankAccount;
 
-    // Getters
+    }
+    
     public String getSupplierCode() {
         return supplierCode;
+    }
+
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
     }
 
     public String getSupplierName() {
@@ -48,7 +54,6 @@ public class Supplier {
         return address;
     }
 
-    // Setters
     public void setSupplierName(String supplierName) {
         this.supplierName = supplierName;
     }
@@ -77,6 +82,26 @@ public class Supplier {
     public String toString() {
         String items = String.join(";", itemCode); // Use semicolon to separate item IDs
         return supplierCode + "," + supplierName + "," + (items.isEmpty() ? "NONE" : items + "," + contactNumber + "," + address);
+        
     }
+    
+    public List<String> getItemCodes() {
+        return itemCode;
+    }
+
+    public void setItemCodes(List<String> itemCodes) {
+        this.itemCode = itemCodes;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+
+    }
+    
+    
     
 }
