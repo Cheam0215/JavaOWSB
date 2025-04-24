@@ -21,7 +21,7 @@ public class Inventory {
             fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
             }
         );
     }

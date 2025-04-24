@@ -4,6 +4,8 @@
  */
 package Entities;
 
+import Utility.UserRoles;
+
 /**
  *
  * @author Sheng Ting
@@ -12,13 +14,13 @@ public class User {
     private String userID;
     private String username;
     private String password;
-    private String role; // Role (e.g., "ADMIN", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
+    private UserRoles role; // Role (e.g., "ADMINISTRATOR", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
     
     public User (){
         
     }
 
-    public User(String userID, String username, String password, String role) {
+    public User(String userID, String username, String password, UserRoles role) {
         this.userID     = userID;
         this.username   = username;
         this.password   = password;
@@ -51,13 +53,15 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRoles getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRoles role) {
         this.role = role;
     }
+
+    
     
     public boolean login () {
         return true;
@@ -66,10 +70,12 @@ public class User {
     public boolean logout () {
         return true;
     }
+    
     // For FileManager compatibility
     @Override
     public String toString() {
-        return userID + "," + username + "," + password + "," + role;
+        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", role=" + role + '}';
     }
+    
     
 }

@@ -6,6 +6,10 @@ package Entities;
 
 import java.util.List;
 import Utility.FileManager;
+import Utility.Remark;
+import Utility.Status;
+import Utility.UserRoles;
+
 /**
  *
  * @author Sheng Ting
@@ -16,7 +20,7 @@ public class InventoryManager extends User{
     private final FileManager fileManager;
 
     public InventoryManager(String userId, String username, String password) {
-        super(userId, username, password, "INVENTORY_MANAGER");
+        super(userId, username, password, UserRoles.INVENTORY_MANAGER);
         this.inventory = new Inventory();
         this.fileManager = new FileManager();
     }
@@ -34,8 +38,9 @@ public class InventoryManager extends User{
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]));
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
             }
         );
         
@@ -63,7 +68,7 @@ public class InventoryManager extends User{
         
          try {
              // Update PO status
-            matchedPO.setStatus("RECEIVED");
+            matchedPO.setStatus(Status.RECEIVED);
             
             // Update PO file
             boolean poUpdated = fileManager.updateToFile(
@@ -77,13 +82,17 @@ public class InventoryManager extends User{
                     po.getItemCode(),
                     String.valueOf(po.getQuantity()),
                     po.getSupplierCode(),
-                    po.getStatus(),
-                    String.valueOf(po.getPaymentAmount())
+                    po.getRequiredDate(),
+                    po.getRequestedDate(),
+                    po.getStatus().toString(),
+                    String.valueOf(po.getPaymentAmount()),
+                    String.valueOf(po.getRemark())
                 ),
                 line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]));
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
                 }
             );
             
@@ -96,7 +105,7 @@ public class InventoryManager extends User{
                 fileManager.getItemFilePath(),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
                 }
             );
             
@@ -125,12 +134,12 @@ public class InventoryManager extends User{
                 item -> String.join(",", 
                     item.getItemCode(),
                     item.getItemName(),
-                    item.getSupplierId(),
+                    item.getSupplierCode(),
                     String.valueOf(item.getStockLevel())
                 ),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
                 }
             );
             

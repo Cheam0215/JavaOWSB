@@ -5,6 +5,7 @@
 package Entities;
 
 import Utility.FileManager;
+import Utility.UserRoles;
 import java.util.List;
 
 
@@ -17,7 +18,7 @@ public class SalesManager extends User {
 
     // Constructor
     public SalesManager(String userId, String username, String password) {
-        super(userId, username, password, "SALES_MANAGER");
+        super(userId, username, password, UserRoles.SALES_MANAGER);
         this.fileManager = new FileManager();
     }
 
@@ -35,7 +36,7 @@ public class SalesManager extends User {
             Item::getItemCode, Item::toString,
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
             }
         );
     }
@@ -46,7 +47,7 @@ public class SalesManager extends User {
             Item::getItemCode,
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
             }
         );
     }
@@ -60,35 +61,38 @@ public class SalesManager extends User {
     }
 
     public boolean updateSupplier(Supplier updatedSupplier) {
-        return fileManager.updateToFile(
-            updatedSupplier, fileManager.getSupplierFilePath(),
-            Supplier::getSupplierCode, Supplier::toString,
-            line -> {
-                String[] data = line.split(",");
-                Supplier s = new Supplier(data[0], data[1]);
-                if (!data[2].equals("NONE")) {
-                    String[] items = data[2].split(";");
-                    for (String itemId : items) s.addItemId(itemId);
-                }
-                return s;
-            }
-        );
+//        return fileManager.updateToFile(
+//            updatedSupplier, fileManager.getSupplierFilePath(),
+//            Supplier::getSupplierCode, Supplier::toString,
+//            line -> {
+//                String[] data = line.split(",");
+//                Supplier s = new Supplier(data[0], data[1]);
+//                if (!data[2].equals("NONE")) {
+//                    String[] items = data[2].split(";");
+//                    for (String itemId : items) s.addItemId(itemId);
+//                }
+//                return s;
+//            }
+//        );
+            return true;
     }
 
     public boolean deleteSupplier(String supplierCode) {
-        return fileManager.deleteFromFile(
-            supplierCode, fileManager.getSupplierFilePath(),
-            Supplier::getSupplierCode,
-            line -> {
-                String[] data = line.split(",");
-                Supplier s = new Supplier(data[0], data[1]);
-                if (!data[2].equals("NONE")) {
-                    String[] items = data[2].split(";");
-                    for (String itemId : items) s.addItemId(itemId);
-                }
-                return s;
-            }
-        );
+//        return fileManager.deleteFromFile(
+//            supplierCode, fileManager.getSupplierFilePath(),
+//            Supplier::getSupplierCode,
+//            line -> {
+//                String[] data = line.split(",");
+//                Supplier s = new Supplier(data[0], data[1]);
+//                if (!data[2].equals("NONE")) {
+//                    String[] items = data[2].split(";");
+//                    for (String itemId : items) s.addItemId(itemId);
+//                }
+//                return s;
+//            }
+//        );
+
+        return true;
     }
 
     // Placeholder for Sales Data and PR methods (expand as needed)

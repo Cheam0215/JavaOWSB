@@ -17,15 +17,17 @@ public class SalesData {
     private String date;
     private double totalAmount;
 
-    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, double retailPrice, String date) {
+    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, double retailPrice, String date, double totalAmount) {
         this.salesId = salesId;
         this.itemCode = itemCode;
         this.quantitySold = quantitySold;
         this.unitPrice = unitPrice;
         this.retailPrice = retailPrice;
         this.date = date;
-        this.totalAmount = quantitySold * retailPrice;
+        this.totalAmount = totalAmount;
     }
+
+    
 
     public String getSalesId() {
         return salesId;

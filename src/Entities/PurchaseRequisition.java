@@ -4,6 +4,8 @@
  */
 package Entities;
 
+import Utility.Status;
+
 /**
  *
  * @author Sheng Ting
@@ -16,17 +18,20 @@ public class PurchaseRequisition {
     private String requiredDate;  
     private String supplierCode; 
     private String requestedDate;
-    private String status;
+    private Status status;
 
-    public PurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate, String supplierCode, String requestedDate, String status) {
+    public PurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String supplierCode, String requestedDate, Status status) {
         this.prId = prId;
         this.itemCode = itemCode;
+        this.requestedBy = requestedBy;
         this.quantity = quantity;
         this.requiredDate = requiredDate;
         this.supplierCode = supplierCode;
         this.requestedDate = requestedDate;
         this.status = status;
     }
+
+   
 
 
     public String getPrId() {
@@ -86,11 +91,11 @@ public class PurchaseRequisition {
         this.requestedDate = requestedDate;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
     
