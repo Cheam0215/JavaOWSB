@@ -39,7 +39,7 @@ public class FinanceManager extends User {
 
         for (PurchaseOrder po : poList) {
             if (po.getPoId().equals(poId)) {
-                if (po.getStatus().equals("PENDING")) {
+                if (po.getStatus().equals(Status.PENDING)) {
                     if (newSupplierCode != null && !newSupplierCode.equals(po.getSupplierCode())) {
                         List<Supplier> suppliers = fileManager.readFile(
                             fileManager.getSupplierFilePath(),
@@ -106,7 +106,7 @@ public class FinanceManager extends User {
         );
 
         for (PurchaseOrder po : poList) {
-            if (po.getPoId().equals(poId) && po.getStatus().equals("APPROVED")) {
+            if (po.getPoId().equals(poId) && po.getStatus().equals(Status.APPROVED)) {
                 List<Item> items = inventory.viewItems();
                 for (Item item : items) {
                     if (item.getItemCode().equals(po.getItemCode())) {
@@ -188,7 +188,7 @@ public class FinanceManager extends User {
 
         double totalExpenses = 0;
         for (PurchaseOrder po : poList) {
-            if (po.getStatus().equals("PAID")) {
+            if (po.getStatus().equals(Status.PAID)) {
                 totalExpenses += po.getPaymentAmount();
             }
         }

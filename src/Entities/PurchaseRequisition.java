@@ -31,9 +31,6 @@ public class PurchaseRequisition {
         this.status = status;
     }
 
-   
-
-
     public String getPrId() {
         return prId;
     }
