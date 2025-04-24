@@ -164,4 +164,8 @@ public class InventoryManager extends User{
         return inventory.generateStockReport();
     }
     
+    public void displayMenu() {
+        
+    };
+    
 }

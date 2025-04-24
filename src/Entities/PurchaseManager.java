@@ -121,7 +121,9 @@ public class PurchaseManager extends User{
         return true;
     }
     
-    
+    public void displayMenu() {
+        
+    };
     
     
 }

@@ -115,4 +115,8 @@ public class SalesManager extends User {
         System.out.println("Viewing all POs...");
         return List.of(); 
     }
+    
+    public void displayMenu() {
+        
+    };
 }

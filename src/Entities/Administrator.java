@@ -27,4 +27,8 @@ public class Administrator extends User{
     public void deleteUser(){
         
     }
+    
+    public void displayMenu() {
+        
+    };
 }

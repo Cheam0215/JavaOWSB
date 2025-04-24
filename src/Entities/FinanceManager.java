@@ -270,5 +270,9 @@ public class FinanceManager extends User {
         }
         return view.toString();
     }
+    
+    public void displayMenu() {
+        
+    };
 }
 
