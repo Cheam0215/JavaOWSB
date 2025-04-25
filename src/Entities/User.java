@@ -6,6 +6,10 @@ package Entities;
 
 import Utility.UserRoles;
 import Utility.Session;
+import Utility.FileManager;
+import java.util.List;
+
+
 
 /**
  *
@@ -58,28 +62,49 @@ public abstract class User {
 
     
     
-    public boolean login(String userID) {
+    public static boolean login(String userID, String password) {
+        FileManager fileManager = new FileManager();
         
-        if (userID == null || userID.trim().isEmpty()) {
+        if (userID == null || userID.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return false;
         }
-    
-        Session loginSession = new Session(userID);
+        List<User> userList = fileManager.readFile(
+            fileManager.getUserFilePath(),
+            User::parse
+        );
+        System.out.println(userList.stream());
+        return userList.stream()
+            .anyMatch(user -> user.getUserID().equals(userID) && user.getPassword().equals(password));
+        }
 
-        if (loginSession.getUserID() != null && !loginSession.getUserID().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
-    }   
-    
-    public boolean logout () {
-        Session logout = new Session();
-        logout.setUserID("");
-        return true;
+       public boolean logout () {
+           Session logout = new Session();
+           logout.setUserID("");
+           return true;
     }
     
     public abstract void displayMenu();
+    
+     public static User parse(String line) {
+        String[] data = line.split(",");
+        if (data.length < 4) {
+            return null;
+        }
+        try {
+            UserRoles role = UserRoles.valueOf(data[3]);
+            return switch (role) {
+                case ADMINISTRATOR -> new Administrator(data[0], data[1], data[2]);
+                case SALES_MANAGER -> new SalesManager(data[0], data[1], data[2]);
+                case PURCHASE_MANAGER -> new PurchaseManager(data[0], data[1], data[2]);
+                case INVENTORY_MANAGER -> new InventoryManager(data[0], data[1], data[2]);
+                case FINANCE_MANAGER -> new FinanceManager(data[0], data[1], data[2]);
+                default -> null;
+            };
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid role in user data: " + line);
+            return null;
+        }
+    }
     
     // For FileManager compatibility
     @Override

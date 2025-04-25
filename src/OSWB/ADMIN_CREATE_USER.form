@@ -154,7 +154,7 @@
                       <Component id="jPasswordField1" max="32767" attributes="0"/>
                       <Component id="jComboBox1" pref="303" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="758" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

@@ -124,7 +124,7 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
                     .addComponent(jTextField1)
                     .addComponent(jPasswordField1)
                     .addComponent(jComboBox1, 0, 303, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(758, Short.MAX_VALUE))
         );
         panel3Layout.setVerticalGroup(
             panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
