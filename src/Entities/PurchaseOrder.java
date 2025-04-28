@@ -132,8 +132,6 @@ public class PurchaseOrder {
     public String toString() {
         return "PurchaseOrder{" + "poId=" + poId + ", prId=" + prId + ", raisedBy=" + raisedBy + ", itemCode=" + itemCode + ", quantity=" + quantity + ", supplierCode=" + supplierCode + ", requiredDate=" + requiredDate + ", requestedDate=" + requestedDate + ", status=" + status + ", paymentAmount=" + paymentAmount + ", remark=" + remark + '}';
     }
-    
-   
 
    
 }
