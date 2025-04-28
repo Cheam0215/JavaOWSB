@@ -13,8 +13,8 @@ public class Item {
     private String itemName;    // Name of the item
     private String supplierCode;  // ID of the supplier providing this item
     private int stockLevel;     // Current stock quantity
-    private double unitPrice;
-    private double retailPrice;
+    private double unitPrice;   //Buy-in price
+    private double retailPrice; // Selling price
 
     // Constructor
     public Item(String itemCode, String itemName, String supplierId, int stockLevel, double unitPrice, double retailPrice) {
@@ -26,55 +26,58 @@ public class Item {
         this.retailPrice = retailPrice;
     }
 
-    // Getters
     public String getItemCode() {
         return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
     }
 
     public String getItemName() {
         return itemName;
     }
 
-    public String getSupplierCode() {
-        return supplierCode;
-    }
-
-    public int getStockLevel() {
-        return stockLevel;
-    }
-
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public double getRetailPrice() {
-        return retailPrice;
-    }
-
-    // Setters
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public String getSupplierCode() {
+        return supplierCode;
     }
 
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
     }
 
+    public int getStockLevel() {
+        return stockLevel;
+    }
+
     public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
+    public double getRetailPrice() {
+        return retailPrice;
+    }
+
     public void setRetailPrice(double retailPrice) {
         this.retailPrice = retailPrice;
     }
 
-    // For FileManager compatibility (toStringConverter)
     @Override
     public String toString() {
-        return itemCode + "," + itemName + "," + supplierCode + "," + stockLevel + "," + unitPrice + "," + retailPrice;
+        return "Item{" + "itemCode=" + itemCode + ", itemName=" + itemName + ", supplierCode=" + supplierCode + ", stockLevel=" + stockLevel + ", unitPrice=" + unitPrice + ", retailPrice=" + retailPrice + '}';
     }
+
+   
 }

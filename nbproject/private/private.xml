@@ -4,12 +4,32 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/Item.java</file>
-            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/InventoryManager.java</file>
-            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Utility/FileManager.java</file>
             <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_Update_Stock.java</file>
             <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/Inventory_Manager_Main.java</file>
             <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_VIEW_ITEM_LIST.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/InventoryManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Utility/FileManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_MAIN.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_Update_Stock_Level.java</file>
             <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Database/purchaseOrderFile.txt</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/PurchaseManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/Inventory.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/Administrator.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/InventoryManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_VIEW_ITEM_LIST.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Utility/Session.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/PurchaseRequisition.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/FinanceManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/SalesData.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_Update_Stock_Level.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/SalesManager.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/Item.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/User.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Database/itemFile.txt</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Database/purchaseOrderFile.txt</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/OSWB/IM_MAIN.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/PurchaseOrder.java</file>
+            <file>file:/C:/Users/chieu/Documents/NetBeansProjects/JavaOWSB/src/Entities/Supplier.java</file>
         </group>
     </open-files>
 </project-private>

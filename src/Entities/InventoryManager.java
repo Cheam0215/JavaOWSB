@@ -6,6 +6,10 @@ package Entities;
 
 import java.util.List;
 import Utility.FileManager;
+import Utility.Remark;
+import Utility.Status;
+import Utility.UserRoles;
+
 /**
  *
  * @author Sheng Ting
@@ -16,7 +20,7 @@ public class InventoryManager extends User{
     private final FileManager fileManager;
 
     public InventoryManager(String userId, String username, String password) {
-        super(userId, username, password, "INVENTORY_MANAGER");
+        super(userId, username, password, UserRoles.INVENTORY_MANAGER);
         this.inventory = new Inventory();
         this.fileManager = new FileManager();
     }
@@ -63,7 +67,7 @@ public class InventoryManager extends User{
         
          try {
              // Update PO status
-            matchedPO.setStatus("RECEIVED");
+            matchedPO.setStatus(Status.RECEIVED);
             
             // Update PO file
             boolean poUpdated = fileManager.updateToFile(
@@ -220,5 +224,9 @@ public class InventoryManager extends User{
     public String generateStockReport() {
         return inventory.generateStockReport();
     }
+    
+    public void displayMenu() {
+        
+    };
     
 }

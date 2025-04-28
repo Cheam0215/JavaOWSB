@@ -1,6 +1,9 @@
 package Entities;
 
 import Utility.FileManager;
+import Utility.UserRoles;
+import Utility.Remark;
+import Utility.Status;
 import java.util.List;
 
 /*
@@ -16,7 +19,7 @@ public class PurchaseManager extends User{
     private final FileManager fileManager;
     
     public PurchaseManager(String userId, String username, String password) {
-        super(userId, username, password, "PURCHASE_MANAGER");
+        super(userId, username, password, UserRoles.PURCHASE_MANAGER);
         this.fileManager = new FileManager();
     }
     
@@ -25,8 +28,7 @@ public class PurchaseManager extends User{
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]));
+                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
             }
         );
 
@@ -36,7 +38,7 @@ public class PurchaseManager extends User{
 
         for (Item item : itemsList) {
             view.append(String.format("%s | %s | %s | %d \n",
-                item.getItemCode(), item.getItemName(), item.getSupplierId(), 
+                item.getItemCode(), item.getItemName(), item.getSupplierCode(), 
                 item.getStockLevel()));
         }
         return view.toString();
@@ -47,7 +49,7 @@ public class PurchaseManager extends User{
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Supplier(data[0], data[1]);
+                return new Supplier(data[0], data[1], Integer.parseInt(data[2]), data[3], data[4]);
             }//2 is list may got problem
         );
 
@@ -67,8 +69,7 @@ public class PurchaseManager extends User{
             fileManager.getPrFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseRequisition(data[0], data[1], 
-                    Integer.parseInt(data[2]), data[3], data[4]);
+                return new PurchaseRequisition(data[0], data[1], data[2], Integer.parseInt(data[3]), data[4], data[5],data[6], Status.valueOf(data[7]));
             }
         );
 
@@ -89,8 +90,10 @@ public class PurchaseManager extends User{
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]));
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
+
             }
         );
          
@@ -118,7 +121,9 @@ public class PurchaseManager extends User{
         return true;
     }
     
-    
+    public void displayMenu() {
+        
+    };
     
     
 }
