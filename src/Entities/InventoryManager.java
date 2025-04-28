@@ -35,7 +35,7 @@ public class InventoryManager extends User{
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]));
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
             }
         );
         
@@ -78,12 +78,15 @@ public class InventoryManager extends User{
                     String.valueOf(po.getQuantity()),
                     po.getSupplierCode(),
                     po.getStatus(),
-                    String.valueOf(po.getPaymentAmount())
+                    String.valueOf(po.getPaymentAmount()),
+                    po.getRemark(),
+                    po.getRequestedDate(),
+                    po.getRequiredDate()
                 ),
                 line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]));
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
                 }
             );
             
@@ -96,7 +99,7 @@ public class InventoryManager extends User{
                 fileManager.getItemFilePath(),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
                 }
             );
             
@@ -125,12 +128,13 @@ public class InventoryManager extends User{
                 item -> String.join(",", 
                     item.getItemCode(),
                     item.getItemName(),
-                    item.getSupplierId(),
-                    String.valueOf(item.getStockLevel())
+                    String.valueOf(item.getStockLevel()),
+                    String.valueOf(item.getRetailPrice()),
+                    String.valueOf(item.getUnitPrice())
                 ),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
                 }
             );
             
@@ -141,6 +145,68 @@ public class InventoryManager extends User{
         } catch (Exception e) {
             throw new RuntimeException("Failed to update stock: " + e.getMessage(), e);
         }
+    }
+    
+    public void rejectPurchaseOrder(String poId, String rejectionReason) {
+        List<PurchaseOrder> poList = fileManager.readFile(
+            fileManager.getPoFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                return new PurchaseOrder(data[0], data[1], data[2], 
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
+            }
+        );
+
+        boolean poFound = false;
+        PurchaseOrder matchedPO = null;
+
+        for (PurchaseOrder po : poList) {
+            if (po.getPoId().equals(poId) && po.getStatus().equals("APPROVED")) {
+                poFound = true;
+                matchedPO = po;
+                break;
+            }
+        }
+
+        if (!poFound) {
+            throw new IllegalArgumentException("No valid APPROVED PO found for PO ID: " + poId);
+        }
+
+        try {
+            matchedPO.setStatus("REJECTED");
+            matchedPO.setRemark(rejectionReason);
+
+            boolean poUpdated = fileManager.updateToFile(
+                matchedPO,
+                fileManager.getPoFilePath(),
+                PurchaseOrder::getPoId,
+                po -> String.join(",",
+                    po.getPoId(),
+                    po.getPrId(),
+                    po.getRaisedBy(),
+                    po.getItemCode(),
+                    String.valueOf(po.getQuantity()),
+                    po.getSupplierCode(),
+                    po.getStatus(),
+                    String.valueOf(po.getPaymentAmount()),
+                    po.getRemark(),
+                    po.getRequestedDate(),
+                    po.getRequiredDate()
+                ),
+                line -> {
+                    String[] data = line.split(",");
+                    return new PurchaseOrder(data[0], data[1], data[2], 
+                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
+                }
+            );
+
+            if (!poUpdated) {
+                throw new RuntimeException("Failed to update PO file with rejection");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to reject PO: " + e.getMessage(), e);
+        }
+    
     }
     
     public void trackLowStock() {
