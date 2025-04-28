@@ -10,7 +10,9 @@ package Utility;
  */
 public enum Remark {
     STOCK_INVALID,
+    INVALID_AMOUNT,
     REJECTED_BY_FINANCE_MANAGER,
+    NULL
 }
 
 
