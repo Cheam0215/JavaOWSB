@@ -12,5 +12,6 @@ public enum Status {
     PENDING,
     APPROVED,
     RECEIVED,
-    PAID
+    PAID,
+    REJECTED
 }
