@@ -59,8 +59,8 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
                 item.getItemName(),
                 item.getSupplierCode(),
                 item.getStockLevel(),
-                item.getRetailPrice(),
-                item.getUnitPrice()
+                item.getUnitPrice(),
+                item.getRetailPrice()
             });
         }
     }
@@ -217,11 +217,11 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
                 item.getItemCode().equalsIgnoreCase(searchText)) {
                 model.addRow(new Object[] {
                     item.getItemCode(),
-                    item.getItemName(),
-                    item.getSupplierCode(),
-                    item.getStockLevel(),
-                    item.getRetailPrice(),
-                    item.getUnitPrice()
+                item.getItemName(),
+                item.getSupplierCode(),
+                item.getStockLevel(),
+                item.getUnitPrice(),
+                item.getRetailPrice()
                 });
                 found = true;
                 break;
