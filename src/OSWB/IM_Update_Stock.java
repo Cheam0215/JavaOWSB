@@ -156,19 +156,19 @@ public class IM_Update_Stock extends javax.swing.JFrame {
                         .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1085, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1236, Short.MAX_VALUE))
                 .addGap(15, 15, 15))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(400, 400, 400)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(452, 452, 452))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addContainerGap(60, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addGap(59, 59, 59)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -232,7 +232,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             try {
                 Remark rejectionReason = (Remark) reasonComboBox.getSelectedItem();
-                inventoryManager.rejectPurchaseOrder(poId, rejectionReason); // Added missing call
+                inventoryManager.rejectPurchaseOrder(poId, rejectionReason); 
                 JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.",
                     "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadApprovedPOs();
