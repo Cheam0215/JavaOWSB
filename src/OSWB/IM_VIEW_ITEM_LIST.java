@@ -240,7 +240,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        IM_MAIN mainPage = new IM_MAIN();
+        Inventory_Manager_Main mainPage = new Inventory_Manager_Main();
         mainPage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed

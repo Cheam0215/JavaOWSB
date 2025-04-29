@@ -7,6 +7,8 @@ package OSWB;
 import Entities.InventoryManager;
 import Entities.PurchaseOrder;
 import Utility.FileManager;
+import Utility.Remark;
+import Utility.Status;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.function.Function;
@@ -33,7 +35,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
      */
     
     private final String[] columnNames = {
-        "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Status", "Payment Amount, Remarks, Requested Date, Required Date"
+        "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Required Date", "Requested Date", "Status", "Payment Amount", "Remarks"
     };
 
     /**
@@ -68,27 +70,28 @@ public class IM_Update_Stock extends javax.swing.JFrame {
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    data[3], Integer.parseInt(data[4]), data[5], data[6], Double.parseDouble(data[7]), data[8], data[9], data[10]);
+                 return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]), Remark.valueOf(data[10]));
 
             }
         );
 
         // Add only APPROVED POs to the table
         for (PurchaseOrder po : poList) {
-            if (po.getStatus().equals("APPROVED")) {
+            if (po.getStatus().equals(Status.APPROVED)) {
                 model.addRow(new Object[] {
                     po.getPoId(),
                     po.getPrId(),
                     po.getRaisedBy(),
                     po.getItemCode(),
-                    po.getQuantity(),
+                    String.valueOf(po.getQuantity()),
                     po.getSupplierCode(),
-                    po.getStatus(),
-                    po.getPaymentAmount(),
-                    po.getRemark(),
+                    po.getRequiredDate(),
                     po.getRequestedDate(),
-                    po.getRequiredDate()
+                    po.getStatus().toString(),
+                    String.valueOf(po.getPaymentAmount()),
+                    po.getRemark().toString()
                 });
             }
         }
@@ -153,19 +156,19 @@ public class IM_Update_Stock extends javax.swing.JFrame {
                         .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1085, Short.MAX_VALUE))
                 .addGap(15, 15, 15))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(345, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(400, 400, 400)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(275, 275, 275))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+                .addGap(57, 57, 57)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -187,7 +190,14 @@ public class IM_Update_Stock extends javax.swing.JFrame {
 
         // Get itemCode and quantity from selected row
         String itemCode = (String) model.getValueAt(selectedRow, 3); // Item Code (column 3)
-        int quantity = ((Number) model.getValueAt(selectedRow, 4)).intValue(); // Quantity (column 4
+        String quantityStr = String.valueOf(model.getValueAt(selectedRow, 4)); // Quantity (column 4) 
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityStr);
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Invalid quantity format: " + quantityStr, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         try {
             // Update stock using InventoryManager
@@ -209,25 +219,25 @@ public class IM_Update_Stock extends javax.swing.JFrame {
         
         String poId = (String) model.getValueAt(selectedRow, 0);
 
-        // Create combo box for rejection reasons
-        String[] reasons = {"Invalid Amount", "Others"};
-        JComboBox<String> reasonComboBox = new JComboBox<>(reasons);
+          // Limit combo box to STOCK_INVALID and INVALID_AMOUNT
+        Remark[] allowedReasons = {Remark.STOCK_INVALID, Remark.INVALID_AMOUNT};
+        JComboBox<Remark> reasonComboBox = new JComboBox<>(allowedReasons);
         JPanel panel = new JPanel();
         panel.add(new JLabel("Select rejection reason:"));
         panel.add(reasonComboBox);
 
-        int result = JOptionPane.showConfirmDialog(this, panel, "Reject Purchase Order", 
+       int result = JOptionPane.showConfirmDialog(this, panel, "Reject Purchase Order",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            String rejectionReason = (String) reasonComboBox.getSelectedItem();
             try {
-                inventoryManager.rejectPurchaseOrder(poId, rejectionReason);
-                JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.", 
+                Remark rejectionReason = (Remark) reasonComboBox.getSelectedItem();
+                inventoryManager.rejectPurchaseOrder(poId, rejectionReason); // Added missing call
+                JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.",
                     "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadApprovedPOs();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Failed to reject PO: " + e.getMessage(), 
+                JOptionPane.showMessageDialog(this, "Failed to reject PO: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
