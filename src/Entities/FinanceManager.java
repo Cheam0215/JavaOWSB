@@ -150,7 +150,6 @@ public class FinanceManager extends User {
     }
 
     public String generateFinancialReport() {
-        // Read Purchase Orders
         List<PurchaseOrder> poList = fileManager.readFile(
             fileManager.getPoFilePath(),
             line -> {
@@ -220,18 +219,18 @@ public class FinanceManager extends User {
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseRequisition(data[0], data[1], 
-                    Integer.parseInt(data[2]), data[3], data[4], data[5]);
+                    Integer.parseInt(data[2]), data[3], data[4]);
             }
         );
 
         StringBuilder view = new StringBuilder("Purchase Requisitions:\n");
-        view.append("PR ID | Item Code | Quantity | Required Date | Supplier | Request Date\n");
+        view.append("PR ID | Item Code | Quantity | Required Date | Supplier\n");
         view.append("-------------------------------------------------\n");
 
         for (PurchaseRequisition pr : prList) {
-            view.append(String.format("%s | %s | %d | %s | %s | %s\n",
+            view.append(String.format("%s | %s | %d | %s | %s\n",
                 pr.getPrId(), pr.getItemCode(), pr.getQuantity(),
-                pr.getRequiredDate(), pr.getSupplierCode(), pr.getRequestDate()));
+                pr.getRequiredDate(), pr.getSupplierCode()));
         }
         return view.toString();
     }
