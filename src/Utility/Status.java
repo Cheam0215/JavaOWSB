@@ -13,5 +13,6 @@ public enum Status {
     APPROVED,
     RECEIVED,
     PAID,
-    REJECTED
+    REJECTED,
+    CANCELLED
 }
