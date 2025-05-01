@@ -64,10 +64,8 @@ public class SalesManager extends User {
                  BufferedWriter bw = new BufferedWriter(fw)) {
                 String itemData = String.format("%s,%s,%s,%d,%.1f,%.1f",
                         item.getItemCode(),
-                        item.getItemName(),
-                        item.getSupplierCode(),
+                        item.getItemName(),                        
                         item.getStockLevel(),
-                        item.getUnitPrice(),
                         item.getRetailPrice());
                 bw.write(itemData);
                 bw.newLine(); // Use BufferedWriter's newLine() for platform-specific newline

@@ -14,7 +14,6 @@ import java.util.List;
 public class Supplier {
     private String supplierCode;
     private String supplierName;
-    private List<String> itemCode;
     private int contactNumber;
     private String address;
     private String bankAccount;
@@ -23,7 +22,6 @@ public class Supplier {
     public Supplier(String supplierCode, String supplierName, int contactNumber, String address, String bankAccount) {
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
-        this.itemCode = new ArrayList<>();
         this.contactNumber = contactNumber;
         this.address = address;
         this.bankAccount = bankAccount;
@@ -40,10 +38,6 @@ public class Supplier {
 
     public String getSupplierName() {
         return supplierName;
-    }
-
-    public List<String> getItemIds() {
-        return new ArrayList<>(itemCode); // Return a copy to protect encapsulation
     }
 
     public int getContactNumber() {
@@ -66,32 +60,11 @@ public class Supplier {
         this.address = address;
     }
 
-    // Methods to manage itemIds
-    public void addItemId(String itemId) {
-        if (!itemCode.contains(itemId)) {
-            itemCode.add(itemId);
-        }
-    }
-
-    public void removeItemId(String itemId) {
-        itemCode.remove(itemId);
-    }
-
-    // For FileManager compatibility (toStringConverter)
     @Override
     public String toString() {
-        String items = String.join(";", itemCode); // Use semicolon to separate item IDs
-        return supplierCode + "," + supplierName + "," + (items.isEmpty() ? "NONE" : items + "," + contactNumber + "," + address);
-        
+        return "Supplier{" + "supplierCode=" + supplierCode + ", supplierName=" + supplierName + ", contactNumber=" + contactNumber + ", address=" + address + ", bankAccount=" + bankAccount + '}';
     }
     
-    public List<String> getItemCodes() {
-        return itemCode;
-    }
-
-    public void setItemCodes(List<String> itemCodes) {
-        this.itemCode = itemCodes;
-    }
 
     public String getBankAccount() {
         return bankAccount;

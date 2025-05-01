@@ -543,6 +543,7 @@ public class SM_Item extends javax.swing.JFrame {
                 jTextField3.setText("");
                 jTextField4.setText("");
                 jTextField2.setText("");
+                loadItems();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to add item. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Failed to add item. Item details: " + newItem.toString());
