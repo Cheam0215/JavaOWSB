@@ -31,3 +31,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+nbproject/private/private.xml
+nbproject/private/private.xml
+nbproject/project.properties

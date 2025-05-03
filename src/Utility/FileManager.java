@@ -15,7 +15,7 @@ import java.util.function.Function;
  */
 public class FileManager {
     // File paths relative to the database package
-    private static final String userFilePath       = "/Database/userFile.txt";
+    private static final String userFilePath = "/database/userFile.txt";
     private final String itemFilePath       = "database/itemFile.txt";
     private final String supplierFilePath   = "database/supplierFile.txt";
     private final String prFilePath         = "database/purchaseRequisitionFile.txt";
@@ -26,22 +26,27 @@ public class FileManager {
     
    
     // Login function
-     public static UserRoles login(String username, String password) {
-        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            return null;
-        }
+    public static UserRoles login(String username, String password) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(FileManager.class.getResourceAsStream(userFilePath)))) {
+            if (reader == null) {
+                System.err.println("Resource not found: " + userFilePath);
+                return null;
+            }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(userFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length >= 4) {
+                    String fileUserID   = String.valueOf(data[0]);
                     String fileUsername = data[1].trim();
                     String filePassword = data[2].trim();
                     String fileRole = data[3].trim();
 
                     if (fileUsername.equals(username) && filePassword.equals(password)) {
                         try {
+                            Session loginSession = new Session();
+                            loginSession.setUserID(fileUserID);
                             return UserRoles.valueOf(fileRole);
                         } catch (IllegalArgumentException e) {
                             System.err.println("Invalid role in user file: " + fileRole);
@@ -50,6 +55,7 @@ public class FileManager {
                     }
                 }
             }
+            
         } catch (IOException e) {
             System.err.println("Error reading user file: " + e.getMessage());
             return null;
