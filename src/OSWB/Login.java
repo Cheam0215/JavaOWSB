@@ -4,9 +4,17 @@
  */
 package OSWB;
 
+import Entities.Administrator;
+import Entities.FinanceManager;
+import Entities.InventoryManager;
+import Entities.PurchaseManager;
+import Entities.SalesManager;
 import Entities.User;
 import Utility.FileManager;
+import Utility.Session;
+import Utility.UserRoles;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -205,7 +213,46 @@ public class Login extends javax.swing.JFrame {
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         String username = usernameField.getText();
         String password = String.valueOf(passwordField.getPassword());
-        FileManager.login(username,password);
+        UserRoles role = FileManager.login(username,password);
+        
+        
+        if(role == null){
+            JOptionPane.showMessageDialog(this, "Invalid Credentials. Please try again");
+            usernameField.setText("");
+            passwordField.setText("");
+        }else {
+            Session loginSession = new Session();
+            String userID = loginSession.getUserID();
+            JOptionPane.showMessageDialog(this, "Login successfully!");
+            
+            switch (role) {
+                case UserRoles.ADMINISTRATOR -> { 
+                    Administrator loggedInAdmin = new Administrator(userID, username, password);
+                    loggedInAdmin.displayMenu();
+                }
+                case UserRoles.FINANCE_MANAGER -> { 
+                    FinanceManager loggedInFM = new FinanceManager(userID, username, password);
+                    loggedInFM.displayMenu();
+                }
+                case UserRoles.INVENTORY_MANAGER -> { 
+                    InventoryManager loggedInIM = new InventoryManager(userID, username, password);
+                    loggedInIM.displayMenu();
+                }
+                case UserRoles.PURCHASE_MANAGER -> { 
+                    PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
+                    loggedInPM.displayMenu();
+                }
+                case UserRoles.SALES_MANAGER -> { 
+                    SalesManager loggedInSM = new SalesManager(userID, username, password);
+                    loggedInSM.displayMenu();
+                }
+                
+            }
+;
+        }
+        
+        
+        
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
