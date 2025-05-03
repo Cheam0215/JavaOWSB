@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  *
  * @author Sheng Ting
@@ -103,9 +102,7 @@ public class SalesManager extends User {
                     String updatedLine = String.format("%s,%s,%s,%d,%.1f,%.1f",
                             updatedItem.getItemCode(),
                             updatedItem.getItemName(),
-                            updatedItem.getSupplierCode(),
                             updatedItem.getStockLevel(),
-                            updatedItem.getUnitPrice(),
                             updatedItem.getRetailPrice());
                     updatedLines.add(updatedLine);
                 } else {
@@ -156,7 +153,7 @@ public class SalesManager extends User {
                 String[] parts = line.split(",");
                 if (parts.length > 0 && parts[0].equals(itemCode)) {
                     found = true;
-                    continue; // Skip the line to delete it
+                    continue; 
                 }
                 updatedLines.add(line);
             }
@@ -231,9 +228,71 @@ public class SalesManager extends User {
         // Add logic to save sales data and update stock
     }
 
-    public void createPurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate) {
-        System.out.println("Creating PR: " + prId + ", " + itemCode + ", " + quantity + ", " + requiredDate);
-        // Add logic to save PR to file
+    public void addPurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status) {
+        try {
+            String filePath = fileManager.getPrFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Append the new purchase requisition
+            try (FileWriter fw = new FileWriter(absolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String prData = String.format("%s,%s,%s,%d,%s,%s,%s",
+                    prId,
+                    itemCode,
+                    requestedBy,
+                    quantity,
+                    requiredDate,
+                    requestedDate,
+                    status.toString());
+                bw.write(prData);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error adding purchase requisition: " + e.getMessage());
+        }
+    }
+    
+    public boolean deletePurchaseRequisition(String prId) {
+        try {
+            String filePath = fileManager.getPrFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            List<String> updatedLines = new ArrayList<>();
+
+            // Filter out the purchase requisition with the matching prId
+            boolean found = false;
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(prId)) {
+                    found = true;
+                    continue; 
+                }
+                updatedLines.add(line);
+            }
+
+            if (!found) {
+                System.out.println("Purchase Requisition with ID " + prId + " not found.");
+                return false;
+            }
+
+            // Rewrite the file with the updated lines
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(absolutePath))) {
+                for (String line : updatedLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting purchase requisition: " + e.getMessage());
+            return false;
+        }
     }
     
     public List<String[]> viewItems() {
@@ -241,22 +300,33 @@ public class SalesManager extends User {
             fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), 
-                    Double.parseDouble(data[4]), 
-                    Double.parseDouble(data[5]));
+                // Ensure the line has the expected number of fields
+                if (data.length < 4) {
+                    System.out.println("Invalid item data: " + line);
+                    return null; // Skip invalid lines
+                }
+                try {
+                    return new Item(
+                        data[0], // itemCode
+                        data[1], // itemName
+                        Integer.parseInt(data[2]), // stockLevel
+                        Double.parseDouble(data[3]) // retailPrice
+                    );
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing item data: " + line + " | " + e.getMessage());
+                    return null; // Skip lines with parsing errors
+                }
             }
         );
 
-        // Convert the list of Item objects to List<String[]> for the table
+        // Filter out null entries (invalid lines)
         List<String[]> result = new ArrayList<>();
         for (Item item : itemList) {
+            if (item == null) continue; // Skip invalid items
             String[] row = new String[]{
                 item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierCode(),
                 String.valueOf(item.getStockLevel()),
-                String.valueOf(item.getUnitPrice()),
                 String.valueOf(item.getRetailPrice())
             };
             result.add(row);
@@ -272,12 +342,11 @@ public class SalesManager extends User {
                 // Create a supplier with the correct parameter order
                 // The format seems to be: supplierCode, supplierName, itemCode, contactNumber, address, bankAccount
                 Supplier supplier = new Supplier(data[0], data[1], 
-                    Integer.parseInt(data[3]), // contactNumber is in position 3
-                    data[4], // address is in position 4
-                    data[5]); // bankAccount is in position 5
+                    Integer.parseInt(data[2]), // contactNumber is in position 3
+                    data[3], // address is in position 4
+                    data[4]); // bankAccount is in position 5
 
                 // Add the itemCode to the supplier's list of item codes
-                supplier.getItemCodes().add(data[2]);
 
                 return supplier;
             }
@@ -289,7 +358,6 @@ public class SalesManager extends User {
             String[] row = new String[]{
                 supplier.getSupplierCode(),
                 supplier.getSupplierName(),
-                String.join(", ", supplier.getItemCodes()), // Format the list of item codes
                 String.valueOf(supplier.getContactNumber()),
                 supplier.getAddress(),
                 supplier.getBankAccount()
@@ -345,9 +413,8 @@ public class SalesManager extends User {
                     data[2],                   // requestedBy
                     Integer.parseInt(data[3]), // quantity
                     data[4],                   // requiredDate
-                    data[5],                   // supplierCode
-                    data[6],                   // requestedDate
-                    Status.valueOf(data[7])    // status - assuming Status is an enum
+                    data[5],                   // requestedDate
+                    Status.valueOf(data[6])    // status - assuming Status is an enum
                 );
             }
         );
@@ -361,7 +428,6 @@ public class SalesManager extends User {
                 pr.getRequestedBy(),
                 String.valueOf(pr.getQuantity()),
                 pr.getRequiredDate(),
-                pr.getSupplierCode(),
                 pr.getRequestedDate(),
                 pr.getStatus().toString()
             };

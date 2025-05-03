@@ -15,7 +15,7 @@ public class Item {
     private double retailPrice; // Selling price
 
     // Constructor
-    public Item(String itemCode, String itemName, String supplierId, int stockLevel, double unitPrice, double retailPrice) {
+    public Item(String itemCode, String itemName, int stockLevel, double retailPrice) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.stockLevel = stockLevel;

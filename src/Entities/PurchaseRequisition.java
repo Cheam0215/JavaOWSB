@@ -13,20 +13,18 @@ import Utility.Status;
 public class PurchaseRequisition {
     private String prId;          
     private String itemCode;
-    private String requestedBy; // ID of Sale's Manager
+    private String requestedBy; 
     private int quantity;         
     private String requiredDate;  
-    private String supplierCode; 
     private String requestedDate;
     private Status status;
 
-    public PurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String supplierCode, String requestedDate, Status status) {
+    public PurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status) {
         this.prId = prId;
         this.itemCode = itemCode;
         this.requestedBy = requestedBy;
         this.quantity = quantity;
         this.requiredDate = requiredDate;
-        this.supplierCode = supplierCode;
         this.requestedDate = requestedDate;
         this.status = status;
     }
@@ -72,13 +70,6 @@ public class PurchaseRequisition {
         this.requiredDate = requiredDate;
     }
 
-    public String getSupplierCode() {
-        return supplierCode;
-    }
-
-    public void setSupplierCode(String supplierCode) {
-        this.supplierCode = supplierCode;
-    }
 
     public String getRequestedDate() {
         return requestedDate;
@@ -102,7 +93,7 @@ public class PurchaseRequisition {
     // For FileManager compatibility
     @Override
     public String toString() {
-        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + supplierCode + "," + requestedDate + "," + status;
+        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + requestedDate + "," + status;
     }
     
 }

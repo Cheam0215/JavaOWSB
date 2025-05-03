@@ -21,6 +21,7 @@ public class FileManager {
     private final String prFilePath         = "database/purchaseRequisitionFile.txt";
     private final String poFilePath         = "database/purchaseOrderFile.txt";
     private final String salesDataFilePath  = "database/salesDataFile.txt";
+    private final String itemSupplyFilePath = "database/itemSupply.txt";
     
     
    
@@ -209,4 +210,5 @@ public class FileManager {
     public String getPrFilePath() { return prFilePath; }
     public String getPoFilePath() { return poFilePath; }
     public String getSalesDataFilePath() { return salesDataFilePath; }
+    public String getItemSupplyFilePath() {return itemSupplyFilePath;}  
 }

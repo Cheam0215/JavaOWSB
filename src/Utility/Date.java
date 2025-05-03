@@ -46,4 +46,17 @@ public class Date {
     public String toString() {
         return month + "/" + day + "/" + year;
     }
+    
+    public String toIsoString() {
+        return String.format("%04d-%02d-%02d", year, month, day);
+    }
+    
+    public static Date now() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        return new Date(
+            cal.get(java.util.Calendar.YEAR),
+            cal.get(java.util.Calendar.MONTH) + 1, 
+            cal.get(java.util.Calendar.DAY_OF_MONTH)
+        );
+    }
 }

@@ -20,14 +20,14 @@ import javax.swing.JOptionPane;
  */
 public class SM_Item extends javax.swing.JFrame {
     private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Item Code","Item Name","Supplier Code","Stock Level","Unit Price","Retail Price"};
+    private String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
     private SalesManager salesManager;
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingItemCode = null; // Track the item code being edited
     
     public SM_Item() {
-        salesManager = new SalesManager("SM001", "salesmanager", "password");
+        salesManager = new SalesManager("001", "salesmanager", "password");
         fileManager = new FileManager();
         initComponents();
         initializeFileManager();
@@ -91,21 +91,16 @@ public class SM_Item extends javax.swing.JFrame {
      
     private void searchItems() {
         String searchTerm = jTextField1.getText().trim();
-        
-        // If search field is empty, reload all data
+
         if (searchTerm.isEmpty()) {
             loadItems();
             return;
         }
         
         try {
-            // Clear current table data
             model.setRowCount(0);
-            
-            // Get all POs
             List<String[]> allItems = salesManager.viewItems();
             boolean foundMatch = false;
-            
             for (String[] item : allItems) {
                 if ((item[0] != null && item[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
                     (item[1] != null && item[1].toLowerCase().contains(searchTerm.toLowerCase()))) {
@@ -113,8 +108,7 @@ public class SM_Item extends javax.swing.JFrame {
                     foundMatch = true;
                 }
             }
-            
-            // Show message if no results found
+
             if (!foundMatch) {
                 JOptionPane.showMessageDialog(this, 
                     "No items found matching '" + searchTerm + "'", 
@@ -133,20 +127,10 @@ public class SM_Item extends javax.swing.JFrame {
     }
     
     private void resetTable() {
-        jTextField1.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField2.setText("");
-        jComboBox1.setSelectedIndex(-1);
-        jLabel10.setText(generateNextItemCode());
-        jLabel11.setText("0");
-        isEditing = false;
-        editingItemCode = null;
-        loadItems();
+
     }
     
     public boolean addItem(Item item) {
-        // We should directly use the salesManager's addItem method which already has file handling implemented
         return salesManager.addItem(item);
     }
 
@@ -159,12 +143,7 @@ public class SM_Item extends javax.swing.JFrame {
 
         // Load the next item code and display it in jLabel10
         String nextItemCode = generateNextItemCode();
-        jLabel10.setText(nextItemCode);
-
-        // Set default stock level to 0
-        jLabel11.setText("0");
-
-        // Initialize and populate supplier combobox
+        jLabel2.setText(nextItemCode);
         loadSupplierCodes();
     }
     
@@ -256,7 +235,6 @@ public class SM_Item extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
@@ -275,17 +253,13 @@ public class SM_Item extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         ResetBtn = new javax.swing.JButton();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel7.setText("Unit Price : ");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -381,14 +355,13 @@ public class SM_Item extends javax.swing.JFrame {
         jLabel6.setText("Stock Level :");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel2.setText("RM");
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("RM");
-
-        jLabel10.setText("jLabel10");
-
-        jLabel11.setText("jLabel11");
 
         ResetBtn.setText("Reset");
         ResetBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -396,6 +369,10 @@ public class SM_Item extends javax.swing.JFrame {
                 ResetBtnActionPerformed(evt);
             }
         });
+
+        jTextField5.setText("jTextField5");
+
+        jLabel2.setText("jLabel2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -411,32 +388,25 @@ public class SM_Item extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel8)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel6))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(33, 33, 33)
-                                .addComponent(editBtn)))
+                        .addGap(33, 33, 33)
+                        .addComponent(editBtn)
                         .addGap(42, 42, 42)
                         .addComponent(saveBtn)
                         .addGap(39, 39, 39)
                         .addComponent(deleteBtn))
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -479,7 +449,7 @@ public class SM_Item extends javax.swing.JFrame {
                         .addGap(45, 45, 45)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel10))
+                            .addComponent(jLabel2))
                         .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
@@ -488,16 +458,11 @@ public class SM_Item extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(45, 45, 45)
+                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel11))
-                        .addGap(45, 45, 45)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
@@ -515,45 +480,7 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        String itemName = jTextField3.getText().trim();
-        String supplierCode = jComboBox1.getSelectedItem().toString();
-        String unitPriceText = jTextField4.getText().trim();
-        String retailPriceText = jTextField2.getText().trim();
-
-        if (itemName.isEmpty() || unitPriceText.isEmpty() || retailPriceText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            double unitPrice = Double.parseDouble(unitPriceText);
-            double retailPrice = Double.parseDouble(retailPriceText);
-
-            Item newItem = new Item(generateNextItemCode(), itemName, supplierCode, 0, unitPrice, retailPrice);
-
-            // Debug: Log the file path
-            String filePath = fileManager.getItemFilePath();
-            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
-            System.out.println("Attempting to write to: " + absolutePath);
-
-            if (addItem(newItem)) {
-                JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                jLabel10.setText(generateNextItemCode());
-                jLabel11.setText("0");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField2.setText("");
-                loadItems();
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to add item. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
-                System.out.println("Failed to add item. Item details: " + newItem.toString());
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid prices.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+        
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
@@ -588,10 +515,7 @@ public class SM_Item extends javax.swing.JFrame {
         if (salesManager.deleteItem(itemCode)) {
             JOptionPane.showMessageDialog(this, "Item deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadItems(); // Reload the table
-            jLabel10.setText(generateNextItemCode()); // Update item code
-            jLabel11.setText("0");
             jTextField3.setText("");
-            jTextField4.setText("");
             jTextField2.setText("");
             
         } else {
@@ -600,84 +524,16 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select an item to edit.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        // Get item details from the selected row
-        editingItemCode = jTable1.getValueAt(selectedRow, 0).toString();
-        String itemName = jTable1.getValueAt(selectedRow, 1).toString();
-        String supplierCode = jTable1.getValueAt(selectedRow, 2).toString();
-        String stockLevel = jTable1.getValueAt(selectedRow, 3).toString();
-        String unitPrice = jTable1.getValueAt(selectedRow, 4).toString();
-        String retailPrice = jTable1.getValueAt(selectedRow, 5).toString();
-
-        // Populate the UI fields
-        jLabel10.setText(editingItemCode);
-        jLabel11.setText(stockLevel);
-        jTextField3.setText(itemName);
-        jComboBox1.setSelectedItem(supplierCode);
-        jTextField4.setText(unitPrice);
-        jTextField2.setText(retailPrice);
-
-        // Enter editing mode
-        isEditing = true;
-        editBtn.setEnabled(false);
-        saveBtn.setEnabled(true);
-        addButton.setEnabled(false);
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (!isEditing || editingItemCode == null) {
-            JOptionPane.showMessageDialog(this, "No item is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        // Get updated values from the UI
-        String itemName = jTextField3.getText().trim();
-        String supplierCode = jComboBox1.getSelectedItem().toString();
-        String unitPriceText = jTextField4.getText().trim();
-        String retailPriceText = jTextField2.getText().trim();
-
-        // Validate input
-        if (itemName.isEmpty() || unitPriceText.isEmpty() || retailPriceText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            double unitPrice = Double.parseDouble(unitPriceText);
-            double retailPrice = Double.parseDouble(retailPriceText);
-            int stockLevel = Integer.parseInt(jLabel11.getText());
-
-            // Create updated Item object
-            Item updatedItem = new Item(editingItemCode, itemName, supplierCode, stockLevel, unitPrice, retailPrice);
-
-            // Update the item using SalesManager
-            if (salesManager.updateItem(updatedItem)) {
-                JOptionPane.showMessageDialog(this, "Item updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                loadItems(); // Reload the table
-                // Reset fields
-                jLabel10.setText(generateNextItemCode());
-                jLabel11.setText("0");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField2.setText("");
-                jComboBox1.setSelectedIndex(-1); // Clear selection
-                isEditing = false;
-                editingItemCode = null;
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to update item. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid prices.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
     }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -709,14 +565,11 @@ public class SM_Item extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -725,7 +578,7 @@ public class SM_Item extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     private javax.swing.JButton saveBtn;
     // End of variables declaration//GEN-END:variables
 }
