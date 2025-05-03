@@ -28,8 +28,8 @@ public class SM_PR extends javax.swing.JFrame {
     /**
      * Creates new form SM_PR
      */
-    public SM_PR() {
-        salesManager = new SalesManager("002", "Edwin", "123456");
+    public SM_PR(SalesManager loggedInSM) {
+        this.salesManager = loggedInSM;
         fileManager = new FileManager();
         initComponents();
         setupTable();
@@ -494,7 +494,7 @@ public class SM_PR extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main();
+        SM_Main smMain = new SM_Main(salesManager);
         smMain.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -550,7 +550,8 @@ public class SM_PR extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SM_PR().setVisible(true);
+                SalesManager pr = new SalesManager("", "", "");
+                new SM_PR(pr).setVisible(true);
             }
         });
     }

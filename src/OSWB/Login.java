@@ -14,6 +14,7 @@ import Utility.FileManager;
 import Utility.Session;
 import Utility.UserRoles;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -213,45 +214,57 @@ public class Login extends javax.swing.JFrame {
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         String username = usernameField.getText();
         String password = String.valueOf(passwordField.getPassword());
-        UserRoles role = FileManager.login(username,password);
-        
-        
-        if(role == null){
+        UserRoles role = FileManager.login(username, password);
+
+        if (role == null) {
             JOptionPane.showMessageDialog(this, "Invalid Credentials. Please try again");
             usernameField.setText("");
             passwordField.setText("");
-        }else {
-            Session loginSession = new Session();
-            String userID = loginSession.getUserID();
-            JOptionPane.showMessageDialog(this, "Login successfully!");
-            
-            switch (role) {
-                case UserRoles.ADMINISTRATOR -> { 
-                    Administrator loggedInAdmin = new Administrator(userID, username, password);
-                    loggedInAdmin.displayMenu();
+        } else {
+            FileManager fileManager = new FileManager();
+            List<User> userList = fileManager.readFile(fileManager.getUserFilePath(), User::parse);
+            User loggedInUser = userList.stream()
+                .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
+
+            if (loggedInUser != null) {
+                Session loginSession = new Session();
+                String userID = loggedInUser.getUserID(); // Get the userID from the matched user
+                loginSession.setUserID(userID); // Set the userID in the session
+
+                JOptionPane.showMessageDialog(this, "Login successfully!");
+
+                switch (role) {
+                    case UserRoles.ADMINISTRATOR -> { 
+                        Administrator loggedInAdmin = new Administrator(userID, username, password);
+                        loggedInAdmin.displayMenu();
+                    }
+                    case UserRoles.FINANCE_MANAGER -> { 
+                        FinanceManager loggedInFM = new FinanceManager(userID, username, password);
+                        loggedInFM.displayMenu();
+                    }
+                    case UserRoles.INVENTORY_MANAGER -> { 
+                        InventoryManager loggedInIM = new InventoryManager(userID, username, password);
+                        loggedInIM.displayMenu();
+                    }
+                    case UserRoles.PURCHASE_MANAGER -> { 
+                        PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
+                        loggedInPM.displayMenu();
+                    }
+                    case UserRoles.SALES_MANAGER -> { 
+                        SalesManager loggedInSM = new SalesManager(userID, username, password);
+                        SM_Main smMain = new SM_Main(loggedInSM);
+                        smMain.setVisible(true);
+                        this.dispose();
+                    }
                 }
-                case UserRoles.FINANCE_MANAGER -> { 
-                    FinanceManager loggedInFM = new FinanceManager(userID, username, password);
-                    loggedInFM.displayMenu();
-                }
-                case UserRoles.INVENTORY_MANAGER -> { 
-                    InventoryManager loggedInIM = new InventoryManager(userID, username, password);
-                    loggedInIM.displayMenu();
-                }
-                case UserRoles.PURCHASE_MANAGER -> { 
-                    PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
-                    loggedInPM.displayMenu();
-                }
-                case UserRoles.SALES_MANAGER -> { 
-                    SalesManager loggedInSM = new SalesManager(userID, username, password);
-                    loggedInSM.displayMenu();
-                }
-                
+            } else {
+                JOptionPane.showMessageDialog(this, "User data not found. Please try again.");
+                usernameField.setText("");
+                passwordField.setText("");
             }
-;
-        }
-        
-        
+        }       
         
     }//GEN-LAST:event_OKButtonActionPerformed
 

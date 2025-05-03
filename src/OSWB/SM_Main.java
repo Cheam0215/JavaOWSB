@@ -4,17 +4,26 @@
  */
 package OSWB;
 
+import Entities.SalesManager;
+
 /**
  *
  * @author Edwin Chen
  */
 public class SM_Main extends javax.swing.JFrame {
-
+    private SalesManager loggedinSM;
+    
     /**
      * Creates new form SM_Main
      */
-    public SM_Main() {
+    public SM_Main(SalesManager loggedInSM) {
+        this.loggedinSM = loggedInSM;
         initComponents();
+        if (loggedInSM != null) {
+            jLabel1.setText(loggedInSM.getUsername() + " SM Home Page");
+        } else {
+            jLabel1.setText("Unknown User SM Home Page"); // Fallback if loggedInSM is null
+        }
     }
 
     /**
@@ -172,7 +181,7 @@ public class SM_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        SM_PR smPr = new SM_PR();
+        SM_PR smPr = new SM_PR(loggedinSM);
         smPr.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -213,7 +222,8 @@ public class SM_Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SM_Main().setVisible(true);
+                SalesManager sm = new SalesManager("", "", "");
+                new SM_Main(sm).setVisible(true);
             }
         });
     }
