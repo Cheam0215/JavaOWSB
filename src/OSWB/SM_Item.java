@@ -27,16 +27,17 @@ public class SM_Item extends javax.swing.JFrame {
     private String editingItemCode = null; // Track the item code being edited
     
     public SM_Item(SalesManager loggedInSM) {
-         this.salesManager = loggedInSM;       
+        this.salesManager = loggedInSM;       
         fileManager = new FileManager();
         initComponents();
         initializeFileManager();
         setupTable();
         loadItems();
         setupDeleteButtonListener();
-        setupTableSelectionListener(); // Add this to enable/disable Edit and Save buttons
-        editBtn.setEnabled(false); // Disable Edit button initially
-        saveBtn.setEnabled(false); // Disable Save button initially
+        setupTableSelectionListener(); 
+        addButton.setEnabled(true);
+        editBtn.setEnabled(false); 
+        saveBtn.setEnabled(false); 
     }
     
     private void setupTable() {
@@ -127,21 +128,25 @@ public class SM_Item extends javax.swing.JFrame {
     }
     
     private void resetTable() {
-
+        jTextField1.setText("");
+        jLabel2.setText(generateNextItemCode());
+        jTextField3.setText("");
+        jTextField5.setText("");
+        jTextField2.setText("");
+        jTextField4.setText("");
+        isEditing = false;
+        editingItemCode = null;
+        loadItems();
+        addButton.setEnabled(true);
+        editBtn.setEnabled(jTable1.getSelectedRow() != -1);
+        saveBtn.setEnabled(false);
+        deleteBtn.setEnabled(jTable1.getSelectedRow() != -1);
     }
     
-    public boolean addItem(Item item) {
-        return salesManager.addItem(item);
-    }
-
-    // This method should be called in the constructor or in a separate init method
     private void initializeFileManager() {
-        // Initialize fileManager
         if (fileManager == null) {
             fileManager = new FileManager();
         }
-
-        // Load the next item code and display it in jLabel10
         String nextItemCode = generateNextItemCode();
         jLabel2.setText(nextItemCode);
         loadSupplierCodes();
@@ -150,22 +155,21 @@ public class SM_Item extends javax.swing.JFrame {
     private void loadSupplierCodes() {
         try {
             jComboBox1.removeAllItems();
-
+            
             if (fileManager == null) {
                 fileManager = new FileManager();
             }
-
-            // Use the FileManager's readFile method instead of directly accessing the file
+            
             List<String> suppliers = fileManager.readFile(
                 fileManager.getSupplierFilePath(), 
-                line -> line  // Simple identity function to keep the lines as strings
+                line -> line
             );
-
+            
             if (suppliers.isEmpty()) {
                 jComboBox1.addItem("No suppliers found");
                 return;
             }
-
+            
             for (String line : suppliers) {
                 String[] parts = line.split(",");
                 if (parts.length >= 1) {
@@ -177,31 +181,24 @@ public class SM_Item extends javax.swing.JFrame {
                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
 
     private String generateNextItemCode() {
-        String nextItemCode = "ITEM001"; // Default if no items exist
-
+        String nextItemCode = "ITEM001";
         try {
             if (fileManager == null) {
                 fileManager = new FileManager();
             }
-
-            // Use the same path resolution as FileManager's writeToFile
             String filePath = fileManager.getItemFilePath();
             String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
             File file = new File(absolutePath);
-
             if (!file.exists()) {
                 return nextItemCode;
             }
-
             List<String> lines = Files.readAllLines(Paths.get(absolutePath));
             int highestNumber = 0;
-
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
-
                 String[] parts = line.split(",");
                 if (parts.length > 0 && parts[0].startsWith("ITEM")) {
                     try {
@@ -211,19 +208,36 @@ public class SM_Item extends javax.swing.JFrame {
                             highestNumber = itemNumber;
                         }
                     } catch (NumberFormatException e) {
-                        // Skip invalid format
                     }
                 }
             }
-
             int nextNumber = highestNumber + 1;
             nextItemCode = String.format("ITEM%03d", nextNumber);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return nextItemCode;
     }
+    
+    private String[] getItemSupplyDetails(String itemCode) {
+        try {
+            String filePath = fileManager.getItemSupplyFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 4 && parts[0].equals(itemCode)) {
+                    return new String[]{parts[1], parts[3]}; // [supplierCode, unitPrice]
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error fetching item supply details: " + e.getMessage(), 
+                                         "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return new String[]{"SUP001", "0"}; // Default values if not found
+    }
+    
 
      
     /**
@@ -258,6 +272,9 @@ public class SM_Item extends javax.swing.JFrame {
         ResetBtn = new javax.swing.JButton();
         jTextField5 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -370,9 +387,11 @@ public class SM_Item extends javax.swing.JFrame {
             }
         });
 
-        jTextField5.setText("jTextField5");
-
         jLabel2.setText("jLabel2");
+
+        jLabel7.setText("Unit Price :");
+
+        jLabel10.setText("RM");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -388,7 +407,8 @@ public class SM_Item extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel8)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -399,14 +419,18 @@ public class SM_Item extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addComponent(deleteBtn))
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -467,6 +491,11 @@ public class SM_Item extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel10)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -480,7 +509,30 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        
+        String itemCode = jLabel2.getText();
+        String itemName = jTextField3.getText().trim();
+        String stockLevelStr = jTextField5.getText().trim();
+        String retailPriceStr = jTextField2.getText().trim();
+        String unitPriceStr = jTextField4.getText().trim();
+        String supplierCode = (String) jComboBox1.getSelectedItem();
+
+        if (itemName.isEmpty() || stockLevelStr.isEmpty() || retailPriceStr.isEmpty() || 
+            unitPriceStr.isEmpty() || supplierCode == null || supplierCode.equals("No suppliers found")) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields and select a valid supplier.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            int stockLevel = Integer.parseInt(stockLevelStr);
+            double retailPrice = Double.parseDouble(retailPriceStr);
+            double unitPrice = Double.parseDouble(unitPriceStr);
+            Item item = new Item(itemCode, itemName, stockLevel, retailPrice);
+            salesManager.addItem(item, supplierCode, unitPrice); // Use unitPrice from jTextField4
+            JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            resetTable();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Stock level and unit price must be integers, and retail price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
@@ -502,33 +554,81 @@ public class SM_Item extends javax.swing.JFrame {
             return;
         }
 
-        // Get the item code from the selected row (column 0)
         String itemCode = jTable1.getValueAt(selectedRow, 0).toString();
-
-        // Confirm deletion
         int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete item " + itemCode + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
         if (dialogResult != JOptionPane.YES_OPTION) {
             return;
         }
 
-        // Delete the item using SalesManager
         if (salesManager.deleteItem(itemCode)) {
             JOptionPane.showMessageDialog(this, "Item deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadItems(); // Reload the table
+            loadItems();
             jTextField3.setText("");
             jTextField2.setText("");
-            
+            jTextField4.setText(""); // Clear unit price field
         } else {
             JOptionPane.showMessageDialog(this, "Failed to delete item " + itemCode + ". Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select an item to edit.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        isEditing = true;
+        editingItemCode = (String) model.getValueAt(selectedRow, 0); // Item Code
+        jLabel2.setText(editingItemCode);
+        jTextField3.setText((String) model.getValueAt(selectedRow, 1)); // Item Name
+        jTextField5.setText(model.getValueAt(selectedRow, 2).toString()); // Stock Level
+        jTextField2.setText(model.getValueAt(selectedRow, 3).toString()); // Retail Price
+        
+        // Fetch supplierCode and unitPrice from itemSupply.txt
+        String[] supplyDetails = getItemSupplyDetails(editingItemCode);
+        jComboBox1.setSelectedItem(supplyDetails[0]); // Supplier Code
+        jTextField4.setText(supplyDetails[1]); // Unit Price
+
+        addButton.setEnabled(false);
+        editBtn.setEnabled(false);
+        saveBtn.setEnabled(true);
+        deleteBtn.setEnabled(false);
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        if (!isEditing || editingItemCode == null) {
+            JOptionPane.showMessageDialog(this, "No item is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        String itemCode = jLabel2.getText();
+        String itemName = jTextField3.getText().trim();
+        String stockLevelStr = jTextField5.getText().trim();
+        String retailPriceStr = jTextField2.getText().trim();
+        String unitPriceStr = jTextField4.getText().trim();
+        String supplierCode = (String) jComboBox1.getSelectedItem();
+
+        if (itemName.isEmpty() || stockLevelStr.isEmpty() || retailPriceStr.isEmpty() || 
+            unitPriceStr.isEmpty() || supplierCode == null || supplierCode.equals("No suppliers found")) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields and select a valid supplier.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            int stockLevel = Integer.parseInt(stockLevelStr);
+            double retailPrice = Double.parseDouble(retailPriceStr);
+            double unitPrice = Double.parseDouble(unitPriceStr);
+            Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
+            if (salesManager.updateItem(updatedItem, supplierCode, (int) unitPrice)) { // Cast double to int if required
+                JOptionPane.showMessageDialog(this, "Item updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                resetTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update item.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Stock level must be an integer, and retail price and unit price must be numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -556,11 +656,13 @@ public class SM_Item extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -569,6 +671,7 @@ public class SM_Item extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JButton saveBtn;
     // End of variables declaration//GEN-END:variables

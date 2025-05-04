@@ -12,13 +12,13 @@ public class ItemSupply {
     private String itemCode;
     private String supplierCode;
     private String itemName;
-    private int unitPriwe;
+    private double unitPrice;
 
-    public ItemSupply(String itemCode, String supplierCode, String itemName, int unitPriwe) {
+    public ItemSupply(String itemCode, String supplierCode, String itemName, double unitPrice) {
         this.itemCode = itemCode;
         this.supplierCode = supplierCode;
         this.itemName = itemName;
-        this.unitPriwe = unitPriwe;
+        this.unitPrice = unitPrice;
     }
     
     
@@ -47,17 +47,17 @@ public class ItemSupply {
         this.itemName = itemName;
     }
 
-    public int getUnitPriwe() {
-        return unitPriwe;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setUnitPriwe(int unitPriwe) {
-        this.unitPriwe = unitPriwe;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     @Override
     public String toString() {
-        return "ItemSupply{" + "itemCode=" + itemCode + ", supplierCode=" + supplierCode + ", itemName=" + itemName + ", unitPriwe=" + unitPriwe + '}';
+        return "ItemSupply{" + "itemCode=" + itemCode + ", supplierCode=" + supplierCode + ", itemName=" + itemName + ", unitPrice=" + unitPrice + '}';
     }
     
     

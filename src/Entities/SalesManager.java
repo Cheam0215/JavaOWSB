@@ -34,91 +34,142 @@ public class SalesManager extends User {
     }
     
     // Item Management
-    public boolean addItem(Item item) {
+    public boolean validateSupplierCode(String supplierCode) {
         try {
-            String filePath = fileManager.getItemFilePath();
+            String filePath = fileManager.getSupplierFilePath();
             String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
-
-            File file = new File(absolutePath);
-            File parentDir = file.getParentFile();
-            if (parentDir != null && !parentDir.exists()) {
-                parentDir.mkdirs();
-            }
-
-            // Check if the file exists and doesn't end with a newline
-            if (file.exists()) {
-                try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
-                    long length = raf.length();
-                    if (length > 0) {
-                        raf.seek(length - 1);
-                        byte lastByte = raf.readByte();
-                        if (lastByte != '\n') {
-                            raf.writeBytes(System.lineSeparator()); // Add a platform-specific newline
-                        }
-                    }
-                }
-            }
-
-            // Append the new item
-            try (FileWriter fw = new FileWriter(absolutePath, true);
-                 BufferedWriter bw = new BufferedWriter(fw)) {
-                String itemData = String.format("%s,%s,%s,%d,%.1f,%.1f",
-                        item.getItemCode(),
-                        item.getItemName(),                        
-                        item.getStockLevel(),
-                        item.getRetailPrice());
-                bw.write(itemData);
-                bw.newLine(); // Use BufferedWriter's newLine() for platform-specific newline
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    public boolean updateItem(Item updatedItem) {
-        try {
-            String filePath = fileManager.getItemFilePath();
-            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
-
-            File file = new File(absolutePath);
-            if (!file.exists()) {
-                System.out.println("Item file does not exist: " + absolutePath);
-                return false;
-            }
-
-            // Read all lines from the file
             List<String> lines = Files.readAllLines(Paths.get(absolutePath));
-            List<String> updatedLines = new ArrayList<>();
-
-            // Update the item with the matching itemCode
-            boolean found = false;
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(supplierCode)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error validating supplier code: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void addItem(Item item, String supplierCode, double unitPrice) {
+        try {
+            // Validate supplierCode
+            if (!validateSupplierCode(supplierCode)) {
+                System.out.println("Invalid supplier code: " + supplierCode);
+                return;
+            }
+
+            // Add to itemFile.txt
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            try (FileWriter fw = new FileWriter(itemAbsolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String itemData = String.format("%s,%s,%d,%.2f",
+                    item.getItemCode(),
+                    item.getItemName(),
+                    item.getStockLevel(),
+                    item.getRetailPrice());
+                bw.write(itemData);
+                bw.newLine();
+            }
+
+            // Add to itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            try (FileWriter fw = new FileWriter(supplyAbsolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String supplyData = String.format("%s,%s,%s,%.2f",
+                    item.getItemCode(),
+                    supplierCode,
+                    item.getItemName(),
+                    unitPrice);
+                bw.write(supplyData);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error adding item: " + e.getMessage());
+        }
+    }
+
+    public boolean updateItem(Item updatedItem, String supplierCode, double unitPrice) {
+        try {
+            // Validate supplierCode
+            if (!validateSupplierCode(supplierCode)) {
+                System.out.println("Invalid supplier code: " + supplierCode);
+                return false;
+            }
+
+            // Update itemFile.txt
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            List<String> itemLines = Files.readAllLines(Paths.get(itemAbsolutePath));
+            List<String> updatedItemLines = new ArrayList<>();
+            boolean itemFound = false;
+
+            for (String line : itemLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
                 if (parts.length > 0 && parts[0].equals(updatedItem.getItemCode())) {
-                    found = true;
-                    // Format the updated item data
-                    String updatedLine = String.format("%s,%s,%s,%d,%.1f,%.1f",
+                    itemFound = true;
+                    String updatedLine = String.format("%s,%s,%d,%.2f",
                             updatedItem.getItemCode(),
                             updatedItem.getItemName(),
                             updatedItem.getStockLevel(),
                             updatedItem.getRetailPrice());
-                    updatedLines.add(updatedLine);
+                    updatedItemLines.add(updatedLine);
                 } else {
-                    updatedLines.add(line);
+                    updatedItemLines.add(line);
                 }
             }
 
-            if (!found) {
-                System.out.println("Item with code " + updatedItem.getItemCode() + " not found.");
+            if (!itemFound) {
+                System.out.println("Item with code " + updatedItem.getItemCode() + " not found in itemFile.txt.");
                 return false;
             }
 
-            // Rewrite the file with the updated lines
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(absolutePath))) {
-                for (String line : updatedLines) {
+            // Rewrite itemFile.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(itemAbsolutePath))) {
+                for (String line : updatedItemLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            // Update itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            List<String> supplyLines = Files.readAllLines(Paths.get(supplyAbsolutePath));
+            List<String> updatedSupplyLines = new ArrayList<>();
+            boolean supplyFound = false;
+
+            for (String line : supplyLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(updatedItem.getItemCode())) {
+                    supplyFound = true;
+                    String updatedLine = String.format("%s,%s,%s,%.2f",
+                            updatedItem.getItemCode(),
+                            supplierCode,
+                            updatedItem.getItemName(),
+                            unitPrice);
+                    updatedSupplyLines.add(updatedLine);
+                } else {
+                    updatedSupplyLines.add(line);
+                }
+            }
+
+            if (!supplyFound) {
+                System.out.println("Item with code " + updatedItem.getItemCode() + " not found in itemSupply.txt.");
+                return false;
+            }
+
+            // Rewrite itemSupply.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(supplyAbsolutePath))) {
+                for (String line : updatedSupplyLines) {
                     bw.write(line);
                     bw.newLine();
                 }
@@ -134,33 +185,249 @@ public class SalesManager extends User {
 
     public boolean deleteItem(String itemCode) {
         try {
-            String filePath = fileManager.getItemFilePath();
-            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+            // Delete from itemFile.txt
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            List<String> itemLines = Files.readAllLines(Paths.get(itemAbsolutePath));
+            List<String> updatedItemLines = new ArrayList<>();
+            boolean itemFound = false;
 
-            File file = new File(absolutePath);
-            if (!file.exists()) {
-                System.out.println("Item file does not exist: " + absolutePath);
+            for (String line : itemLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(itemCode)) {
+                    itemFound = true;
+                    continue;
+                }
+                updatedItemLines.add(line);
+            }
+
+            if (!itemFound) {
+                System.out.println("Item with code " + itemCode + " not found in itemFile.txt.");
                 return false;
             }
+
+            // Rewrite itemFile.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(itemAbsolutePath))) {
+                for (String line : updatedItemLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            // Delete from itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            List<String> supplyLines = Files.readAllLines(Paths.get(supplyAbsolutePath));
+            List<String> updatedSupplyLines = new ArrayList<>();
+            boolean supplyFound = false;
+
+            for (String line : supplyLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(itemCode)) {
+                    supplyFound = true;
+                    continue;
+                }
+                updatedSupplyLines.add(line);
+            }
+
+            if (!supplyFound) {
+                System.out.println("Item with code " + itemCode + " not found in itemSupply.txt.");
+                return false;
+            }
+
+            // Rewrite itemSupply.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(supplyAbsolutePath))) {
+                for (String line : updatedSupplyLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting item: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public void addItemSupply(ItemSupply itemSupply) {
+        try {
+            // Validate supplierCode
+            if (!validateSupplierCode(itemSupply.getSupplierCode())) {
+                System.out.println("Invalid supplier code: " + itemSupply.getSupplierCode());
+                return;
+            }
+
+            // Add to itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            try (FileWriter fw = new FileWriter(supplyAbsolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String supplyData = String.format("%s,%s,%s,%.2f",
+                    itemSupply.getItemCode(),
+                    itemSupply.getSupplierCode(),
+                    itemSupply.getItemName(),
+                    itemSupply.getUnitPrice());
+                bw.write(supplyData);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error adding item supply: " + e.getMessage());
+        }
+    }
+
+    public boolean updateItemSupply(ItemSupply updatedItemSupply) {
+        try {
+            // Validate supplierCode
+            if (!validateSupplierCode(updatedItemSupply.getSupplierCode())) {
+                System.out.println("Invalid supplier code: " + updatedItemSupply.getSupplierCode());
+                return false;
+            }
+
+            // Update itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            List<String> supplyLines = Files.readAllLines(Paths.get(supplyAbsolutePath));
+            List<String> updatedSupplyLines = new ArrayList<>();
+            boolean supplyFound = false;
+
+            for (String line : supplyLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(updatedItemSupply.getItemCode())) {
+                    supplyFound = true;
+                    String updatedLine = String.format("%s,%s,%s,%.2f",
+                            updatedItemSupply.getItemCode(),
+                            updatedItemSupply.getSupplierCode(),
+                            updatedItemSupply.getItemName(),
+                            updatedItemSupply.getUnitPrice());
+                    updatedSupplyLines.add(updatedLine);
+                } else {
+                    updatedSupplyLines.add(line);
+                }
+            }
+
+            if (!supplyFound) {
+                System.out.println("Item supply with code " + updatedItemSupply.getItemCode() + " not found in itemSupply.txt.");
+                return false;
+            }
+
+            // Rewrite itemSupply.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(supplyAbsolutePath))) {
+                for (String line : updatedSupplyLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error updating item supply: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteItemSupply(String itemCode) {
+        try {
+            // Delete from itemSupply.txt
+            String supplyFilePath = fileManager.getItemSupplyFilePath();
+            String supplyAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + supplyFilePath.replace("/", File.separator);
+            List<String> supplyLines = Files.readAllLines(Paths.get(supplyAbsolutePath));
+            List<String> updatedSupplyLines = new ArrayList<>();
+            boolean supplyFound = false;
+
+            for (String line : supplyLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(itemCode)) {
+                    supplyFound = true;
+                    continue;
+                }
+                updatedSupplyLines.add(line);
+            }
+
+            if (!supplyFound) {
+                System.out.println("Item supply with code " + itemCode + " not found in itemSupply.txt.");
+                return false;
+            }
+
+            // Rewrite itemSupply.txt
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(supplyAbsolutePath))) {
+                for (String line : updatedSupplyLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting item supply: " + e.getMessage());
+            return false;
+        }
+    }
+    
+
+    // Supplier Management
+    public void addSupplier(Supplier supplier) {
+        try {
+            String filePath = fileManager.getSupplierFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Append the new supplier data
+            try (FileWriter fw = new FileWriter(absolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String supplierData = String.format("%s,%s,%d,%s,%s",
+                    supplier.getSupplierCode(),
+                    supplier.getSupplierName(),
+                    supplier.getContactNumber(),
+                    supplier.getAddress(),
+                    supplier.getBankAccount());
+                bw.write(supplierData);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error adding supplier: " + e.getMessage());
+        }
+    }
+
+    public boolean updateSupplier(Supplier updatedSupplier) {
+        try {
+            String filePath = fileManager.getSupplierFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
 
             // Read all lines from the file
             List<String> lines = Files.readAllLines(Paths.get(absolutePath));
             List<String> updatedLines = new ArrayList<>();
 
-            // Filter out the item with the matching itemCode
+            // Update the supplier data with the matching supplierCode
             boolean found = false;
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
-                if (parts.length > 0 && parts[0].equals(itemCode)) {
+                if (parts.length > 0 && parts[0].equals(updatedSupplier.getSupplierCode())) {
                     found = true;
-                    continue; 
+                    // Format the updated supplier data
+                    String updatedLine = String.format("%s,%s,%d,%s,%s",
+                            updatedSupplier.getSupplierCode(),
+                            updatedSupplier.getSupplierName(),
+                            updatedSupplier.getContactNumber(),
+                            updatedSupplier.getAddress(),
+                            updatedSupplier.getBankAccount());
+                    updatedLines.add(updatedLine);
+                } else {
+                    updatedLines.add(line);
                 }
-                updatedLines.add(line);
             }
 
             if (!found) {
-                System.out.println("Item with code " + itemCode + " not found.");
+                System.out.println("Supplier with code " + updatedSupplier.getSupplierCode() + " not found.");
                 return false;
             }
 
@@ -175,55 +442,53 @@ public class SalesManager extends User {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error deleting item: " + e.getMessage());
+            System.out.println("Error updating supplier: " + e.getMessage());
             return false;
         }
     }
 
-    // Supplier Management
-    public boolean addSupplier(Supplier supplier) {
-        return fileManager.writeToFile(
-            supplier, fileManager.getSupplierFilePath(),
-            Supplier::getSupplierCode, Supplier::toString
-        );
-    }
-
-    public boolean updateSupplier(Supplier updatedSupplier) {
-//        return fileManager.updateToFile(
-//            updatedSupplier, fileManager.getSupplierFilePath(),
-//            Supplier::getSupplierCode, Supplier::toString,
-//            line -> {
-//                String[] data = line.split(",");
-//                Supplier s = new Supplier(data[0], data[1]);
-//                if (!data[2].equals("NONE")) {
-//                    String[] items = data[2].split(";");
-//                    for (String itemId : items) s.addItemId(itemId);
-//                }
-//                return s;
-//            }
-//        );
-            return true;
-    }
-
     public boolean deleteSupplier(String supplierCode) {
-//        return fileManager.deleteFromFile(
-//            supplierCode, fileManager.getSupplierFilePath(),
-//            Supplier::getSupplierCode,
-//            line -> {
-//                String[] data = line.split(",");
-//                Supplier s = new Supplier(data[0], data[1]);
-//                if (!data[2].equals("NONE")) {
-//                    String[] items = data[2].split(";");
-//                    for (String itemId : items) s.addItemId(itemId);
-//                }
-//                return s;
-//            }
-//        );
+        try {
+            String filePath = fileManager.getSupplierFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
 
-        return true;
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            List<String> updatedLines = new ArrayList<>();
+
+            // Filter out the line with the matching supplierCode
+            boolean found = false;
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(supplierCode)) {
+                    found = true;
+                    continue; // Skip this line (delete it)
+                }
+                updatedLines.add(line);
+            }
+
+            if (!found) {
+                System.out.println("Supplier with code " + supplierCode + " not found.");
+                return false;
+            }
+
+            // Write the updated lines back to the file
+            try (FileWriter fw = new FileWriter(absolutePath, false);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                for (String line : updatedLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error deleting supplier: " + e.getMessage());
+            return false;
+        }
     }
 
-    // Placeholder for Sales Data and PR methods (expand as needed)
     public void addSalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount) {
         try {
             String filePath = fileManager.getSalesDataFilePath();
@@ -592,6 +857,44 @@ public class SalesManager extends User {
                 item.getItemName(),
                 String.valueOf(item.getStockLevel()),
                 String.valueOf(item.getRetailPrice())
+            };
+            result.add(row);
+        }
+        return result;
+    }
+    
+    public List<String[]> viewItemSupplies() {
+        List<ItemSupply> itemSupplyList = fileManager.readFile(
+            fileManager.getItemSupplyFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 4) {
+                    System.out.println("Invalid item supply data: " + line);
+                    return null;
+                }
+                try {
+                    return new ItemSupply(
+                        data[0], // itemCode
+                        data[1], // supplierCode
+                        data[2], // itemName
+                        Double.parseDouble(data[3]) // unitPrice
+                    );
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing item supply data: " + line + " | " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+
+        // Convert the list of ItemSupply objects to List<String[]> for the table
+        List<String[]> result = new ArrayList<>();
+        for (ItemSupply itemSupply : itemSupplyList) {
+            if (itemSupply == null) continue;
+            String[] row = new String[]{
+                itemSupply.getItemCode(),
+                itemSupply.getSupplierCode(),
+                itemSupply.getItemName(),
+                String.valueOf(itemSupply.getUnitPrice())
             };
             result.add(row);
         }
