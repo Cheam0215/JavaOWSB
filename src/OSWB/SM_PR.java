@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Entities.PurchaseRequisition;
 import Entities.SalesManager;
 import Utility.FileManager;
 import Utility.Date;
@@ -24,6 +25,8 @@ public class SM_PR extends javax.swing.JFrame {
     private String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
     private SalesManager salesManager;
     private FileManager fileManager;
+    private boolean isEditing = false; // Track if we're in editing mode
+    private String editingPrId = null; // Track the PR ID being edited
 
     /**
      * Creates new form SM_PR
@@ -37,6 +40,9 @@ public class SM_PR extends javax.swing.JFrame {
         populateItemCodeComboBox(); 
         setDefaultValues(); 
         initializeFileManager();
+        setupTableSelectionListener(); // Add listener to manage button states
+        editBtn.setEnabled(false); // Disable Edit button initially
+        saveBtn.setEnabled(false); // Disable Save button initially
     };
     
     private void setupTable() {
@@ -115,7 +121,17 @@ public class SM_PR extends javax.swing.JFrame {
     
     private void resetTable() {
         jTextField1.setText("");
+        jLabel9.setText(generateNextPrID());
+        jComboBox1.setSelectedIndex(-1);
+        jSpinner1.setValue(0);
+        jDateChooser1.setDate(new java.util.Date());
+        isEditing = false;
+        editingPrId = null;
         loadPR();
+        addBtn.setEnabled(true);
+        editBtn.setEnabled(jTable1.getSelectedRow() != -1);
+        saveBtn.setEnabled(false);
+        deleteBtn.setEnabled(jTable1.getSelectedRow() != -1);
     }
     
     private void populateItemCodeComboBox() {
@@ -187,6 +203,18 @@ public class SM_PR extends javax.swing.JFrame {
         }
 
         return nextPrID;
+    }
+    
+    private void setupTableSelectionListener() {
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean rowSelected = jTable1.getSelectedRow() != -1;
+                editBtn.setEnabled(rowSelected && !isEditing); // Enable Edit only if not editing
+                saveBtn.setEnabled(isEditing); // Enable Save only when editing
+                addBtn.setEnabled(!isEditing); // Disable Add when editing
+                deleteBtn.setEnabled(rowSelected && !isEditing); // Enable Delete only if not editing
+            }
+        });
     }
     
     private void initializeFileManager() {
@@ -299,10 +327,20 @@ public class SM_PR extends javax.swing.JFrame {
         });
 
         editBtn.setText("Edit");
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText(" Purchase Requisition ID :");
 
         saveBtn.setText("Save");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Item Code :");
 
@@ -347,15 +385,15 @@ public class SM_PR extends javax.swing.JFrame {
                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6)
-                                    .addComponent(addBtn))
+                                    .addComponent(addBtn)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(42, 42, 42)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -519,6 +557,96 @@ public class SM_PR extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         loadPR(); // Refresh the table
     }//GEN-LAST:event_deleteBtnActionPerformed
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a Purchase Requisition to edit.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Get PR details from the selected row
+        editingPrId = (String) model.getValueAt(selectedRow, 0); // PR ID
+        String itemCode = (String) model.getValueAt(selectedRow, 1);
+        String requestedBy = (String) model.getValueAt(selectedRow, 2);
+        String quantity = (String) model.getValueAt(selectedRow, 3);
+        String requiredDateStr = (String) model.getValueAt(selectedRow, 4);
+        String requestedDate = (String) model.getValueAt(selectedRow, 5);
+        String status = (String) model.getValueAt(selectedRow, 6);
+
+        // Populate the UI fields
+        jLabel9.setText(editingPrId); // PR ID (read-only)
+        jComboBox1.setSelectedItem(itemCode); // Item Code (editable)
+        jLabel11.setText(requestedBy); // Requested By (read-only)
+        jSpinner1.setValue(Integer.parseInt(quantity)); // Quantity (editable)
+        try {
+            java.util.Date requiredDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(requiredDateStr);
+            jDateChooser1.setDate(requiredDate); // Required Date (editable)
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Error parsing required date: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        jLabel7.setText(requestedDate); // Requested Date (read-only)
+        jLabel12.setText(status); // Status (read-only)
+
+        // Enter editing mode
+        isEditing = true;
+        editBtn.setEnabled(false);
+        saveBtn.setEnabled(true);
+        addBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+    }//GEN-LAST:event_editBtnActionPerformed
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        if (!isEditing || editingPrId == null) {
+            JOptionPane.showMessageDialog(this, "No Purchase Requisition is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Get updated values from the UI
+        String itemCode = (String) jComboBox1.getSelectedItem();
+        int quantity = (Integer) jSpinner1.getValue();
+        java.util.Date requiredUtilDate = jDateChooser1.getDate();
+
+        // Validate input
+        if (itemCode == null || itemCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (quantity <= 0) {
+            JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (requiredUtilDate == null) {
+            JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Convert required date to string format
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(requiredUtilDate);
+        Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
+                                    cal.get(java.util.Calendar.MONTH) + 1, 
+                                    cal.get(java.util.Calendar.DAY_OF_MONTH));
+        String requiredDateStr = requiredDate.toIsoString();
+
+        // Retrieve original values for uneditable fields
+        String requestedBy = jLabel11.getText();
+        String requestedDate = jLabel7.getText();
+        Status status = Status.valueOf(jLabel12.getText());
+
+        // Create updated PurchaseRequisition object
+        PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+
+        // Update the purchase requisition
+        if (salesManager.updatePurchaseRequisition(updatedPR)) {
+            JOptionPane.showMessageDialog(this, "Purchase Requisition updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadPR(); // Refresh the table
+            resetTable(); // Reset the form
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update Purchase Requisition. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveBtnActionPerformed
 
     /**
      * @param args the command line arguments

@@ -26,8 +26,8 @@ public class SM_Item extends javax.swing.JFrame {
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingItemCode = null; // Track the item code being edited
     
-    public SM_Item() {
-        salesManager = new SalesManager("001", "salesmanager", "password");
+    public SM_Item(SalesManager loggedInSM) {
+         this.salesManager = loggedInSM;       
         fileManager = new FileManager();
         initComponents();
         initializeFileManager();
@@ -474,7 +474,7 @@ public class SM_Item extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main();
+        SM_Main smMain = new SM_Main(salesManager);
         smMain.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -539,19 +539,10 @@ public class SM_Item extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SM_Item.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SM_Item().setVisible(true);
+                SalesManager item = new SalesManager("", "", "");
+                new SM_Item(item).setVisible(true);
             }
         });
     }

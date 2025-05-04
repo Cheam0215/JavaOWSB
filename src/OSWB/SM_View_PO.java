@@ -18,8 +18,8 @@ public class SM_View_PO extends javax.swing.JFrame {
     private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
     private SalesManager salesManager;
     
-    public SM_View_PO() {
-        salesManager = new SalesManager("SM001", "salesmanager", "password");
+    public SM_View_PO(SalesManager loggedinSM) {
+        this.salesManager = loggedinSM;
         initComponents();
         setupTable();
         loadPO();
@@ -232,7 +232,7 @@ public class SM_View_PO extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main();
+        SM_Main smMain = new SM_Main(salesManager);
         smMain.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -279,7 +279,8 @@ public class SM_View_PO extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SM_View_PO().setVisible(true);
+                SalesManager po = new SalesManager("","","");
+                new SM_View_PO(po).setVisible(true);
             }
         });
     }

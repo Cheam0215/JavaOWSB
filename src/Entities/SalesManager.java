@@ -16,6 +16,7 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -223,10 +224,219 @@ public class SalesManager extends User {
     }
 
     // Placeholder for Sales Data and PR methods (expand as needed)
-    public void enterSalesData(String itemCode, int quantitySold, String date) {
-        System.out.println("Entering sales data: " + itemCode + ", " + quantitySold + ", " + date);
-        // Add logic to save sales data and update stock
+    public void addSalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount) {
+        try {
+            String filePath = fileManager.getSalesDataFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Append the new sales data
+            try (FileWriter fw = new FileWriter(absolutePath, true);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                String salesData = String.format("%s,%s,%d,%.2f,%s,%.2f",
+                    salesId,
+                    itemCode,
+                    quantitySold,
+                    retailPrice,
+                    date,
+                    totalAmount);
+                bw.write(salesData);
+                bw.newLine();
+            }
+
+            // Update stock level in itemFile.txt
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            List<String> itemLines = Files.readAllLines(Paths.get(itemAbsolutePath));
+            List<String> updatedItemLines = new ArrayList<>();
+
+            for (String line : itemLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 2 && parts[0].equals(itemCode)) {
+                    int currentStock = Integer.parseInt(parts[2].trim());
+                    int newStock = currentStock - quantitySold;
+                    String updatedLine = String.format("%s,%s,%d,%s", parts[0], parts[1], newStock, String.join(",", Arrays.copyOfRange(parts, 3, parts.length)));
+                    updatedItemLines.add(updatedLine);
+                } else {
+                    updatedItemLines.add(line);
+                }
+            }
+
+            // Rewrite itemFile.txt with updated stock
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(itemAbsolutePath))) {
+                for (String line : updatedItemLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error adding sales data: " + e.getMessage());
+        }
     }
+
+    public boolean updateSalesData(SalesData updatedSales) {
+        try {
+            String filePath = fileManager.getSalesDataFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            List<String> updatedLines = new ArrayList<>();
+            int originalQuantity = 0;
+
+            // Find the original quantity to calculate the difference
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(updatedSales.getSalesId())) {
+                    originalQuantity = Integer.parseInt(parts[2].trim());
+                    break;
+                }
+            }
+
+            // Update the sales data with the matching salesId
+            boolean found = false;
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(updatedSales.getSalesId())) {
+                    found = true;
+                    // Format the updated sales data
+                    String updatedLine = String.format("%s,%s,%d,%.2f,%s,%.2f",
+                            updatedSales.getSalesId(),
+                            updatedSales.getItemCode(),
+                            updatedSales.getQuantitySold(),
+                            updatedSales.getRetailPrice(),
+                            updatedSales.getDate(),
+                            updatedSales.getTotalAmount());
+                    updatedLines.add(updatedLine);
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (!found) {
+                System.out.println("Sales Data with ID " + updatedSales.getSalesId() + " not found.");
+                return false;
+            }
+
+            // Rewrite the file with the updated lines
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(absolutePath))) {
+                for (String line : updatedLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            // Update stock level in itemFile.txt based on quantity change
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            List<String> itemLines = Files.readAllLines(Paths.get(itemAbsolutePath));
+            List<String> updatedItemLines = new ArrayList<>();
+
+            int quantityChange = originalQuantity - updatedSales.getQuantitySold();
+            for (String line : itemLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 2 && parts[0].equals(updatedSales.getItemCode())) {
+                    int currentStock = Integer.parseInt(parts[2].trim());
+                    int newStock = currentStock + quantityChange; // Add the difference back to stock
+                    String updatedLine = String.format("%s,%s,%d,%s", parts[0], parts[1], newStock, String.join(",", Arrays.copyOfRange(parts, 3, parts.length)));
+                    updatedItemLines.add(updatedLine);
+                } else {
+                    updatedItemLines.add(line);
+                }
+            }
+
+            // Rewrite itemFile.txt with updated stock
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(itemAbsolutePath))) {
+                for (String line : updatedItemLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error updating Sales Data: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteSalesData(String salesId) {
+        try {
+            String filePath = fileManager.getSalesDataFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            List<String> updatedLines = new ArrayList<>();
+            String itemCode = null;
+            int originalQuantity = 0;
+
+            // Find the itemCode and original quantity to revert stock
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(salesId)) {
+                    itemCode = parts[1];
+                    originalQuantity = Integer.parseInt(parts[2].trim());
+                    continue; // Skip this line (delete it)
+                }
+                updatedLines.add(line);
+            }
+
+            if (itemCode == null) {
+                System.out.println("Sales ID " + salesId + " not found.");
+                return false;
+            }
+
+            // Write the updated lines back to the file
+            try (FileWriter fw = new FileWriter(absolutePath, false);
+                 BufferedWriter bw = new BufferedWriter(fw)) {
+                for (String line : updatedLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            // Update stock level in itemFile.txt by adding back the original quantity
+            String itemFilePath = fileManager.getItemFilePath();
+            String itemAbsolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + itemFilePath.replace("/", File.separator);
+            List<String> itemLines = Files.readAllLines(Paths.get(itemAbsolutePath));
+            List<String> updatedItemLines = new ArrayList<>();
+
+            for (String line : itemLines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 2 && parts[0].equals(itemCode)) {
+                    int currentStock = Integer.parseInt(parts[2].trim());
+                    int newStock = currentStock + originalQuantity;
+                    String updatedLine = String.format("%s,%s,%d,%s", parts[0], parts[1], newStock, String.join(",", Arrays.copyOfRange(parts, 3, parts.length)));
+                    updatedItemLines.add(updatedLine);
+                } else {
+                    updatedItemLines.add(line);
+                }
+            }
+
+            // Rewrite itemFile.txt with updated stock
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(itemAbsolutePath))) {
+                for (String line : updatedItemLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting sales data: " + e.getMessage());
+            return false;
+        }
+    }
+    
 
     public void addPurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status) {
         try {
@@ -252,6 +462,60 @@ public class SalesManager extends User {
             System.out.println("Error adding purchase requisition: " + e.getMessage());
         }
     }
+    
+    public boolean updatePurchaseRequisition(PurchaseRequisition updatedPR) {
+        try {
+            String filePath = fileManager.getPrFilePath();
+            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(absolutePath));
+            List<String> updatedLines = new ArrayList<>();
+
+            // Update the purchase requisition with the matching prId
+            boolean found = false;
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(updatedPR.getPrId())) {
+                    found = true;
+                    // Format the updated purchase requisition data
+                    String updatedLine = String.format("%s,%s,%s,%d,%s,%s,%s",
+                            updatedPR.getPrId(),
+                            updatedPR.getItemCode(),
+                            updatedPR.getRequestedBy(),
+                            updatedPR.getQuantity(),
+                            updatedPR.getRequiredDate(),
+                            updatedPR.getRequestedDate(),
+                            updatedPR.getStatus());
+                    updatedLines.add(updatedLine);
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (!found) {
+                System.out.println("Purchase Requisition with ID " + updatedPR.getPrId() + " not found.");
+                return false;
+            }
+
+            // Rewrite the file with the updated lines
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(absolutePath))) {
+                for (String line : updatedLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error updating Purchase Requisition: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    
     
     public boolean deletePurchaseRequisition(String prId) {
         try {
@@ -376,10 +640,9 @@ public class SalesManager extends User {
                     data[0],                     // salesId
                     data[1],                     // itemCode
                     Integer.parseInt(data[2]),   // quantitySold
-                    Double.parseDouble(data[3]), // unitPrice
-                    Double.parseDouble(data[4]), // retailPrice
-                    data[5],                     // date
-                    Double.parseDouble(data[6])  // totalAmount
+                    Double.parseDouble(data[3]), // retailPrice
+                    data[4],                     // date
+                    Double.parseDouble(data[5])  // totalAmount
                 );
             }
         );
@@ -391,7 +654,6 @@ public class SalesManager extends User {
                 sale.getSalesId(),
                 sale.getItemCode(),
                 String.valueOf(sale.getQuantitySold()),
-                String.valueOf(sale.getUnitPrice()),
                 String.valueOf(sale.getRetailPrice()),
                 sale.getDate(),
                 String.valueOf(sale.getTotalAmount())

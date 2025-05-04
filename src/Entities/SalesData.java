@@ -12,16 +12,14 @@ public class SalesData {
     private String salesId;
     private String itemCode;
     private int quantitySold;
-    private double unitPrice;
     private double retailPrice;
     private String date;
     private double totalAmount;
 
-    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, double retailPrice, String date, double totalAmount) {
+    public SalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount) {
         this.salesId = salesId;
         this.itemCode = itemCode;
         this.quantitySold = quantitySold;
-        this.unitPrice = unitPrice;
         this.retailPrice = retailPrice;
         this.date = date;
         this.totalAmount = totalAmount;
@@ -53,14 +51,6 @@ public class SalesData {
         this.quantitySold = quantitySold;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public String getDate() {
         return date;
     }
@@ -89,7 +79,7 @@ public class SalesData {
 
     @Override
     public String toString() {
-        return salesId + "," + itemCode + "," + quantitySold + "," + unitPrice + "," + retailPrice + "," + date + "," + totalAmount;
+        return salesId + "," + itemCode + "," + quantitySold + "," + retailPrice + "," + date + "," + totalAmount;
     }
 }
 

@@ -4,16 +4,24 @@
  */
 package OSWB;
 
+
+import Entities.SalesManager;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Edwin Chen
  */
 public class SM_ItemSupply extends javax.swing.JFrame {
-
+    private DefaultTableModel model = new DefaultTableModel();
+    private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
+    private SalesManager salesManager;
     /**
      * Creates new form SM_ItemSupply
      */
-    public SM_ItemSupply() {
+    public SM_ItemSupply(SalesManager loggedinSM) {
+        this.salesManager = loggedinSM;
         initComponents();
     }
 
@@ -111,7 +119,12 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton5.setText("jButton5");
+        jButton5.setText("Back");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jTextField2.setText("jTextField2");
 
@@ -137,7 +150,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(262, 262, 262))
+                        .addGap(232, 232, 232))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -160,17 +173,19 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(42, 42, 42)
                         .addComponent(jButton6)
                         .addGap(18, 18, 18)
                         .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addGap(239, 239, 239)
+                        .addComponent(jButton5)
+                        .addContainerGap(18, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,6 +228,12 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        SM_Main smMain = new SM_Main(salesManager);
+        smMain.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -243,7 +264,8 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SM_ItemSupply().setVisible(true);
+                SalesManager itemsupply = new SalesManager("","","");
+                new SM_ItemSupply(itemsupply).setVisible(true);
             }
         });
     }
