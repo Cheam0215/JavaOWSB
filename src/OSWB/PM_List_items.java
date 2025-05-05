@@ -25,12 +25,19 @@ public class PM_List_items extends javax.swing.JFrame {
      */
     public PM_List_items(PurchaseManager loggedInPM) {
         this.purchaseManager = loggedInPM;       
-       
         initComponents();
         setupTable();
         loadItems();
+        edit();
     }
     
+    public void edit()
+    {
+        itemCodeTxtField.setEditable(false);
+        itemNameTxtField.setEditable(false);
+        retailPricetxtField.setEditable(false);
+        stockLevelTxtField.setEditable(false);
+    }
     
     private void setupTable() {
         model.setColumnIdentifiers(columnName);

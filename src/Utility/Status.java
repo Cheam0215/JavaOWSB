@@ -14,5 +14,6 @@ public enum Status {
     RECEIVED,
     PAID,
     REJECTED,
-    CANCELLED
+    CANCELLED,
+    DELETED
 }

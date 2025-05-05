@@ -8,6 +8,7 @@ import Entities.PurchaseManager;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import Utility.Status;
 
 /**
  *
@@ -26,9 +27,25 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         initComponents();
         setupTable();
         loadPO();
-        
+        edit();
+        saveButton.setEnabled(false);
     }
     
+    public void edit()
+    {
+        quantityTxtField1.setEditable(false);
+        
+        purchaseOrderTxtField1.setEditable(false);
+        purchaseRequisitionIDTxtField1.setEditable(false);
+        itemCodeTxtField1.setEditable(false);
+        supplierIDTxtField2.setEditable(false);
+        raisedByTxtField2.setEditable(false);
+        statusTxtField2.setEditable(false);
+        requestedDateTxtField3.setEditable(false);
+        paymentAmountTxtField3.setEditable(false);
+        requiredDateTxtField4.setEditable(false);
+        remarksTxtField5.setEditable(false);
+    }
     private void setupTable() {
         model.setColumnIdentifiers(columnName);
         purchaseOrderTable.setModel(model);
@@ -156,7 +173,8 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         requiredDateLabel2 = new javax.swing.JLabel();
         requiredDateTxtField4 = new javax.swing.JTextField();
         remarksLabel3 = new javax.swing.JLabel();
-        remarksComboBox1 = new javax.swing.JComboBox<>();
+        remarksTxtField5 = new javax.swing.JTextField();
+        cancelButton = new javax.swing.JButton();
         sideBarMenu5 = new javax.swing.JPanel();
         itemsListPageButton5 = new javax.swing.JButton();
         supplierPageButton5 = new javax.swing.JButton();
@@ -478,7 +496,19 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         remarksLabel3.setText("Remarks :");
 
-        remarksComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        remarksTxtField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                remarksTxtField5ActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.setToolTipText("");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout purchaseOrderListTablePanelLayout = new javax.swing.GroupLayout(purchaseOrderListTablePanel);
         purchaseOrderListTablePanel.setLayout(purchaseOrderListTablePanelLayout);
@@ -534,22 +564,25 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                                             .addComponent(requiredDateLabel2)
                                             .addComponent(remarksLabel3))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(requiredDateTxtField4)
-                                            .addComponent(remarksComboBox1, 0, 206, Short.MAX_VALUE)))))))
+                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(requiredDateTxtField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(remarksTxtField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                     .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                         .addGap(218, 218, 218)
                         .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(42, Short.MAX_VALUE))
+            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         purchaseOrderListTablePanelLayout.setVerticalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,13 +627,14 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                     .addComponent(requiredDateTxtField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(remarksComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(remarksLabel3))
+                    .addComponent(remarksLabel3)
+                    .addComponent(remarksTxtField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -720,6 +754,37 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        int selectedRow = purchaseOrderTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a Purchase Order to edit.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String status = purchaseOrderTable.getValueAt(selectedRow, 8).toString();
+        if (!status.equals(Status.PENDING.toString())) {
+            JOptionPane.showMessageDialog(this,
+                "Cannot edit Purchase Order. Only PENDING Purchase Orders can be edited. Current status: " + status + ".",
+                "Invalid Status",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Enable only quantity field for editing
+        quantityTxtField1.setEditable(true);
+        paymentAmountTxtField3.setEditable(true);
+        // Disable all other fields
+        purchaseOrderTxtField1.setEditable(false);
+        purchaseRequisitionIDTxtField1.setEditable(false);
+        itemCodeTxtField1.setEditable(false);
+        supplierIDTxtField2.setEditable(false);
+        raisedByTxtField2.setEditable(false);
+        statusTxtField2.setEditable(false);
+        requestedDateTxtField3.setEditable(false);
+        requiredDateTxtField4.setEditable(false);
+        remarksTxtField5.setEditable(false);
+        // Enable Save button and disable Delete button
+        saveButton.setEnabled(true);
+        deleteButton.setEnabled(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -764,10 +829,161 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     }//GEN-LAST:event_raisedByTxtField2ActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = purchaseOrderTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a Purchase Order to save.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String poId = purchaseOrderTxtField1.getText().trim();
+        String quantityStr = quantityTxtField1.getText().trim();
+        String paymentAmountStr = paymentAmountTxtField3.getText().trim();
+
+        // Validate quantity
+        int quantity;
+        double paymentAmount;
+        try {
+            quantity = Integer.parseInt(quantityStr);
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "Quantity must be a positive integer.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid quantity format. Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validate payment amount
+        try {
+            paymentAmount = Double.parseDouble(paymentAmountStr);
+            if (paymentAmount < 0) {
+                JOptionPane.showMessageDialog(this, "Payment amount cannot be negative.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid payment amount format. Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Confirm the update
+        String confirmationMessage = String.format(
+            "Are you sure you want to update the following Purchase Order?\n" +
+            poId, quantity, paymentAmount
+        );
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            confirmationMessage,
+            "Confirm Purchase Order Update",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (response != JOptionPane.YES_OPTION) {
+            return; 
+        }
+
+        // Update the Purchase Order
+        try {
+            boolean updated = purchaseManager.editPurchaseOrder(poId, quantity, paymentAmount);
+            if (updated) {
+                JOptionPane.showMessageDialog(this, "Purchase Order " + poId + " updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                // Update table
+                model.setValueAt(String.valueOf(quantity), selectedRow, 4);
+                model.setValueAt(String.valueOf(paymentAmount), selectedRow, 9);
+                // Disable editing
+                quantityTxtField1.setEditable(false);
+                paymentAmountTxtField3.setEditable(false);
+                saveButton.setEnabled(false);
+                deleteButton.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Failed to update Purchase Order " + poId + ". Check console logs for details.",
+                    "Update Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error updating Purchase Order " + poId + ": " + e.getMessage(),
+                "Update Exception",
+                JOptionPane.ERROR_MESSAGE);
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int selectedRow = purchaseOrderTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a Purchase Order to delete.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String poId = purchaseOrderTable.getValueAt(selectedRow, 0).toString();
+        String itemCode = purchaseOrderTable.getValueAt(selectedRow, 3).toString();
+        String status = purchaseOrderTable.getValueAt(selectedRow, 8).toString();
+
+        // Check if status is PENDING
+        if (!status.equals(Status.PENDING.toString())) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Cannot delete Purchase Order " + poId + ". Only PENDING Purchase Orders can be deleted. Current status: " + status + ".",
+                "Invalid Status",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Show confirmation dialog
+        String confirmationMessage = String.format(
+            "Are you sure you want to delete the following Purchase Order?\n" +
+            "Purchase Order ID: %s\n" +
+            "Item Code: %s\n" +
+            "Current Status: %s",
+            poId, itemCode, status
+        );
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            confirmationMessage,
+            "Confirm Purchase Order Deletion",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (response != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        
+        try {
+            boolean deleted = purchaseManager.deletePurchaseOrder(poId);
+            if (deleted) {
+                JOptionPane.showMessageDialog(this, "Purchase Order " + poId + " deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                loadPO(); // Refresh table
+                // Update text fields if the deleted row was selected
+                if (purchaseOrderTable.getSelectedRow() == selectedRow) {
+                    purchaseOrderTxtField1.setText("");
+                    purchaseRequisitionIDTxtField1.setText("");
+                    raisedByTxtField2.setText("");
+                    itemCodeTxtField1.setText("");
+                    quantityTxtField1.setText("");
+                    supplierIDTxtField2.setText("");
+                    requiredDateTxtField4.setText("");
+                    requestedDateTxtField3.setText("");
+                    statusTxtField2.setText("");
+                    paymentAmountTxtField3.setText("");
+                    remarksTxtField5.setText("");
+                }
+  
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Failed to delete Purchase Order " + poId + ". Check console logs for details.",
+                    "Deletion Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error deleting Purchase Order " + poId + ": " + e.getMessage(),
+                "Deletion Exception",
+                JOptionPane.ERROR_MESSAGE);
+        }
 //make a confirmation than delete        // TODO add your handling code here:
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -805,9 +1021,50 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             requestedDateTxtField3.setText(purchaseOrderTable.getValueAt(selectedRow, 7).toString());
             statusTxtField2.setText(purchaseOrderTable.getValueAt(selectedRow, 8).toString());
             paymentAmountTxtField3.setText(purchaseOrderTable.getValueAt(selectedRow, 9).toString());
-            remarksComboBox1.setSelectedItem(purchaseOrderTable.getValueAt(selectedRow, 10).toString());
+            remarksTxtField5.setText(purchaseOrderTable.getValueAt(selectedRow, 10).toString());
         }      // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderTableMouseClicked
+
+    private void remarksTxtField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remarksTxtField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_remarksTxtField5ActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        int selectedRow = purchaseOrderTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Restore text fields to the selected row's values
+            purchaseOrderTxtField1.setText(purchaseOrderTable.getValueAt(selectedRow, 0).toString());
+            purchaseRequisitionIDTxtField1.setText(purchaseOrderTable.getValueAt(selectedRow, 1).toString());
+            raisedByTxtField2.setText(purchaseOrderTable.getValueAt(selectedRow, 2).toString());
+            itemCodeTxtField1.setText(purchaseOrderTable.getValueAt(selectedRow, 3).toString());
+            quantityTxtField1.setText(purchaseOrderTable.getValueAt(selectedRow, 4).toString());
+            supplierIDTxtField2.setText(purchaseOrderTable.getValueAt(selectedRow, 5).toString());
+            requiredDateTxtField4.setText(purchaseOrderTable.getValueAt(selectedRow, 6).toString());
+            requestedDateTxtField3.setText(purchaseOrderTable.getValueAt(selectedRow, 7).toString());
+            statusTxtField2.setText(purchaseOrderTable.getValueAt(selectedRow, 8).toString());
+            paymentAmountTxtField3.setText(purchaseOrderTable.getValueAt(selectedRow, 9).toString());
+            remarksTxtField5.setText(purchaseOrderTable.getValueAt(selectedRow, 10).toString());
+        } else {
+            // Clear all text fields if no row is selected
+            purchaseOrderTxtField1.setText("");
+            purchaseRequisitionIDTxtField1.setText("");
+            raisedByTxtField2.setText("");
+            itemCodeTxtField1.setText("");
+            quantityTxtField1.setText("");
+            supplierIDTxtField2.setText("");
+            requiredDateTxtField4.setText("");
+            requestedDateTxtField3.setText("");
+            statusTxtField2.setText("");
+            paymentAmountTxtField3.setText("");
+            remarksTxtField5.setText("");
+        }
+
+        // Disable all text fields
+        edit();
+        // Reset button states
+        saveButton.setEnabled(false);
+        deleteButton.setEnabled(true);    // TODO add your handling code here:
+    }//GEN-LAST:event_cancelButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -847,6 +1104,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton homeButton3;
@@ -877,8 +1135,8 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private javax.swing.JTextField quantityTxtField1;
     private javax.swing.JTextField raisedByTxtField2;
     private javax.swing.JLabel raisedbyLabel;
-    private javax.swing.JComboBox<String> remarksComboBox1;
     private javax.swing.JLabel remarksLabel3;
+    private javax.swing.JTextField remarksTxtField5;
     private javax.swing.JLabel requestedDateLabel1;
     private javax.swing.JTextField requestedDateTxtField3;
     private javax.swing.JLabel requiredDateLabel2;

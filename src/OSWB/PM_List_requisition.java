@@ -26,12 +26,36 @@ public class PM_List_requisition extends javax.swing.JFrame {
         initComponents();
         setupTable();
         loadPR();
+        loadSuppliers();
+        edit();
+        makePOButton2.setEnabled(true);
+        saveButton1.setEnabled(false);
+        supplierComboBox1.setEnabled(false);
+    }
+    
+    public void edit(){
+        purchaseRequisitionIDTxtField.setEditable(false);
+        quantityTxtField.setEditable(false);
+        itemCodeTxtField.setEditable(false);
+        requiredDateTxtField.setEditable(false);
+        statusTxtField1.setEditable(false);
+        requestedDatetxtField.setEditable(false);
+        requestedByTxtField.setEditable(false);
         
     }
     
     private void setupTable() {
         model.setColumnIdentifiers(columnName);
         requisitionTable.setModel(model);
+    }
+    private void loadSuppliers() {
+        try {
+            List<String[]> suppliers = purchaseManager.viewSuppliers();
+            String[] supplierCodes = suppliers.stream().map(row -> row[0]).toArray(String[]::new);
+            supplierComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(supplierCodes));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading suppliers: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void loadPR() {
@@ -112,6 +136,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        saveButton = new javax.swing.JButton();
         tittle4 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
         homeButton4 = new javax.swing.JButton();
@@ -137,10 +162,20 @@ public class PM_List_requisition extends javax.swing.JFrame {
         supplierComboBox1 = new javax.swing.JComboBox<>();
         requestedByLabel2 = new javax.swing.JLabel();
         requestedByTxtField = new javax.swing.JTextField();
+        saveButton1 = new javax.swing.JButton();
+        makePOButton2 = new javax.swing.JButton();
         sideBarMenu3 = new javax.swing.JPanel();
         itemsListPageButton3 = new javax.swing.JButton();
         supplierPageButton3 = new javax.swing.JButton();
         purchaseOrderPageButton3 = new javax.swing.JButton();
+
+        saveButton.setText("Save");
+        saveButton.setToolTipText("");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -270,12 +305,33 @@ public class PM_List_requisition extends javax.swing.JFrame {
         });
 
         supplierComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        supplierComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierComboBox1ActionPerformed(evt);
+            }
+        });
 
         requestedByLabel2.setText("Requested by :");
 
         requestedByTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 requestedByTxtFieldActionPerformed(evt);
+            }
+        });
+
+        saveButton1.setText("Save");
+        saveButton1.setToolTipText("");
+        saveButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButton1ActionPerformed(evt);
+            }
+        });
+
+        makePOButton2.setText("Make PO");
+        makePOButton2.setToolTipText("");
+        makePOButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makePOButton2ActionPerformed(evt);
             }
         });
 
@@ -288,44 +344,49 @@ public class PM_List_requisition extends javax.swing.JFrame {
                     .addGroup(requisitionTablePanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
-                        .addGap(259, 259, 259)
-                        .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(requisitionTablePanelLayout.createSequentialGroup()
-                                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(purchaseRequisitionIDLabel)
-                                    .addComponent(statusLabel1)
-                                    .addComponent(itemCodeLabel)
-                                    .addComponent(supplierLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
-                                        .addComponent(supplierComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(requestedByLabel2)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(requestedByTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(requisitionTablePanelLayout.createSequentialGroup()
-                                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(statusTxtField1)
-                                            .addComponent(itemCodeTxtField)
-                                            .addComponent(purchaseRequisitionIDTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(requestedDateLabel1)
-                                            .addComponent(requiredDateLabel)
-                                            .addComponent(quantityLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(quantityTxtField)
-                                            .addComponent(requiredDateTxtField)
-                                            .addComponent(requestedDatetxtField))))))))
+                    .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, requisitionTablePanelLayout.createSequentialGroup()
+                            .addGap(259, 259, 259)
+                            .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(makePOButton2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(saveButton1))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, requisitionTablePanelLayout.createSequentialGroup()
+                            .addGap(41, 41, 41)
+                            .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                    .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(purchaseRequisitionIDLabel)
+                                        .addComponent(statusLabel1)
+                                        .addComponent(itemCodeLabel)
+                                        .addComponent(supplierLabel1))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                            .addComponent(supplierComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(requestedByLabel2)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(requestedByTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(requisitionTablePanelLayout.createSequentialGroup()
+                                            .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(statusTxtField1)
+                                                .addComponent(itemCodeTxtField)
+                                                .addComponent(purchaseRequisitionIDTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))
+                                            .addGap(18, 18, 18)
+                                            .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(requestedDateLabel1)
+                                                .addComponent(requiredDateLabel)
+                                                .addComponent(quantityLabel))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(quantityTxtField)
+                                                .addComponent(requiredDateTxtField)
+                                                .addComponent(requestedDatetxtField)))))))))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         requisitionTablePanelLayout.setVerticalGroup(
@@ -338,7 +399,9 @@ public class PM_List_requisition extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
+                    .addComponent(searchButton)
+                    .addComponent(saveButton1)
+                    .addComponent(makePOButton2))
                 .addGap(18, 18, 18)
                 .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(purchaseRequisitionIDLabel)
@@ -517,6 +580,72 @@ public class PM_List_requisition extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_requestedByTxtFieldActionPerformed
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void makePOButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePOButton2ActionPerformed
+        supplierComboBox1.setEnabled(true);
+        saveButton1.setEnabled(true);
+                // TODO add your handling code here:
+    }//GEN-LAST:event_makePOButton2ActionPerformed
+
+    private void supplierComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_supplierComboBox1ActionPerformed
+
+    private void saveButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButton1ActionPerformed
+        int selectedRow = requisitionTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a Purchase Requisition.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String prId = requisitionTable.getValueAt(selectedRow, 0).toString();
+        String itemCode = requisitionTable.getValueAt(selectedRow, 1).toString();
+        String quantity = requisitionTable.getValueAt(selectedRow, 3).toString();
+        String requiredDate = requisitionTable.getValueAt(selectedRow, 4).toString();
+        String status = requisitionTable.getValueAt(selectedRow, 6).toString();
+        String supplierCode = (String) supplierComboBox1.getSelectedItem();
+        if (supplierCode == null || supplierCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a supplier.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Show confirmation dialog
+        String confirmationMessage = String.format(
+                "Are you sure you want to generate a Purchase Order for:\n" +
+                        "Purchase Requisition ID: %s\n" +
+                        "Item Code: %s\n" +
+                        "Quantity: %s\n" +
+                        "Required Date: %s\n" +
+                        "Current Status: %s\n" +
+                        "Supplier Code: %s",
+                prId, itemCode, quantity, requiredDate, status, supplierCode
+        );
+        int response = JOptionPane.showConfirmDialog(
+                this,
+                confirmationMessage,
+                "Confirm Purchase Order Creation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (response != JOptionPane.YES_OPTION) {
+            // User canceled, exit the method
+            return;
+        }
+
+        // Proceed with generating the PurchaseOrder
+        String result = purchaseManager.generatePurchaseOrder(prId, supplierCode);
+        if (result.startsWith("Error")) {
+            JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadPR(); // Refresh table to reflect updated PR status
+        }     // TODO add your handling code here:
+    }//GEN-LAST:event_saveButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -560,6 +689,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     private javax.swing.JTextField itemCodeTxtField;
     private javax.swing.JButton itemsListPageButton3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton makePOButton2;
     private javax.swing.JLabel pageName;
     private javax.swing.JButton purchaseOrderPageButton3;
     private javax.swing.JLabel purchaseRequisitionIDLabel;
@@ -574,6 +704,8 @@ public class PM_List_requisition extends javax.swing.JFrame {
     private javax.swing.JTextField requiredDateTxtField;
     private javax.swing.JTable requisitionTable;
     private javax.swing.JPanel requisitionTablePanel;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JButton saveButton1;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTxtField;
     private javax.swing.JPanel sideBarMenu3;

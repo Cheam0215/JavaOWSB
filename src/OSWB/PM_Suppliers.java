@@ -27,7 +27,16 @@ public class PM_Suppliers extends javax.swing.JFrame {
         initComponents();
         setupTable();
         loadSuppliers();
-        
+        edit();
+    }
+    
+    public void edit()
+    {
+        supplierCodeTxtField.setEditable(false);
+        supplierNameTxtField.setEditable(false);
+        contactNumberTxtField.setEditable(false);
+        addressTxtField2.setEditable(false);
+        bankAccountTxtField1.setEditable(false);
     }
 
     private void setupTable() {
