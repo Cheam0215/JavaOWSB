@@ -1,9 +1,18 @@
 package Entities;
 
 import Utility.FileManager;
-import Utility.UserRoles;
 import Utility.Remark;
 import Utility.Status;
+import Utility.UserRoles;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -23,90 +32,142 @@ public class PurchaseManager extends User{
         this.fileManager = new FileManager();
     }
     
-    public String viewItems() {
-        List<Item> itemsList = fileManager.readFile(
-            fileManager.getPoFilePath(),
+    public List<String[]> viewItems() {
+        List<Item> itemList = fileManager.readFile(
+            fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
+                // Ensure the line has the expected number of fields
+                if (data.length < 4) {
+                    System.out.println("Invalid item data: " + line);
+                    return null; // Skip invalid lines
+                }
+                try {
+                    return new Item(
+                        data[0], // itemCode
+                        data[1], // itemName
+                        Integer.parseInt(data[2]), // stockLevel
+                        Double.parseDouble(data[3]) // retailPrice
+                    );
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing item data: " + line + " | " + e.getMessage());
+                    return null; // Skip lines with parsing errors
+                }
             }
         );
 
-        StringBuilder view = new StringBuilder("Item List:\n");
-        view.append("Item Code|Item Name|Supplier ID|Stock Level\n");
-        view.append("-------------------------------------------\n");
-
-        for (Item item : itemsList) {
-            view.append(String.format("%s | %s | %s | %d \n",
-                item.getItemCode(), item.getItemName(), item.getSupplierCode(), 
-                item.getStockLevel()));
+        // Filter out null entries (invalid lines)
+        List<String[]> result = new ArrayList<>();
+        for (Item item : itemList) {
+            if (item == null) continue; // Skip invalid items
+            String[] row = new String[]{
+                item.getItemCode(),
+                item.getItemName(),
+                String.valueOf(item.getStockLevel()),
+                String.valueOf(item.getRetailPrice())
+            };
+            result.add(row);
         }
-        return view.toString();
+        return result;
     }
     
-    public String viewSuppliers() {
+    public List<String[]> viewSuppliers() {
         List<Supplier> supplierList = fileManager.readFile(
-            fileManager.getPoFilePath(),
+            fileManager.getSupplierFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Supplier(data[0], data[1], Integer.parseInt(data[2]), data[3], data[4]);
-            }//2 is list may got problem
+                // Create a supplier with the correct parameter order
+                // The format seems to be: supplierCode, supplierName, itemCode, contactNumber, address, bankAccount
+                Supplier supplier = new Supplier(data[0], data[1], 
+                    Integer.parseInt(data[2]), // contactNumber is in position 3
+                    data[3], // address is in position 4
+                    data[4]); // bankAccount is in position 5
+
+                // Add the itemCode to the supplier's list of item codes
+
+                return supplier;
+            }
         );
 
-        StringBuilder view = new StringBuilder("Item List:\n");
-        view.append("Supplier Code|Supplier Name\n");
-        view.append("-------------------------------------------\n");
-
-        for (Supplier sup : supplierList) {
-            view.append(String.format("%s | %s \n",
-                sup.getSupplierCode(), sup.getSupplierName(), sup.getItemIds()));
+        // Convert the list of Supplier objects to List<String[]> for the table
+        List<String[]> result = new ArrayList<>();
+        for (Supplier supplier : supplierList) {
+            String[] row = new String[]{
+                supplier.getSupplierCode(),
+                supplier.getSupplierName(),
+                String.valueOf(supplier.getContactNumber()),
+                supplier.getAddress(),
+                supplier.getBankAccount()
+            };
+            result.add(row);
         }
-        return view.toString();
+        return result;
     }
     
-    public String viewPurchaseRequisition() {
+    public List<String[]> viewPurchaseRequisition() {
         List<PurchaseRequisition> prList = fileManager.readFile(
             fileManager.getPrFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseRequisition(data[0], data[1], data[2], Integer.parseInt(data[3]), data[4], data[5],data[6], Status.valueOf(data[7]));
+                return new PurchaseRequisition(
+                    data[0],                   // prId
+                    data[1],                   // itemCode
+                    data[2],                   // requestedBy
+                    Integer.parseInt(data[3]), // quantity
+                    data[4],                   // requiredDate
+                    data[5],                   // requestedDate
+                    Status.valueOf(data[6])    // status - assuming Status is an enum
+                );
             }
         );
 
-        StringBuilder view = new StringBuilder("Purchase Requisitions:\n");
-        view.append("PR ID | Item Code | Quantity | Required Date | Supplier\n");
-        view.append("-------------------------------------------------\n");
-
+        // Convert the list of PurchaseRequisition objects to List<String[]> for the table
+        List<String[]> result = new ArrayList<>();
         for (PurchaseRequisition pr : prList) {
-            view.append(String.format("%s | %s | %d | %s | %s\n",
-                pr.getPrId(), pr.getItemCode(), pr.getQuantity(),
-                pr.getRequiredDate(), pr.getSupplierCode()));
+            String[] row = new String[]{
+                pr.getPrId(),
+                pr.getItemCode(),
+                pr.getRequestedBy(),
+                String.valueOf(pr.getQuantity()),
+                pr.getRequiredDate(),
+                pr.getRequestedDate(),
+                pr.getStatus().toString()
+            };
+            result.add(row);
         }
-        return view.toString();
+        return result;
     }
     
-    public String viewPurchaseOrder() {
-         List<PurchaseOrder> poList = fileManager.readFile(
+    public List<String[]> viewPurchaseOrder() {
+        List<PurchaseOrder> poList = fileManager.readFile(
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
                 return new PurchaseOrder(data[0], data[1], data[2], data[3],
-                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
-                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
-
+                    Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]), Remark.valueOf(data[10]));
             }
         );
-         
-        StringBuilder view = new StringBuilder("Purchase Order:\n");
-        view.append("Purchase Order ID | Purchase Requisition ID | Item Code | Quantity | Supplier ID | Status | Payment Amount\n");
-        view.append("-------------------------------------------------\n");
 
-        for (PurchaseOrder po : poList){
-            view.append(String.format("%s | %s | %s | %d | %s | %s | RM%.2f\n",
-                po.getPoId(), po.getPrId(), po.getItemCode(),
-                po.getQuantity(), po.getSupplierCode(),po.getStatus(), po.getPaymentAmount()));   
+        // Convert the list of PurchaseOrder objects to List<String[]> for the table
+        List<String[]> result = new ArrayList<>();
+        for (PurchaseOrder po : poList) {
+            String[] row = new String[]{
+                po.getPoId(),
+                po.getPrId(),
+                po.getRaisedBy(),
+                po.getItemCode(),
+                String.valueOf(po.getQuantity()),
+                po.getSupplierCode(),
+                po.getRequiredDate(),
+                po.getRequestedDate(),
+                po.getStatus().toString(),
+                String.valueOf(po.getPaymentAmount()),
+                po.getRemark().toString()
+            };
+            result.add(row);
         }
-        return view.toString();
+        return result;
     }
     
     public String generatePurchaseOrder() {

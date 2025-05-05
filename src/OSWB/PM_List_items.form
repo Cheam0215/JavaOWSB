@@ -513,22 +513,22 @@
                           <Component id="searchButton" min="-2" pref="60" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="supplierIDLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="supplierIDTxtField" min="-2" pref="257" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
                                           <Component id="itemCodeLabel" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="itemCodeTxtField" min="-2" pref="257" max="-2" attributes="0"/>
                                       </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="retailPriceLabel" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="retailPricetxtField" min="-2" pref="257" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="stockLevelLabel" min="-2" max="-2" attributes="0"/>
@@ -571,10 +571,10 @@
                   </Group>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="supplierIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="stockLevelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="supplierIDTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="retailPricetxtField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="stockLevelTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="retailPriceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -613,6 +613,10 @@
                   </Table>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="itemsListTableMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="itemsListTableMouseEntered"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -689,15 +693,18 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="itemCodeLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Item Code :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="supplierIDLabel">
+        <Component class="javax.swing.JLabel" name="retailPriceLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Supplier ID :"/>
+            <Property name="text" type="java.lang.String" value="Retail Price :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="itemNameLabel">
@@ -715,9 +722,9 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemCodeTxtFieldActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="supplierIDTxtField">
+        <Component class="javax.swing.JTextField" name="retailPricetxtField">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierIDTxtFieldActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="retailPricetxtFieldActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="itemNameTxtField">

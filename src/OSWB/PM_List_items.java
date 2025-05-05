@@ -4,19 +4,93 @@
  */
 package OSWB;
 
+import Utility.FileManager;
+import javax.swing.table.DefaultTableModel;
+import Entities.PurchaseManager;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author User
  */
 public class PM_List_items extends javax.swing.JFrame {
+    private DefaultTableModel model = new DefaultTableModel();
+    private String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
+    
+     private PurchaseManager purchaseManager;
 
     /**
      * Creates new form PM_Items
      */
-    public PM_List_items() {
+    public PM_List_items(PurchaseManager loggedInPM) {
+        this.purchaseManager = loggedInPM;       
+       
         initComponents();
+        setupTable();
+        loadItems();
     }
+    
+    
+    private void setupTable() {
+        model.setColumnIdentifiers(columnName);
+        itemsListTable.setModel(model);
+    }
+    
+    private void loadItems() {
+        try {
+            model.setRowCount(0);
+            List<String[]> items = purchaseManager.viewItems();
+            if (items.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "There are no items available.", "Load Items", JOptionPane.WARNING_MESSAGE);
+            } else {
+                for (String[] item : items) {
+                    model.addRow(item);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading items: " + e.getMessage(), "Load Items Error", JOptionPane.ERROR_MESSAGE);
+            model.setRowCount(0);
+        }
+        itemsListTable.clearSelection(); // Clear selection after loading
+    }
+    
+    private void searchItems() {
+        String searchTerm = searchTxtField.getText().trim();
 
+        if (searchTerm.isEmpty()) {
+            loadItems();
+            return;
+        }
+        
+        try {
+            model.setRowCount(0);
+            List<String[]> allItems = purchaseManager.viewItems();
+            boolean foundMatch = false;
+            for (String[] item : allItems) {
+                if ((item[0] != null && item[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
+                    (item[1] != null && item[1].toLowerCase().contains(searchTerm.toLowerCase()))) {
+                    model.addRow(item);
+                    foundMatch = true;
+                }
+            }
+
+            if (!foundMatch) {
+                JOptionPane.showMessageDialog(this, 
+                    "No items found matching '" + searchTerm + "'", 
+                    "Search Results", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                // Reload all data after showing the message
+                loadItems();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error searching items: " + e.getMessage(), 
+                "Search Error", 
+                JOptionPane.ERROR_MESSAGE);
+            loadItems();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,11 +136,11 @@ public class PM_List_items extends javax.swing.JFrame {
         searchTxtField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         itemCodeLabel = new javax.swing.JLabel();
-        supplierIDLabel = new javax.swing.JLabel();
+        retailPriceLabel = new javax.swing.JLabel();
         itemNameLabel = new javax.swing.JLabel();
         stockLevelLabel = new javax.swing.JLabel();
         itemCodeTxtField = new javax.swing.JTextField();
-        supplierIDTxtField = new javax.swing.JTextField();
+        retailPricetxtField = new javax.swing.JTextField();
         itemNameTxtField = new javax.swing.JTextField();
         stockLevelTxtField = new javax.swing.JTextField();
 
@@ -399,6 +473,14 @@ public class PM_List_items extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        itemsListTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemsListTableMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                itemsListTableMouseEntered(evt);
+            }
+        });
         jScrollPane2.setViewportView(itemsListTable);
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
@@ -450,10 +532,15 @@ public class PM_List_items extends javax.swing.JFrame {
 
         searchButton.setText("Search");
         searchButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
 
         itemCodeLabel.setText("Item Code :");
 
-        supplierIDLabel.setText("Supplier ID :");
+        retailPriceLabel.setText("Retail Price :");
 
         itemNameLabel.setText("Item Name :");
 
@@ -465,9 +552,9 @@ public class PM_List_items extends javax.swing.JFrame {
             }
         });
 
-        supplierIDTxtField.addActionListener(new java.awt.event.ActionListener() {
+        retailPricetxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierIDTxtFieldActionPerformed(evt);
+                retailPricetxtFieldActionPerformed(evt);
             }
         });
 
@@ -500,19 +587,19 @@ public class PM_List_items extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(itemsListTablePanelLayout.createSequentialGroup()
-                        .addGap(38, 38, 38)
+                        .addGap(29, 29, 29)
                         .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(itemsListTablePanelLayout.createSequentialGroup()
-                                .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(itemsListTablePanelLayout.createSequentialGroup()
-                                        .addComponent(supplierIDLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(supplierIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(itemsListTablePanelLayout.createSequentialGroup()
                                         .addComponent(itemCodeLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(itemCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
+                                        .addComponent(itemCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(itemsListTablePanelLayout.createSequentialGroup()
+                                        .addComponent(retailPriceLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(retailPricetxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(27, 27, 27)
                                 .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(itemsListTablePanelLayout.createSequentialGroup()
                                         .addComponent(stockLevelLabel)
@@ -544,10 +631,10 @@ public class PM_List_items extends javax.swing.JFrame {
                     .addComponent(itemNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(supplierIDLabel)
                     .addComponent(stockLevelLabel)
-                    .addComponent(supplierIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stockLevelTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(retailPricetxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stockLevelTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(retailPriceLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(sideBarMenu5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -640,9 +727,9 @@ public class PM_List_items extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_itemCodeTxtFieldActionPerformed
 
-    private void supplierIDTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierIDTxtFieldActionPerformed
+    private void retailPricetxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retailPricetxtFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_supplierIDTxtFieldActionPerformed
+    }//GEN-LAST:event_retailPricetxtFieldActionPerformed
 
     private void itemNameTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameTxtFieldActionPerformed
         // TODO add your handling code here:
@@ -651,6 +738,32 @@ public class PM_List_items extends javax.swing.JFrame {
     private void stockLevelTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockLevelTxtFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_stockLevelTxtFieldActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    searchItems();        // TODO add your handling code here:
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void itemsListTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemsListTableMouseClicked
+        int selectedRow = itemsListTable.getSelectedRow();
+
+    if (selectedRow >= 0) {
+        // Get values from each column
+        String itemCode = itemsListTable.getValueAt(selectedRow, 0).toString();
+        String itemName = itemsListTable.getValueAt(selectedRow, 1).toString();
+        String retailPrice = itemsListTable.getValueAt(selectedRow, 2).toString();
+        String stockLevel = itemsListTable.getValueAt(selectedRow, 3).toString();
+
+        // Set values to text fields
+        itemCodeTxtField.setText(itemCode);
+        itemNameTxtField.setText(itemName);
+        retailPricetxtField.setText(retailPrice);
+        stockLevelTxtField.setText(stockLevel);
+    }    // TODO add your handling code here:
+    }//GEN-LAST:event_itemsListTableMouseClicked
+
+    private void itemsListTableMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemsListTableMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemsListTableMouseEntered
 
     /**
      * @param args the command line arguments
@@ -683,7 +796,8 @@ public class PM_List_items extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PM_List_items().setVisible(true);
+                PurchaseManager item = new PurchaseManager("", "", "");
+                new PM_List_items(item).setVisible(true);
             }
         });
     }
@@ -717,6 +831,8 @@ public class PM_List_items extends javax.swing.JFrame {
     private javax.swing.JButton purchaseOrderPageButton;
     private javax.swing.JButton purchaseOrderPageButton1;
     private javax.swing.JButton purchaseOrderPageButton5;
+    private javax.swing.JLabel retailPriceLabel;
+    private javax.swing.JTextField retailPricetxtField;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTxtField;
     private javax.swing.JPanel sideBarMenu;
@@ -724,8 +840,6 @@ public class PM_List_items extends javax.swing.JFrame {
     private javax.swing.JPanel sideBarMenu5;
     private javax.swing.JLabel stockLevelLabel;
     private javax.swing.JTextField stockLevelTxtField;
-    private javax.swing.JLabel supplierIDLabel;
-    private javax.swing.JTextField supplierIDTxtField;
     private javax.swing.JButton supplierPageButton;
     private javax.swing.JButton supplierPageButton1;
     private javax.swing.JButton supplierPageButton5;
