@@ -280,16 +280,31 @@
                                           </Group>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="itemIDLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="itemIDTxtField" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="contactNumberLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="contactNumberTxtField" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="addressLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="bankAccountLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="bankAccountTxtField1" max="32767" attributes="0"/>
+                                                  <Component id="addressTxtField2" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
                                   </Group>
                               </Group>
                               <Component id="jScrollPane2" min="-2" pref="759" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="55" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -308,14 +323,21 @@
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="supplierCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="itemIDLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contactNumberLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="supplierCodeTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="itemIDTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contactNumberTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="supplierNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="supplierNameTxtField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addressLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addressTxtField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="bankAccountLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="bankAccountTxtField1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -353,12 +375,15 @@
                   </Table>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="supplierListTableMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="itemIDLabel">
+        <Component class="javax.swing.JLabel" name="contactNumberLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Item ID :"/>
+            <Property name="text" type="java.lang.String" value="Contact Number :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="supplierCodeTxtField">
@@ -371,9 +396,9 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierNameTxtFieldActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="itemIDTxtField">
+        <Component class="javax.swing.JTextField" name="contactNumberTxtField">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemIDTxtFieldActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contactNumberTxtFieldActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="searchTxtField">
@@ -387,6 +412,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="supplierCodeLabel">
           <Properties>
@@ -397,6 +425,26 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Supplier Name :"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="addressLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Address :"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="bankAccountLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Bank Account :"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="bankAccountTxtField1">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bankAccountTxtField1ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="addressTxtField2">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addressTxtField2ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
