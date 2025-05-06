@@ -705,8 +705,7 @@ public class PM_List_items extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, 
                 "No previous page available.", 
                 "Navigation Error", 
-                JOptionPane.INFORMATION_MESSAGE);
-            
+                JOptionPane.INFORMATION_MESSAGE); 
         }      // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 

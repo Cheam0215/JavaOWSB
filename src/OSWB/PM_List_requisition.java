@@ -521,7 +521,6 @@ public class PM_List_requisition extends javax.swing.JFrame {
                 "No previous page available.", 
                 "Navigation Error", 
                 JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 
