@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseManager;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 /**
  *
@@ -17,14 +18,15 @@ import javax.swing.JOptionPane;
 public class PM_List_items extends javax.swing.JFrame {
     private DefaultTableModel model = new DefaultTableModel();
     private String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
-    
-     private PurchaseManager purchaseManager;
+    private JFrame previousPage;
+    private PurchaseManager purchaseManager;
 
     /**
      * Creates new form PM_Items
      */
-    public PM_List_items(PurchaseManager loggedInPM) {
-        this.purchaseManager = loggedInPM;       
+    public PM_List_items(PurchaseManager loggedInPM, JFrame previousPage) {
+        this.purchaseManager = loggedInPM;  
+        this.previousPage = previousPage;
         initComponents();
         setupTable();
         loadItems();
@@ -131,7 +133,6 @@ public class PM_List_items extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         tittle2 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
-        homeButton2 = new javax.swing.JButton();
         itemsListTablePanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -427,35 +428,21 @@ public class PM_List_items extends javax.swing.JFrame {
         pageName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pageName.setText("Items List Page");
 
-        homeButton2.setText("Home");
-        homeButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout tittle2Layout = new javax.swing.GroupLayout(tittle2);
         tittle2.setLayout(tittle2Layout);
         tittle2Layout.setHorizontalGroup(
             tittle2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle2Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(homeButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(218, 218, 218)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
         tittle2Layout.setVerticalGroup(
             tittle2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle2Layout.createSequentialGroup()
                 .addContainerGap(49, Short.MAX_VALUE)
-                .addGroup(tittle2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle2Layout.createSequentialGroup()
-                        .addComponent(homeButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle2Layout.createSequentialGroup()
-                        .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45))))
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
 
         itemsListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -518,11 +505,11 @@ public class PM_List_items extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
+                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
         sideBarMenu5Layout.setVerticalGroup(
@@ -586,9 +573,6 @@ public class PM_List_items extends javax.swing.JFrame {
                 .addComponent(sideBarMenu5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(itemsListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(itemsListTablePanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(itemsListTablePanelLayout.createSequentialGroup()
                         .addGap(261, 261, 261)
                         .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -616,7 +600,10 @@ public class PM_List_items extends javax.swing.JFrame {
                                         .addComponent(itemNameLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(itemNameTxtField))))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(itemsListTablePanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(backButton)))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
         itemsListTablePanelLayout.setVerticalGroup(
@@ -710,24 +697,32 @@ public class PM_List_items extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_profilePageButton1ActionPerformed
 
-    private void homeButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_homeButton2ActionPerformed
-
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
+        if (previousPage != null) {
+            previousPage.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No previous page available.", 
+                "Navigation Error", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+        }      // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_items(purchaseManager,this).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void itemCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCodeTxtFieldActionPerformed
@@ -804,16 +799,15 @@ public class PM_List_items extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 PurchaseManager item = new PurchaseManager("", "", "");
-                new PM_List_items(item).setVisible(true);
+                new PM_List_items(item,null).setVisible(true);
             }
-        });
+        });                                                         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton homeButton;
     private javax.swing.JButton homeButton1;
-    private javax.swing.JButton homeButton2;
     private javax.swing.JLabel itemCodeLabel;
     private javax.swing.JTextField itemCodeTxtField;
     private javax.swing.JLabel itemNameLabel;

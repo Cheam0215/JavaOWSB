@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import Utility.Status;
+import javax.swing.JFrame;
 
 /**
  *
@@ -18,12 +19,14 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private DefaultTableModel model = new DefaultTableModel();
     private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
     private PurchaseManager purchaseManager;
+    private JFrame previousPage;
 
     /**
      * Creates new form PM_List_purchase_order
      */
-    public PM_List_purchase_order(PurchaseManager loggedInPM) {
-        this.purchaseManager = loggedInPM;       
+    public PM_List_purchase_order(PurchaseManager loggedInPM, JFrame previousPage) {
+        this.purchaseManager = loggedInPM;    
+        this.previousPage = previousPage;
         initComponents();
         setupTable();
         loadPO();
@@ -140,11 +143,10 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         searchButton = new javax.swing.JButton();
         itemCodeLabel = new javax.swing.JLabel();
         supplierIDLabel = new javax.swing.JLabel();
+        backButton = new javax.swing.JButton();
         tittle4 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
-        homeButton4 = new javax.swing.JButton();
         purchaseOrderListTablePanel = new javax.swing.JPanel();
-        backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         purchaseOrderTable = new javax.swing.JTable();
         editButton = new javax.swing.JButton();
@@ -175,6 +177,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         remarksLabel3 = new javax.swing.JLabel();
         remarksTxtField5 = new javax.swing.JTextField();
         cancelButton = new javax.swing.JButton();
+        backButton1 = new javax.swing.JButton();
         sideBarMenu5 = new javax.swing.JPanel();
         itemsListPageButton5 = new javax.swing.JButton();
         supplierPageButton5 = new javax.swing.JButton();
@@ -312,6 +315,15 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         supplierIDLabel.setText("Supplier ID :");
 
+        backButton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        backButton.setText("<");
+        backButton.setToolTipText("");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tittle4.setBackground(new java.awt.Color(0, 102, 255));
@@ -321,21 +333,12 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         pageName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pageName.setText("Purchase Order Page");
 
-        homeButton4.setText("Home");
-        homeButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeButton4ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout tittle4Layout = new javax.swing.GroupLayout(tittle4);
         tittle4.setLayout(tittle4Layout);
         tittle4Layout.setHorizontalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(homeButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
+                .addGap(209, 209, 209)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -343,25 +346,11 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle4Layout.createSequentialGroup()
                 .addContainerGap(49, Short.MAX_VALUE)
-                .addGroup(tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
-                        .addComponent(homeButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
-                        .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45))))
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
 
         purchaseOrderListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
-
-        backButton.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        backButton.setText("<");
-        backButton.setToolTipText("");
-        backButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backButtonActionPerformed(evt);
-            }
-        });
 
         purchaseOrderTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -510,16 +499,34 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             }
         });
 
+        backButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        backButton1.setText("<");
+        backButton1.setToolTipText("");
+        backButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout purchaseOrderListTablePanelLayout = new javax.swing.GroupLayout(purchaseOrderListTablePanel);
         purchaseOrderListTablePanel.setLayout(purchaseOrderListTablePanelLayout);
         purchaseOrderListTablePanelLayout.setHorizontalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
+            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -571,24 +578,17 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                         .addGap(218, 218, 218)
                         .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(backButton1)))
                 .addContainerGap(42, Short.MAX_VALUE))
-            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
         );
         purchaseOrderListTablePanelLayout.setVerticalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(backButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -629,13 +629,13 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(remarksLabel3)
                     .addComponent(remarksTxtField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
@@ -666,12 +666,12 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         sideBarMenu5Layout.setVerticalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -733,24 +733,19 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_profilePageButton3ActionPerformed
 
-    private void homeButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_homeButton4ActionPerformed
-
-    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_backButtonActionPerformed
-
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_items(purchaseManager,this).setVisible(true);
+        this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -785,6 +780,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         // Enable Save button and disable Delete button
         saveButton.setEnabled(true);
         deleteButton.setEnabled(false);
+        editButton.setEnabled(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -895,6 +891,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 paymentAmountTxtField3.setEditable(false);
                 saveButton.setEnabled(false);
                 deleteButton.setEnabled(true);
+                editButton.setEnabled(true);
             } else {
                 JOptionPane.showMessageDialog(this,
                     "Failed to update Purchase Order " + poId + ". Check console logs for details.",
@@ -1063,8 +1060,26 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         edit();
         // Reset button states
         saveButton.setEnabled(false);
-        deleteButton.setEnabled(true);    // TODO add your handling code here:
+        deleteButton.setEnabled(true);
+        editButton.setEnabled(true);// TODO add your handling code here:
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void backButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButton1ActionPerformed
+        if (previousPage != null) {
+            previousPage.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No previous page available.", 
+                "Navigation Error", 
+                JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_backButton1ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1097,18 +1112,18 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 PurchaseManager po = new PurchaseManager("", "", "");
-                new PM_List_purchase_order(po).setVisible(true);
+                new PM_List_purchase_order(po,null).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton backButton1;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     private javax.swing.JButton homeButton3;
-    private javax.swing.JButton homeButton4;
     private javax.swing.JLabel itemCodeLabel;
     private javax.swing.JLabel itemCodeLabel1;
     private javax.swing.JTextField itemCodeTxtField;

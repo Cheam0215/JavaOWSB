@@ -8,6 +8,7 @@ import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseManager;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -16,14 +17,15 @@ import javax.swing.JOptionPane;
 public class PM_Suppliers extends javax.swing.JFrame {
     private DefaultTableModel model = new DefaultTableModel();
     private String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
-    
-     private PurchaseManager purchaseManager;
+    private JFrame previousPage;
+    private PurchaseManager purchaseManager;
 
     /**
      * Creates new form PM_Suppliers
      */
-    public PM_Suppliers(PurchaseManager loggedInPM) {
-        this.purchaseManager = loggedInPM;       
+    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage) {
+        this.purchaseManager = loggedInPM;    
+        this.previousPage = previousPage;
         initComponents();
         setupTable();
         loadSuppliers();
@@ -130,7 +132,6 @@ public class PM_Suppliers extends javax.swing.JFrame {
         profilePageButton2 = new javax.swing.JButton();
         tittle3 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
-        homeButton3 = new javax.swing.JButton();
         supplierListTablePanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -252,23 +253,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
 
         pageName.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         pageName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pageName.setText("Purchase Manager Page");
-
-        homeButton3.setText("Home");
-        homeButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeButton3ActionPerformed(evt);
-            }
-        });
+        pageName.setText("Supplier List Page");
 
         javax.swing.GroupLayout tittle3Layout = new javax.swing.GroupLayout(tittle3);
         tittle3.setLayout(tittle3Layout);
         tittle3Layout.setHorizontalGroup(
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(homeButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
+                .addGap(217, 217, 217)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -276,13 +268,8 @@ public class PM_Suppliers extends javax.swing.JFrame {
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle3Layout.createSequentialGroup()
                 .addContainerGap(49, Short.MAX_VALUE)
-                .addGroup(tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                        .addComponent(homeButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                        .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45))))
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
 
         supplierListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -367,45 +354,44 @@ public class PM_Suppliers extends javax.swing.JFrame {
         supplierListTablePanelLayout.setHorizontalGroup(
             supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                            .addGap(223, 223, 223)
+                            .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                            .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addComponent(supplierNameLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addComponent(supplierCodeLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(18, 18, 18)
                             .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                    .addGap(223, 223, 223)
-                                    .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(contactNumberLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(contactNumberTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
                                 .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addComponent(supplierNameLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addComponent(supplierCodeLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(18, 18, 18)
                                     .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addComponent(contactNumberLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(contactNumberTxtField))
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(addressLabel1)
-                                                .addComponent(bankAccountLabel2))
-                                            .addGap(21, 21, 21)
-                                            .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(bankAccountTxtField1)
-                                                .addComponent(addressTxtField2))))))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(addressLabel1)
+                                        .addComponent(bankAccountLabel2))
+                                    .addGap(21, 21, 21)
+                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(bankAccountTxtField1)
+                                        .addComponent(addressTxtField2))))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(55, 55, 55))
+            .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(backButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         supplierListTablePanelLayout.setVerticalGroup(
             supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -434,7 +420,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
                 .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bankAccountLabel2)
                     .addComponent(bankAccountTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
@@ -465,23 +451,23 @@ public class PM_Suppliers extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(20, 20, 20)
                 .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         sideBarMenu5Layout.setVerticalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(96, 96, 96)
+                .addGap(94, 94, 94)
                 .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
+                .addGap(121, 121, 121)
                 .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(144, 144, 144))
+                .addGap(148, 148, 148))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -531,24 +517,32 @@ public class PM_Suppliers extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_profilePageButton2ActionPerformed
 
-    private void homeButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_homeButton3ActionPerformed
-
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
+        if (previousPage != null) {
+            previousPage.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No previous page available.", 
+                "Navigation Error", 
+                JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_items(purchaseManager,this).setVisible(true);
+        this.dispose();                 // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        // TODO add your handling code here:
+       new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+        this.dispose();  // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void supplierCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierCodeTxtFieldActionPerformed
@@ -626,7 +620,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 PurchaseManager supplier = new PurchaseManager("","","");
-                new PM_Suppliers(supplier).setVisible(true);
+                new PM_Suppliers(supplier,null).setVisible(true);
             }
         });
     }
@@ -640,7 +634,6 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JLabel contactNumberLabel;
     private javax.swing.JTextField contactNumberTxtField;
     private javax.swing.JButton homeButton2;
-    private javax.swing.JButton homeButton3;
     private javax.swing.JButton itemsListPageButton2;
     private javax.swing.JButton itemsListPageButton5;
     private javax.swing.JLabel jLabel3;

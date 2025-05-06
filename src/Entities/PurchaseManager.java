@@ -312,10 +312,10 @@ public class PurchaseManager extends User{
     public boolean editPurchaseOrder(String poId, int newQuantity , double new_payment_amount) {
         try {
             // Validate session
-//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-//                System.out.println("Error: No user logged in.");
-//                return false;
-//            }
+            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+                System.out.println("Error: No user logged in.");
+                return false;
+            }
 
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
