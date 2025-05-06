@@ -5,6 +5,7 @@
 package OSWB;
 
 import Entities.InventoryManager;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -47,6 +48,11 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
         });
 
         jButton3.setText("Manage");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Generate Stock report");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -115,7 +121,10 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        InventoryManager inventoryManager = new InventoryManager("IM001", "manager", "password");
+        IM_Generate_Report report = new IM_Generate_Report(inventoryManager);
+        report.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -127,10 +136,14 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         InventoryManager inventoryManager = new InventoryManager("IM001", "manager", "password");
-        IM_Update_Stock updatePage = new IM_Update_Stock(inventoryManager);
-        updatePage.setVisible(true);
+        IM_Generate_Report report = new IM_Generate_Report(inventoryManager);
+        report.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
