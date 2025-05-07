@@ -245,7 +245,9 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.INVENTORY_MANAGER -> { 
                         InventoryManager loggedInIM = new InventoryManager(userID, username, password);
-                        loggedInIM.displayMenu();
+                        Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM);
+                        IM_MAIN.setVisible(true);
+                        this.dispose();
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
