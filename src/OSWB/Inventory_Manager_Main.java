@@ -12,14 +12,16 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class Inventory_Manager_Main extends javax.swing.JFrame {
+    private InventoryManager loggedinIM;
 
     /**
      * Creates new form Inventory_Manager_Main
      */
-    public Inventory_Manager_Main() {
+    public Inventory_Manager_Main(InventoryManager loggedInIM) {
+        this.loggedinIM = loggedInIM;
         initComponents();
+        jLabel1.setText(loggedInIM.getUsername() + " Inventory Manager Dashboard");
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -136,8 +138,8 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         InventoryManager inventoryManager = new InventoryManager("IM001", "manager", "password");
-        IM_Generate_Report report = new IM_Generate_Report(inventoryManager);
-        report.setVisible(true);
+        IM_Update_Stock update = new IM_Update_Stock(inventoryManager);
+        update.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -166,7 +168,8 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Inventory_Manager_Main().setVisible(true);
+                InventoryManager im = new InventoryManager("", "", "");
+                new Inventory_Manager_Main(im).setVisible(true);
             }
         });
     }
