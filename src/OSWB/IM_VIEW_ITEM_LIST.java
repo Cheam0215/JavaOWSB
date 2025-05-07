@@ -21,7 +21,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     private InventoryManager inventoryManager;
     
     private final String[] columnNames = {
-        "Item Code", "Item Name", "Supplier ID", "Stock Level", "Unit Price", "Retail Price"
+        "Item Code", "Item Name", "Stock Level", "Retail Price"
     };
 
     /**
@@ -49,7 +49,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
                 fileManager.getItemFilePath(),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[4]), Double.parseDouble(data[5]));
+                    return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
                 }
         );
         
@@ -57,9 +57,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
             model.addRow(new Object[] {
                 item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierCode(),
                 item.getStockLevel(),
-                item.getUnitPrice(),
                 item.getRetailPrice()
             });
         }
@@ -198,8 +196,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
             fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]), 
-                               Double.parseDouble(data[4]), Double.parseDouble(data[5]));
+                return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
             }
         );
        
@@ -216,11 +213,9 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
             if (item.getItemName().equalsIgnoreCase(searchText) || 
                 item.getItemCode().equalsIgnoreCase(searchText)) {
                 model.addRow(new Object[] {
-                    item.getItemCode(),
+                item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierCode(),
                 item.getStockLevel(),
-                item.getUnitPrice(),
                 item.getRetailPrice()
                 });
                 found = true;
