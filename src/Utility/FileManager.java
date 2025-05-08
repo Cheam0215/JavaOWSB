@@ -26,43 +26,58 @@ public class FileManager {
     
    
     // Login function
-    public static UserRoles login(String username, String password) {
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(FileManager.class.getResourceAsStream(userFilePath)))) {
-            if (reader == null) {
-                System.err.println("Resource not found: " + userFilePath);
-                return null;
-            }
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length >= 4) {
-                    String fileUserID   = String.valueOf(data[0]);
-                    String fileUsername = data[1].trim();
-                    String filePassword = data[2].trim();
-                    String fileRole = data[3].trim();
-
-                    if (fileUsername.equals(username) && filePassword.equals(password)) {
-                        try {
-                            Session loginSession = new Session();
-                            loginSession.setUserID(fileUserID);
-                            return UserRoles.valueOf(fileRole);
-                        } catch (IllegalArgumentException e) {
-                            System.err.println("Invalid role in user file: " + fileRole);
-                            return null;
-                        }
-                    }
-                }
-            }
-            
-        } catch (IOException e) {
-            System.err.println("Error reading user file: " + e.getMessage());
+   public static UserRoles login(String username, String password) {
+    try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(FileManager.class.getResourceAsStream(userFilePath)))) {
+        if (reader == null) {
+            System.err.println("Resource not found: " + userFilePath);
             return null;
         }
 
-        return null; // No matching user found
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length >= 4) {
+                String fileUserID = String.valueOf(data[0]);
+                String fileUsername = data[1].trim();
+                String filePassword = data[2].trim();
+                String fileRole = data[3].trim();
+
+                // Try to deserialize the password; fall back to plain text if it fails
+                String storedPassword = filePassword;
+                try {
+                    byte[] decodedBytes = Base64.getDecoder().decode(filePassword);
+                    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(decodedBytes))) {
+                        storedPassword = (String) in.readObject();
+                        System.out.println("storedPassword " + storedPassword);
+                    }
+                } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
+                    // If deserialization fails or not Base64, use the field as plain text
+//                    System.out.println("Password not serialized or invalid Base64: " + filePassword);
+                }
+
+                // Compare username and password
+                if (fileUsername.equals(username) && storedPassword.equals(password)) {
+                    System.out.println("username : " +username);
+                    System.out.println("password : "+ password);
+                    try {
+                        Session loginSession = new Session();
+                        loginSession.setUserID(fileUserID);
+                        return UserRoles.valueOf(fileRole);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Invalid role in user file: " + fileRole);
+                        return null;
+                    }
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading user file: " + e.getMessage());
+        return null;
     }
+
+    return null; // No matching user found
+}
 
 
     // Write an entity to a file, checking for duplicates

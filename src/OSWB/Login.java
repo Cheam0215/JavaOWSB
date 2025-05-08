@@ -223,7 +223,7 @@ public class Login extends javax.swing.JFrame {
             FileManager fileManager = new FileManager();
             List<User> userList = fileManager.readFile(fileManager.getUserFilePath(), User::parse);
             User loggedInUser = userList.stream()
-                .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
+                .filter(user -> user.getUsername().equals(username))
                 .findFirst()
                 .orElse(null);
 

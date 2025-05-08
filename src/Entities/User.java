@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Sheng Ting
  */
-public abstract class User {
+public class User {
     private String userID;
     private String username;
     private String password;
@@ -83,7 +83,7 @@ public abstract class User {
            return true;
     }
     
-    public abstract void displayMenu();
+    public void displayMenu(){};
     
      public static User parse(String line) {
         String[] data = line.split(",");

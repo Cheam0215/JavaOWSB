@@ -4,17 +4,44 @@
  */
 package OSWB;
 
+import Entities.FinanceManager;
+import Entities.InventoryManager;
+import Entities.PurchaseManager;
+import Entities.SalesManager;
+import Entities.User;
+import Utility.UserRoles;
+import java.util.List;
+import Utility.FileManager;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.Base64;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Sheng Ting
  */
 public class ADMIN_CREATE_USER extends javax.swing.JFrame {
+    
+    private FileManager fileManager;
 
     /**
      * Creates new form ADMIN_CREATE_USER
      */
     public ADMIN_CREATE_USER() {
         initComponents();
+        // Populate roleField with UserRoles, excluding ADMINISTRATOR
+        FileManager fileManager = new FileManager();
+        this.fileManager = fileManager;
+        String[] roleNames = Arrays.stream(UserRoles.values())
+                .filter(role -> !role.equals(UserRoles.ADMINISTRATOR))
+                .map(Enum::name)
+                .toArray(String[]::new);
+        roleField.setModel(new javax.swing.DefaultComboBoxModel<>(roleNames));
     }
 
     /**
@@ -35,9 +62,9 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        passwordField = new javax.swing.JPasswordField();
+        usernameField = new javax.swing.JTextField();
+        roleField = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -71,6 +98,11 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         backButton.setText("Back");
 
         regitserButton.setText("Register");
+        regitserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regitserButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -107,7 +139,18 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Role : ");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        usernameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameFieldActionPerformed(evt);
+            }
+        });
+
+        roleField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        roleField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roleFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
         panel3.setLayout(panel3Layout);
@@ -121,9 +164,9 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
-                    .addComponent(jPasswordField1)
-                    .addComponent(jComboBox1, 0, 303, Short.MAX_VALUE))
+                    .addComponent(usernameField)
+                    .addComponent(passwordField)
+                    .addComponent(roleField, 0, 303, Short.MAX_VALUE))
                 .addContainerGap(758, Short.MAX_VALUE))
         );
         panel3Layout.setVerticalGroup(
@@ -132,15 +175,15 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
                 .addGap(107, 107, 107)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(52, 52, 52)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(49, 49, 49)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(roleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(269, Short.MAX_VALUE))
         );
 
@@ -165,6 +208,120 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void roleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_roleFieldActionPerformed
+
+    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameFieldActionPerformed
+
+    private void regitserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regitserButtonActionPerformed
+        String username     = usernameField.getText().trim();
+        String password     = String.valueOf(passwordField.getPassword());
+        String roleString   = (String) roleField.getSelectedItem();
+        UserRoles role      = UserRoles.valueOf(roleString);
+
+        // Validate inputs
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (password.length() < 6) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Read existing users to check for duplicate username
+        List<User> existingUsers = fileManager.readFile(
+            fileManager.getUserFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 4) {
+                    JOptionPane.showMessageDialog(this, "Invalid user data. Index out of bounds", "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+                String passwordField = data[2];
+                // Try to deserialize the password; fall back to plain text if it fails
+                String deserializedPassword = passwordField;
+                try {
+                    byte[] decodedBytes = Base64.getDecoder().decode(passwordField);
+                    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(decodedBytes))) {
+                        deserializedPassword = (String) in.readObject();
+                    }
+                } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
+                    // If deserialization fails or not Base64, assume plain text
+                    System.out.println("Password not serialized or invalid Base64: " + passwordField);
+                }
+                try {
+                    return new User(
+                        data[0], // id
+                        data[1], // username
+                        deserializedPassword, // password (deserialized or plain)
+                        UserRoles.valueOf(data[3]) // role
+                    );
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Error parsing user data: " + line + " | " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+
+        // Check for duplicate username
+        for (User user : existingUsers) {
+            if (user != null && user.getUsername().equalsIgnoreCase(username)) {
+                JOptionPane.showMessageDialog(this, "Username already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        // Serialize the password to Base64
+        String serializedPassword;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream out = new ObjectOutputStream(baos)) {
+            out.writeObject(password);
+            out.flush();
+            serializedPassword = Base64.getEncoder().encodeToString(baos.toByteArray());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error serializing password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Generate a new ID
+        String userID = String.format("%03d", existingUsers.size() + 1);
+
+        // Create role-specific object
+        User roleSpecificUser;
+        switch (role) {
+            case FINANCE_MANAGER -> roleSpecificUser = new FinanceManager(userID, username, serializedPassword);
+            case INVENTORY_MANAGER -> roleSpecificUser = new InventoryManager(userID, username, serializedPassword);
+            case PURCHASE_MANAGER -> roleSpecificUser = new PurchaseManager(userID, username, serializedPassword);
+            case SALES_MANAGER -> roleSpecificUser = new SalesManager(userID, username, serializedPassword);
+            default -> {
+                JOptionPane.showMessageDialog(this, "Invalid role selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        // Write user to file
+        boolean success = fileManager.writeToFile(
+            roleSpecificUser,
+            fileManager.getUserFilePath(),
+            User::getUserID,
+            user -> user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole().name()
+        );
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "User created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            usernameField.setText("");
+            passwordField.setText("");
+            roleField.setSelectedIndex(0);
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to create user.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_regitserButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,16 +360,16 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     private java.awt.Panel panel1;
     private java.awt.Panel panel3;
+    private javax.swing.JPasswordField passwordField;
     private javax.swing.JButton regitserButton;
+    private javax.swing.JComboBox<String> roleField;
+    private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }
