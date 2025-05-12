@@ -4,19 +4,115 @@
  */
 package OSWB;
 
+import Utility.FileManager;
+import javax.swing.table.DefaultTableModel;
+import Entities.PurchaseManager;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 /**
  *
  * @author User
  */
 public class PM_Suppliers extends javax.swing.JFrame {
+    private DefaultTableModel model = new DefaultTableModel();
+    private String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
+    private JFrame previousPage;
+    private PurchaseManager purchaseManager;
 
     /**
      * Creates new form PM_Suppliers
      */
-    public PM_Suppliers() {
+    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage) {
+        this.purchaseManager = loggedInPM;    
+        this.previousPage = previousPage;
         initComponents();
+        setupTable();
+        loadSuppliers();
+        edit();
+    }
+    
+    public void edit()
+    {
+        supplierCodeTxtField.setEditable(false);
+        supplierNameTxtField.setEditable(false);
+        contactNumberTxtField.setEditable(false);
+        addressTxtField2.setEditable(false);
+        bankAccountTxtField1.setEditable(false);
     }
 
+    private void setupTable() {
+        model.setColumnIdentifiers(columnName);
+        supplierListTable.setModel(model);
+    }
+    
+    private void loadSuppliers() {
+        try {
+            // Clear existing data from the table model
+            model.setRowCount(0);
+
+            List<String[]> items = purchaseManager.viewSuppliers(); // Assuming viewItems returns List<String[]>
+            if (items.isEmpty()) {
+                // Optional: Show a message if the overall item list is empty
+                 JOptionPane.showMessageDialog(this, "There are no suppliers available.", "Load Suppliers", JOptionPane.WARNING_MESSAGE);
+            } else {
+                for (String[] item : items) {
+                    model.addRow(item);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                                          "Error loading suppliers: " + e.getMessage(),
+                                          "Load Suppliers Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            // Ensure table is empty if loading fails
+            model.setRowCount(0);
+        }
+    }
+    
+    private void searchSuppliers() {
+        String searchTerm = searchTxtField.getText().trim();
+        
+        // If search field is empty, reload all data
+        if (searchTerm.isEmpty()) {
+            loadSuppliers();
+            return;
+        }
+        
+        try {
+            // Clear current table data
+            model.setRowCount(0);
+            
+            // Get all POs
+            List<String[]> allSuppliers = purchaseManager.viewSuppliers();
+            boolean foundMatch = false;
+            
+            for (String[] suppliers : allSuppliers) {
+                if ((suppliers[0] != null && suppliers[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
+                    (suppliers[1] != null && suppliers[1].toLowerCase().contains(searchTerm.toLowerCase())) ||
+                    (suppliers[2] != null && suppliers[2].toLowerCase().contains(searchTerm.toLowerCase()))) {
+                    model.addRow(suppliers);
+                    foundMatch = true;
+                }
+            }
+            
+            // Show message if no results found
+            if (!foundMatch) {
+                JOptionPane.showMessageDialog(this, 
+                    "No Suppliers found matching '" + searchTerm + "'", 
+                    "Search Results", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                // Reload all data after showing the message
+                loadSuppliers();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error searching Suppliers: " + e.getMessage(), 
+                "Search Error", 
+                JOptionPane.ERROR_MESSAGE);
+            loadSuppliers();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,19 +132,22 @@ public class PM_Suppliers extends javax.swing.JFrame {
         profilePageButton2 = new javax.swing.JButton();
         tittle3 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
-        homeButton3 = new javax.swing.JButton();
         supplierListTablePanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         supplierListTable = new javax.swing.JTable();
-        itemIDLabel = new javax.swing.JLabel();
+        contactNumberLabel = new javax.swing.JLabel();
         supplierCodeTxtField = new javax.swing.JTextField();
         supplierNameTxtField = new javax.swing.JTextField();
-        itemIDTxtField = new javax.swing.JTextField();
+        contactNumberTxtField = new javax.swing.JTextField();
         searchTxtField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         supplierCodeLabel = new javax.swing.JLabel();
         supplierNameLabel = new javax.swing.JLabel();
+        addressLabel1 = new javax.swing.JLabel();
+        bankAccountLabel2 = new javax.swing.JLabel();
+        bankAccountTxtField1 = new javax.swing.JTextField();
+        addressTxtField2 = new javax.swing.JTextField();
         sideBarMenu5 = new javax.swing.JPanel();
         itemsListPageButton5 = new javax.swing.JButton();
         supplierPageButton5 = new javax.swing.JButton();
@@ -154,23 +253,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
 
         pageName.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         pageName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pageName.setText("Purchase Manager Page");
-
-        homeButton3.setText("Home");
-        homeButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeButton3ActionPerformed(evt);
-            }
-        });
+        pageName.setText("Supplier List Page");
 
         javax.swing.GroupLayout tittle3Layout = new javax.swing.GroupLayout(tittle3);
         tittle3.setLayout(tittle3Layout);
         tittle3Layout.setHorizontalGroup(
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(homeButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
+                .addGap(217, 217, 217)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -178,13 +268,8 @@ public class PM_Suppliers extends javax.swing.JFrame {
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle3Layout.createSequentialGroup()
                 .addContainerGap(49, Short.MAX_VALUE)
-                .addGroup(tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                        .addComponent(homeButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                        .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45))))
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
 
         supplierListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -209,9 +294,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        supplierListTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                supplierListTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(supplierListTable);
 
-        itemIDLabel.setText("Item ID :");
+        contactNumberLabel.setText("Contact Number :");
 
         supplierCodeTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,53 +315,83 @@ public class PM_Suppliers extends javax.swing.JFrame {
             }
         });
 
-        itemIDTxtField.addActionListener(new java.awt.event.ActionListener() {
+        contactNumberTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemIDTxtFieldActionPerformed(evt);
+                contactNumberTxtFieldActionPerformed(evt);
             }
         });
 
         searchButton.setText("Search");
         searchButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
 
         supplierCodeLabel.setText("Supplier Code :");
 
         supplierNameLabel.setText("Supplier Name :");
+
+        addressLabel1.setText("Address :");
+
+        bankAccountLabel2.setText("Bank Account :");
+
+        bankAccountTxtField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bankAccountTxtField1ActionPerformed(evt);
+            }
+        });
+
+        addressTxtField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addressTxtField2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout supplierListTablePanelLayout = new javax.swing.GroupLayout(supplierListTablePanel);
         supplierListTablePanel.setLayout(supplierListTablePanelLayout);
         supplierListTablePanelLayout.setHorizontalGroup(
             supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                            .addGap(223, 223, 223)
+                            .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                            .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addComponent(supplierNameLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addComponent(supplierCodeLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(18, 18, 18)
                             .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                    .addGap(223, 223, 223)
-                                    .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addComponent(supplierNameLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(supplierListTablePanelLayout.createSequentialGroup()
-                                            .addComponent(supplierCodeLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(18, 18, 18)
-                                    .addComponent(itemIDLabel)
+                                    .addComponent(contactNumberLabel)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(itemIDTxtField)))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(55, Short.MAX_VALUE))
+                                    .addComponent(contactNumberTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
+                                .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(addressLabel1)
+                                        .addComponent(bankAccountLabel2))
+                                    .addGap(21, 21, 21)
+                                    .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(bankAccountTxtField1)
+                                        .addComponent(addressTxtField2))))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55))
+            .addGroup(supplierListTablePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(backButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         supplierListTablePanelLayout.setVerticalGroup(
             supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,14 +407,20 @@ public class PM_Suppliers extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(supplierCodeLabel)
-                    .addComponent(itemIDLabel)
+                    .addComponent(contactNumberLabel)
                     .addComponent(supplierCodeTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemIDTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(contactNumberTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(supplierNameLabel)
-                    .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(supplierNameTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addressLabel1)
+                    .addComponent(addressTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bankAccountLabel2)
+                    .addComponent(bankAccountTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
@@ -325,23 +451,23 @@ public class PM_Suppliers extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(20, 20, 20)
                 .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         sideBarMenu5Layout.setVerticalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(96, 96, 96)
+                .addGap(94, 94, 94)
                 .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
+                .addGap(121, 121, 121)
                 .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(144, 144, 144))
+                .addGap(148, 148, 148))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -391,24 +517,31 @@ public class PM_Suppliers extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_profilePageButton2ActionPerformed
 
-    private void homeButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_homeButton3ActionPerformed
-
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
+        if (previousPage != null) {
+            previousPage.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "No previous page available.", 
+                "Navigation Error", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_List_items(purchaseManager,this).setVisible(true);
+        this.dispose();                 // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        // TODO add your handling code here:
+        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        // TODO add your handling code here:
+       new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+        this.dispose();  // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void supplierCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierCodeTxtFieldActionPerformed
@@ -419,9 +552,41 @@ public class PM_Suppliers extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_supplierNameTxtFieldActionPerformed
 
-    private void itemIDTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemIDTxtFieldActionPerformed
+    private void contactNumberTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contactNumberTxtFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_itemIDTxtFieldActionPerformed
+    }//GEN-LAST:event_contactNumberTxtFieldActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    searchSuppliers();        // TODO add your handling code here:
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void bankAccountTxtField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bankAccountTxtField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bankAccountTxtField1ActionPerformed
+
+    private void addressTxtField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressTxtField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addressTxtField2ActionPerformed
+
+    private void supplierListTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_supplierListTableMouseClicked
+        int selectedRow = supplierListTable.getSelectedRow();
+
+    if (selectedRow >= 0) {
+        // Get values from each column
+        String supplierCode = supplierListTable.getValueAt(selectedRow, 0).toString();
+        String supplierName = supplierListTable.getValueAt(selectedRow, 1).toString();
+        String contactNumber = supplierListTable.getValueAt(selectedRow, 2).toString();
+        String address = supplierListTable.getValueAt(selectedRow, 3).toString();
+        String bankAccount = supplierListTable.getValueAt(selectedRow, 4).toString();
+
+        // Set values to text fields
+        supplierCodeTxtField.setText(supplierCode);
+        supplierNameTxtField.setText(supplierName);
+        contactNumberTxtField.setText(contactNumber);
+        addressTxtField2.setText(address);
+        bankAccountTxtField1.setText(bankAccount);
+    }     // TODO add your handling code here:
+    }//GEN-LAST:event_supplierListTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -453,17 +618,21 @@ public class PM_Suppliers extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PM_Suppliers().setVisible(true);
+                PurchaseManager supplier = new PurchaseManager("","","");
+                new PM_Suppliers(supplier,null).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel addressLabel1;
+    private javax.swing.JTextField addressTxtField2;
     private javax.swing.JButton backButton;
+    private javax.swing.JLabel bankAccountLabel2;
+    private javax.swing.JTextField bankAccountTxtField1;
+    private javax.swing.JLabel contactNumberLabel;
+    private javax.swing.JTextField contactNumberTxtField;
     private javax.swing.JButton homeButton2;
-    private javax.swing.JButton homeButton3;
-    private javax.swing.JLabel itemIDLabel;
-    private javax.swing.JTextField itemIDTxtField;
     private javax.swing.JButton itemsListPageButton2;
     private javax.swing.JButton itemsListPageButton5;
     private javax.swing.JLabel jLabel3;

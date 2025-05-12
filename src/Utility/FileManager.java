@@ -8,23 +8,84 @@ import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 
+
 /**
  *
  * @author Sheng Ting
  */
 public class FileManager {
-    final String userFilePath     = "userFile.txt";
-    final String itemFilePath     = "itemFile.txt";
-    final String supplierFilePath = "supplierFile.txt";
-    final String prFilePath       = "purchaseRequisitionFile.txt"; /** Purchase Requisition file path */
-    final String poFilePath       = "purchaseOrderFile.txt"; /** Purchase Order file path */
-    final String salesDataFilePath = "salesDataFile.txt"; /** Sales Data file path */ // Added
+    // File paths relative to the database package
+    private static final String userFilePath = "/database/userFile.txt";
+    private final String itemFilePath       = "database/itemFile.txt";
+    private final String supplierFilePath   = "database/supplierFile.txt";
+    private final String prFilePath         = "database/purchaseRequisitionFile.txt";
+    private final String poFilePath         = "database/purchaseOrderFile.txt";
+    private final String salesDataFilePath  = "database/salesDataFile.txt";
+    private final String itemSupplyFilePath = "database/itemSupply.txt";
+    
+    
+   
+    // Login function
+   public static UserRoles login(String username, String password) {
+    try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(FileManager.class.getResourceAsStream(userFilePath)))) {
+        if (reader == null) {
+            System.err.println("Resource not found: " + userFilePath);
+            return null;
+        }
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length >= 4) {
+                String fileUserID = String.valueOf(data[0]);
+                String fileUsername = data[1].trim();
+                String filePassword = data[2].trim();
+                String fileRole = data[3].trim();
+
+                // Try to deserialize the password; fall back to plain text if it fails
+                String storedPassword = filePassword;
+                try {
+                    byte[] decodedBytes = Base64.getDecoder().decode(filePassword);
+                    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(decodedBytes))) {
+                        storedPassword = (String) in.readObject();
+                        System.out.println("storedPassword " + storedPassword);
+                    }
+                } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
+                    // If deserialization fails or not Base64, use the field as plain text
+//                    System.out.println("Password not serialized or invalid Base64: " + filePassword);
+                }
+
+                // Compare username and password
+                if (fileUsername.equals(username) && storedPassword.equals(password)) {
+                    System.out.println("username : " +username);
+                    System.out.println("password : "+ password);
+                    try {
+                        Session loginSession = new Session();
+                        loginSession.setUserID(fileUserID);
+                        return UserRoles.valueOf(fileRole);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Invalid role in user file: " + fileRole);
+                        return null;
+                    }
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading user file: " + e.getMessage());
+        return null;
+    }
+
+    return null; // No matching user found
+}
+
 
     // Write an entity to a file, checking for duplicates
     public <T> boolean writeToFile(T entity, String filePath, 
                                    Function<T, String> idExtractor, 
                                    Function<T, String> toStringConverter) {
-        List<T> existingData = readFile(filePath, line -> null); // Load existing data
+        // Read existing data to check for duplicates
+        List<T> existingData = readFile(filePath, line -> null);
         Set<String> existingIds = new HashSet<>();
         for (T existing : existingData) {
             if (existing != null) {
@@ -35,13 +96,18 @@ public class FileManager {
         String entityId = idExtractor.apply(entity);
         if (existingIds.contains(entityId)) {
             System.out.println("Duplicate ID found: " + entityId + ". Use updateToFile to modify.");
-            return false; // Duplicate found
+            return false;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(toStringConverter.apply(entity));
-            writer.newLine();
-            return true; // Successfully written
+        // Write to file (append mode)
+        try {
+            File file = new File(getResourcePath(filePath));
+            file.getParentFile().mkdirs(); // Create parent directories if they don't exist
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                writer.write(toStringConverter.apply(entity));
+                writer.newLine();
+                return true;
+            }
         } catch (IOException e) {
             System.out.println("Error writing to file " + filePath + ": " + e.getMessage());
             return false;
@@ -57,10 +123,9 @@ public class FileManager {
         String entityId = idExtractor.apply(entity);
         boolean found = false;
 
-        // Update the list in memory//
         for (int i = 0; i < dataList.size(); i++) {
             if (idExtractor.apply(dataList.get(i)).equals(entityId)) {
-                dataList.set(i, entity); // Replace old entry with updated entity
+                dataList.set(i, entity);
                 found = true;
                 break;
             }
@@ -72,12 +137,16 @@ public class FileManager {
         }
 
         // Rewrite the entire file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (T item : dataList) {
-                writer.write(toStringConverter.apply(item));
-                writer.newLine();
+        try {
+            File file = new File(getResourcePath(filePath));
+            file.getParentFile().mkdirs();
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (T item : dataList) {
+                    writer.write(toStringConverter.apply(item));
+                    writer.newLine();
+                }
+                return true;
             }
-            return true; // Successfully updated
         } catch (IOException e) {
             System.out.println("Error updating file " + filePath + ": " + e.getMessage());
             return false;
@@ -87,25 +156,29 @@ public class FileManager {
     // Read all entities from a file
     public <T> List<T> readFile(String filePath, Function<String, T> parser) {
         List<T> dataList = new ArrayList<>();
-        Set<String> ids = new HashSet<>(); // For duplicate checking during load
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    T entity = parser.apply(line);
-                    if (entity != null) {
-                        dataList.add(entity);
+        try {
+            File file = new File(getResourcePath(filePath));
+            System.out.println("Reading file: " + file.getAbsolutePath());
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.trim().isEmpty()) {
+                        T entity = parser.apply(line);
+                        if (entity != null) {
+                            dataList.add(entity);
+                        }
                     }
                 }
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + filePath + ". Starting fresh.");
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + filePath + ". Starting fresh.");
         } catch (IOException e) {
             System.out.println("Error reading file " + filePath + ": " + e.getMessage());
         }
         return dataList;
     }
+    
+    
 
     // Delete an entity from a file
     public <T> boolean deleteFromFile(String entityId, String filePath, 
@@ -114,7 +187,6 @@ public class FileManager {
         List<T> dataList = readFile(filePath, parser);
         boolean found = false;
 
-        // Remove the entity from the list
         for (int i = 0; i < dataList.size(); i++) {
             if (idExtractor.apply(dataList.get(i)).equals(entityId)) {
                 dataList.remove(i);
@@ -128,17 +200,28 @@ public class FileManager {
             return false;
         }
 
-        // Rewrite the file without the deleted entity
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (T item : dataList) {
-                writer.write(item.toString()); // Assumes toString() is sufficient
-                writer.newLine();
+        // Rewrite the file
+        try {
+            File file = new File(getResourcePath(filePath));
+            file.getParentFile().mkdirs();
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (T item : dataList) {
+                    writer.write(item.toString());
+                    writer.newLine();
+                }
+                return true;
             }
-            return true; // Successfully deleted
         } catch (IOException e) {
             System.out.println("Error deleting from file " + filePath + ": " + e.getMessage());
             return false;
         }
+    }
+
+    // Helper method to get the absolute path for writing files
+    private String getResourcePath(String filePath) {
+        // Convert classpath resource path to file system path
+        String basePath = new File("").getAbsolutePath();
+        return basePath + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
     }
 
     // Getter methods for file paths
@@ -147,5 +230,8 @@ public class FileManager {
     public String getSupplierFilePath() { return supplierFilePath; }
     public String getPrFilePath() { return prFilePath; }
     public String getPoFilePath() { return poFilePath; }
-    public String getSalesDataFilePath() { return salesDataFilePath; } // Added
+    public String getSalesDataFilePath() { return salesDataFilePath; }
+    public String getItemSupplyFilePath() {return itemSupplyFilePath;}  
 }
+
+

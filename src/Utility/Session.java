@@ -15,6 +15,10 @@ public class Session {
         this.userID = userID;
     }
     
+    public Session() {
+        
+    };
+    
     public String getUserID() {
         return userID;
     }

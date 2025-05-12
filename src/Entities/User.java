@@ -4,6 +4,13 @@
  */
 package Entities;
 
+import Utility.UserRoles;
+import Utility.Session;
+import Utility.FileManager;
+import java.util.List;
+
+
+
 /**
  *
  * @author Sheng Ting
@@ -12,21 +19,15 @@ public class User {
     private String userID;
     private String username;
     private String password;
-    private String role; // Role (e.g., "ADMIN", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
+    private UserRoles role; // Role (e.g., "ADMINISTRATOR", "SALES_MANAGER", "PURCHASE_MANAGER", "INVENTORY_MANAGER", "FINANCE_MANAGER")
     
-    public User (){
-        
-    }
-
-    public User(String userID, String username, String password, String role) {
+    public User(String userID, String username, String password, UserRoles role) {
         this.userID     = userID;
         this.username   = username;
         this.password   = password;
         this.role       = role;
     }
     
-    
-
     public String getUserID() {
         return userID;
     }
@@ -51,25 +52,65 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRoles getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRoles role) {
         this.role = role;
     }
+
     
-    public boolean login () {
-        return true;
+    
+    public static boolean login(String userID, String password) {
+        FileManager fileManager = new FileManager();
+        
+        if (userID == null || userID.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            return false;
+        }
+        List<User> userList = fileManager.readFile(
+            fileManager.getUserFilePath(),
+            User::parse
+        );
+        System.out.println(userList.stream());
+        return userList.stream()
+            .anyMatch(user -> user.getUserID().equals(userID) && user.getPassword().equals(password));
+        }
+
+       public boolean logout () {
+           Session logout = new Session();
+           logout.setUserID("");
+           return true;
     }
     
-    public boolean logout () {
-        return true;
+    public void displayMenu(){};
+    
+     public static User parse(String line) {
+        String[] data = line.split(",");
+        if (data.length < 4) {
+            return null;
+        }
+        try {
+            UserRoles role = UserRoles.valueOf(data[3]);
+            return switch (role) {
+                case ADMINISTRATOR -> new Administrator(data[0], data[1], data[2]);
+                case SALES_MANAGER -> new SalesManager(data[0], data[1], data[2]);
+                case PURCHASE_MANAGER -> new PurchaseManager(data[0], data[1], data[2]);
+                case INVENTORY_MANAGER -> new InventoryManager(data[0], data[1], data[2]);
+                case FINANCE_MANAGER -> new FinanceManager(data[0], data[1], data[2]);
+                default -> null;
+            };
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid role in user data: " + line);
+            return null;
+        }
     }
+    
     // For FileManager compatibility
     @Override
     public String toString() {
-        return userID + "," + username + "," + password + "," + role;
+        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", role=" + role + '}';
     }
+    
     
 }

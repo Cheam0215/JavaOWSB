@@ -14,48 +14,67 @@ import java.util.List;
 public class Supplier {
     private String supplierCode;
     private String supplierName;
-    private List<String> itemIDs;
+    private int contactNumber;
+    private String address;
+    private String bankAccount;
     
-    public Supplier(String supplierCode, String supplierName) {
+    
+    public Supplier(String supplierCode, String supplierName, int contactNumber, String address, String bankAccount) {
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
-        this.itemIDs = new ArrayList<>();
-    }
+        this.contactNumber = contactNumber;
+        this.address = address;
+        this.bankAccount = bankAccount;
 
-    // Getters
+    }
+    
     public String getSupplierCode() {
         return supplierCode;
+    }
+
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
     }
 
     public String getSupplierName() {
         return supplierName;
     }
 
-    public List<String> getItemIds() {
-        return new ArrayList<>(itemIDs); // Return a copy to protect encapsulation
+    public int getContactNumber() {
+        return contactNumber;
     }
 
-    // Setters
+    public String getAddress() {
+        return address;
+    }
+
     public void setSupplierName(String supplierName) {
         this.supplierName = supplierName;
     }
 
-    // Methods to manage itemIds
-    public void addItemId(String itemId) {
-        if (!itemIDs.contains(itemId)) {
-            itemIDs.add(itemId);
-        }
+    public void setContactNumber(int contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
-    public void removeItemId(String itemId) {
-        itemIDs.remove(itemId);
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    // For FileManager compatibility (toStringConverter)
     @Override
     public String toString() {
-        String items = String.join(";", itemIDs); // Use semicolon to separate item IDs
-        return supplierCode + "," + supplierName + "," + (items.isEmpty() ? "NONE" : items);
+        return "Supplier{" + "supplierCode=" + supplierCode + ", supplierName=" + supplierName + ", contactNumber=" + contactNumber + ", address=" + address + ", bankAccount=" + bankAccount + '}';
     }
+    
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+
+    }
+    
+    
     
 }

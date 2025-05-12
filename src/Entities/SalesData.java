@@ -12,18 +12,20 @@ public class SalesData {
     private String salesId;
     private String itemCode;
     private int quantitySold;
-    private double unitPrice;
+    private double retailPrice;
     private String date;
     private double totalAmount;
 
-    public SalesData(String salesId, String itemCode, int quantitySold, double unitPrice, String date) {
+    public SalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount) {
         this.salesId = salesId;
         this.itemCode = itemCode;
         this.quantitySold = quantitySold;
-        this.unitPrice = unitPrice;
+        this.retailPrice = retailPrice;
         this.date = date;
-        this.totalAmount = quantitySold * unitPrice;
+        this.totalAmount = totalAmount;
     }
+
+    
 
     public String getSalesId() {
         return salesId;
@@ -49,14 +51,6 @@ public class SalesData {
         this.quantitySold = quantitySold;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public String getDate() {
         return date;
     }
@@ -73,11 +67,19 @@ public class SalesData {
         this.totalAmount = totalAmount;
     }
 
+    public double getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(double retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
    
 
     @Override
     public String toString() {
-        return salesId + "," + itemCode + "," + quantitySold + "," + unitPrice + "," + date + "," + totalAmount;
+        return salesId + "," + itemCode + "," + quantitySold + "," + retailPrice + "," + date + "," + totalAmount;
     }
 }
 

@@ -7,6 +7,9 @@ package Entities;
 import java.util.List;
 
 import Utility.FileManager;
+import Utility.UserRoles;
+import Utility.Remark;
+import Utility.Status;
 
 /**
  *
@@ -17,7 +20,7 @@ public class FinanceManager extends User {
     private final Inventory inventory;
 
     public FinanceManager(String userId, String username, String password) {
-        super(userId, username, password, "FINANCE_MANAGER");
+        super(userId, username, password, UserRoles.FINANCE_MANAGER);
         this.fileManager = new FileManager();
         this.inventory = new Inventory();
     }
@@ -27,20 +30,22 @@ public class FinanceManager extends User {
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
+
             }
         );
 
         for (PurchaseOrder po : poList) {
             if (po.getPoId().equals(poId)) {
-                if (po.getStatus().equals("PENDING")) {
+                if (po.getStatus().equals(Status.PENDING)) {
                     if (newSupplierCode != null && !newSupplierCode.equals(po.getSupplierCode())) {
                         List<Supplier> suppliers = fileManager.readFile(
                             fileManager.getSupplierFilePath(),
                             line -> {
                                 String[] data = line.split(",");
-                                Supplier supp = new Supplier(data[0], data[1]);
+                                Supplier supp = new Supplier(data[0], data[1],Integer.parseInt(data[3]), data[4], data[5]);
                                 if (!data[2].equals("NONE")) {
                                     String[] items = data[2].split(";");
                                     for (String itemId : items) supp.addItemId(itemId);
@@ -67,14 +72,16 @@ public class FinanceManager extends User {
                         po.setQuantity(newQuantity);
                     }
                     
-                    po.setStatus("APPROVED");
+                    po.setStatus(Status.APPROVED);
                     return fileManager.updateToFile(
                         po, fileManager.getPoFilePath(),
                         PurchaseOrder::getPoId, PurchaseOrder::toString,
                         line -> {
                             String[] data = line.split(",");
-                            return new PurchaseOrder(data[0], data[1], data[2], 
-                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                            return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                                Double.parseDouble(data[9]),Remark.valueOf(data[10]));
+
                         }
                     );
                 }
@@ -91,13 +98,15 @@ public class FinanceManager extends User {
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
+
             }
         );
 
         for (PurchaseOrder po : poList) {
-            if (po.getPoId().equals(poId) && po.getStatus().equals("APPROVED")) {
+            if (po.getPoId().equals(poId) && po.getStatus().equals(Status.APPROVED)) {
                 List<Item> items = inventory.viewItems();
                 for (Item item : items) {
                     if (item.getItemCode().equals(po.getItemCode())) {
@@ -124,23 +133,24 @@ public class FinanceManager extends User {
                 fileManager.getPoFilePath(),
                 line -> {
                     String[] data = line.split(",");
-                    return new PurchaseOrder(data[0], data[1], data[2], 
-                        Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                    return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
                 }
             );
 
             for (PurchaseOrder po : poList) {
                 if (po.getPoId().equals(poId)) {
                     po.setPaymentAmount(amount);
-                    po.setStatus("PAID");
+                    po.setStatus(Status.PAID);
                     return fileManager.updateToFile(
                         po, fileManager.getPoFilePath(),
                         PurchaseOrder::getPoId, PurchaseOrder::toString,
                         line -> {
                             String[] data = line.split(",");
-                            return new PurchaseOrder(data[0], data[1], data[2], 
-                                Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
-
+                            return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                                Double.parseDouble(data[9]),Remark.valueOf(data[10]));
                         }
                     );
                 }
@@ -154,8 +164,9 @@ public class FinanceManager extends User {
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                                Double.parseDouble(data[9]),Remark.valueOf(data[10]));
             }
         );
 
@@ -163,8 +174,9 @@ public class FinanceManager extends User {
             fileManager.getSalesDataFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new SalesData(data[0], data[1], 
-                    Integer.parseInt(data[2]), Double.parseDouble(data[3]), data[4]);
+                return new SalesData(data[0], data[1],
+                    Integer.parseInt(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4]),
+                    data[5],Double.parseDouble(data[6]));
             }
         );
 
@@ -175,7 +187,7 @@ public class FinanceManager extends User {
 
         double totalExpenses = 0;
         for (PurchaseOrder po : poList) {
-            if (po.getStatus().equals("PAID")) {
+            if (po.getStatus().equals(Status.PAID)) {
                 totalExpenses += po.getPaymentAmount();
             }
         }
@@ -218,8 +230,9 @@ public class FinanceManager extends User {
             fileManager.getPrFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseRequisition(data[0], data[1], 
-                    Integer.parseInt(data[2]), data[3], data[4]);
+                return new PurchaseRequisition(data[0], data[1], data[2],
+                    Integer.parseInt(data[3]), data[4], data[5], data[6], Status.valueOf(data[7]));
+
             }
         );
 
@@ -230,7 +243,8 @@ public class FinanceManager extends User {
         for (PurchaseRequisition pr : prList) {
             view.append(String.format("%s | %s | %d | %s | %s\n",
                 pr.getPrId(), pr.getItemCode(), pr.getQuantity(),
-                pr.getRequiredDate(), pr.getSupplierCode()));
+                pr.getRequiredDate(), pr.getSupplierCode(), pr.getRequiredDate()));
+
         }
         return view.toString();
     }
@@ -240,8 +254,9 @@ public class FinanceManager extends User {
             fileManager.getPoFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], 
-                    Integer.parseInt(data[3]), data[4], data[5], Double.parseDouble(data[6]), data[7], data[8], data[9]);
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7],Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]),Remark.valueOf(data[10]));
             }
         );
 
@@ -256,5 +271,9 @@ public class FinanceManager extends User {
         }
         return view.toString();
     }
+    
+    public void displayMenu() {
+        
+    };
 }
 

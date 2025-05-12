@@ -4,6 +4,8 @@
  */
 package Entities;
 
+import Utility.Status;
+
 /**
  *
  * @author Sheng Ting
@@ -11,17 +13,20 @@ package Entities;
 public class PurchaseRequisition {
     private String prId;          
     private String itemCode;
-    private String requestedBy; // ID of Sale's Manager
+    private String requestedBy; 
     private int quantity;         
     private String requiredDate;  
-    private String supplierCode; 
+    private String requestedDate;
+    private Status status;
 
-    public PurchaseRequisition(String prId, String itemCode, int quantity, String requiredDate, String supplierCode) {
+    public PurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status) {
         this.prId = prId;
         this.itemCode = itemCode;
+        this.requestedBy = requestedBy;
         this.quantity = quantity;
         this.requiredDate = requiredDate;
-        this.supplierCode = supplierCode;
+        this.requestedDate = requestedDate;
+        this.status = status;
     }
 
     public String getPrId() {
@@ -47,8 +52,7 @@ public class PurchaseRequisition {
     public void setRequestedBy(String requestedBy) {
         this.requestedBy = requestedBy;
     }
-    
-    
+     
 
     public int getQuantity() {
         return quantity;
@@ -66,18 +70,30 @@ public class PurchaseRequisition {
         this.requiredDate = requiredDate;
     }
 
-    public String getSupplierCode() {
-        return supplierCode;
+
+    public String getRequestedDate() {
+        return requestedDate;
     }
 
-    public void setSupplierCode(String supplierCode) {
-        this.supplierCode = supplierCode;
+    public void setRequestedDate(String requestedDate) {
+        this.requestedDate = requestedDate;
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    
+    
+    
     
     // For FileManager compatibility
     @Override
     public String toString() {
-        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + supplierCode;
+        return prId + "," + itemCode + "," + quantity + "," + requiredDate + "," + requestedDate + "," + status;
     }
     
 }

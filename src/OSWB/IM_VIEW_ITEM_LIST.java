@@ -21,7 +21,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     private InventoryManager inventoryManager;
     
     private final String[] columnNames = {
-        "Item Code", "Item Name", "Supplier ID", "Stock Level"
+        "Item Code", "Item Name", "Stock Level", "Retail Price"
     };
 
     /**
@@ -49,7 +49,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
                 fileManager.getItemFilePath(),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
+                    return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
                 }
         );
         
@@ -57,8 +57,8 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
             model.addRow(new Object[] {
                 item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierId(),
-                item.getStockLevel()
+                item.getStockLevel(),
+                item.getRetailPrice()
             });
         }
     }
@@ -156,65 +156,78 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(307, 307, 307))
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 366, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(307, 307, 307))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        List<Item> itemList = fileManager.readFile(
-                fileManager.getItemFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
-                }
+       List<Item> itemList = fileManager.readFile(
+            fileManager.getItemFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
+            }
         );
-               
+       
+        String searchText = txtSearch.getText().trim();
+        
+        if (searchText.isEmpty()) {
+            viewTable();
+            return;
+        }
+        
+        boolean found = false;
+        model.setRowCount(0);
         for (Item item : itemList) {
-            if (item.getItemName().equals(txtSearch.getText()) || item.getItemCode().equals(txtSearch.getText())) {
-                model.setRowCount(0);
+            if (item.getItemName().equalsIgnoreCase(searchText) || 
+                item.getItemCode().equalsIgnoreCase(searchText)) {
                 model.addRow(new Object[] {
                 item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierId(),
-                item.getStockLevel()
+                item.getStockLevel(),
+                item.getRetailPrice()
                 });
-                break;
-            }else if(txtSearch.getText().equals("")){
-                viewTable();
-            }
-            
-            else{
-                JOptionPane.showMessageDialog(this, "Item Not Found", "Error", JOptionPane.ERROR_MESSAGE);
+                found = true;
                 break;
             }
         }
+        
+        if (!found) {
+            JOptionPane.showMessageDialog(this, "Item Not Found", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        model.fireTableDataChanged();
+        tableItem.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
@@ -222,7 +235,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        IM_MAIN mainPage = new IM_MAIN();
+        Inventory_Manager_Main mainPage = new Inventory_Manager_Main();
         mainPage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed

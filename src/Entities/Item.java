@@ -11,50 +11,53 @@ package Entities;
 public class Item {
     private String itemCode;    // Unique identifier for the item
     private String itemName;    // Name of the item
-    private String supplierId;  // ID of the supplier providing this item
     private int stockLevel;     // Current stock quantity
+    private double retailPrice; // Selling price
 
     // Constructor
-    public Item(String itemCode, String itemName, String supplierId, int stockLevel) {
+    public Item(String itemCode, String itemName, int stockLevel, double retailPrice) {
         this.itemCode = itemCode;
         this.itemName = itemName;
-        this.supplierId = supplierId;
         this.stockLevel = stockLevel;
+        this.retailPrice = retailPrice;
     }
 
-    // Getters
     public String getItemCode() {
         return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
     }
 
     public String getItemName() {
         return itemName;
     }
 
-    public String getSupplierId() {
-        return supplierId;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public int getStockLevel() {
         return stockLevel;
     }
 
-    // Setters
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setSupplierId(String supplierId) {
-        this.supplierId = supplierId;
-    }
-
     public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
     }
 
-    // For FileManager compatibility (toStringConverter)
+    public double getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(double retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
     @Override
     public String toString() {
-        return itemCode + "," + itemName + "," + supplierId + "," + stockLevel;
+        return "Item{" + "itemCode=" + itemCode + ", itemName=" + itemName + ", stockLevel=" + stockLevel + ", retailPrice=" + retailPrice + '}';
     }
+
+   
 }
