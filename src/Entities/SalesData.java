@@ -25,8 +25,6 @@ public class SalesData {
         this.totalAmount = totalAmount;
     }
 
-    
-
     public String getSalesId() {
         return salesId;
     }
