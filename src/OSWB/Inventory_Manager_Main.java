@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Edwin Chen
  */
 public class Inventory_Manager_Main extends javax.swing.JFrame {
     private InventoryManager loggedinIM;

@@ -4,11 +4,23 @@
  */
 package Entities;
 
+import Entities.Item;
+import Entities.PurchaseOrder;
 import java.util.List;
 import Utility.FileManager;
 import Utility.Remark;
 import Utility.Status;
 import Utility.UserRoles;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -71,8 +83,7 @@ public class InventoryManager extends User{
             fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
-                return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]),
-                               Double.parseDouble(data[4]), Double.parseDouble(data[5]));
+                return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
             }
         );
 
@@ -136,15 +147,12 @@ public class InventoryManager extends User{
                 item -> String.join(",",
                     item.getItemCode(),
                     item.getItemName(),
-                    item.getSupplierCode(), // Added missing supplierCode
                     String.valueOf(item.getStockLevel()),
-                    String.valueOf(item.getRetailPrice()),
-                    String.valueOf(item.getUnitPrice())
+                    String.valueOf(item.getRetailPrice())
                 ),
                 line -> {
                     String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]),
-                                   Double.parseDouble(data[4]), Double.parseDouble(data[5]));
+                    return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
                 }
             );
 
@@ -258,13 +266,378 @@ public class InventoryManager extends User{
     public String viewPurchaseOrder(){
         return null;
     }
+    
+    public void displayStockReport() {
+        LocalDate today = LocalDate.now();
+        String manager = getUsername();
 
-    public String generateStockReport() {
-        return inventory.generateStockReport();
+        System.out.println("Generating report for date: " + today);
+
+        // Read purchase orders to calculate stock in for today
+        List<PurchaseOrder> poList = fileManager.readFile(
+            fileManager.getPoFilePath(),
+            line -> {
+                // Skip empty lines or lines that don't contain enough columns
+                if (line.trim().isEmpty() || !line.contains(",")) {
+                    System.out.println("Skipping invalid PO line: " + line);
+                    return null;
+                }
+                String[] data = line.split(",");
+                if (data.length < 11) {
+                    System.out.println("Skipping PO line with insufficient columns: " + line);
+                    return null;
+                }
+                System.out.println("Reading PO line: " + String.join(",", data));
+                try {
+                    return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                        Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
+                        Double.parseDouble(data[9]), Remark.valueOf(data[10]));
+                } catch (Exception e) {
+                    System.err.println("Error creating PO from line '" + String.join(",", data) + "': " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+        System.out.println("Total POs read: " + poList.size());
+
+        Map<String, Integer> stockInQty = new HashMap<>();
+        Map<String, Double> stockInValue = new HashMap<>();
+        for (PurchaseOrder po : poList) {
+            if (po != null) {
+                System.out.println("Processing PO: " + po.getPoId() + ", Status: " + po.getStatus() + 
+                                 ", Required Date: " + po.getRequiredDate() + ", Order Date: " + po.getRequestedDate());
+                try {
+                    LocalDate requiredDate = LocalDate.parse(po.getRequiredDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                    System.out.println("Parsed Required Date: " + requiredDate + ", Today: " + today + 
+                                     ", Equals: " + requiredDate.equals(today));
+                    if (po.getStatus().equals(Status.APPROVED) && requiredDate.equals(today)) {
+                        stockInQty.merge(po.getItemCode(), po.getQuantity(), Integer::sum);
+                        stockInValue.merge(po.getItemCode(), po.getPaymentAmount(), Double::sum);
+                        System.out.println("Added to Stock In: " + po.getItemCode() + ", Qty: " + po.getQuantity());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing requiredDate for PO " + po.getPoId() + ": " + e.getMessage());
+                }
+            }
+        }
+        System.out.println("Stock In Qty: " + stockInQty);
+        System.out.println("Stock In Value: " + stockInValue);
+
+        // Read sales to calculate stock out for today
+        List<SalesData> salesList = fileManager.readFile(
+            fileManager.getSalesDataFilePath(),
+            line -> {
+                if (line.trim().isEmpty() || line.startsWith("salesId")) return null;
+                String[] data = line.split(",");
+                if (data.length < 6) {
+                    System.out.println("Skipping Sale line with insufficient columns: " + line);
+                    return null;
+                }
+                System.out.println("Reading Sale line: " + String.join(",", data));
+                try {
+                    return new SalesData(data[0], data[1],
+                        Integer.parseInt(data[2]), Double.parseDouble(data[3]), data[4], Double.parseDouble(data[5]));
+                } catch (Exception e) {
+                    System.err.println("Error creating Sale from line '" + String.join(",", data) + "': " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+
+        Map<String, Integer> stockOutQty = new HashMap<>();
+        Map<String, Double> stockOutValue = new HashMap<>();
+        for (SalesData sales : salesList) {
+            if (sales != null) {
+                try {
+                    LocalDate saleDate = LocalDate.parse(sales.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                    if (saleDate.equals(today)) {
+                        stockOutQty.merge(sales.getItemCode(), sales.getQuantitySold(), Integer::sum);
+                        stockOutValue.merge(sales.getItemCode(), sales.getTotalAmount(), Double::sum);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing sale date for Sale " + sales.getSalesId() + ": " + e.getMessage());
+                }
+            }
+        }
+        System.out.println("Stock Out Qty: " + stockOutQty);
+        System.out.println("Stock Out Value: " + stockOutValue);
+
+        // Read current inventory
+        List<Item> itemList = fileManager.readFile(
+            fileManager.getItemFilePath(),
+            line -> {
+                if (line.trim().isEmpty() || line.startsWith("itemcode")) return null;
+                String[] data = line.split(",");
+                if (data.length < 4) {
+                    System.out.println("Skipping Item line with insufficient columns: " + line);
+                    return null;
+                }
+                System.out.println("Reading Item line: " + String.join(",", data));
+                try {
+                    return new Item(data[0], data[1], Integer.parseInt(data[2]), Double.parseDouble(data[3]));
+                } catch (Exception e) {
+                    System.err.println("Error creating Item from line '" + String.join(",", data) + "': " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+        System.out.println("Items loaded: " + itemList.size());
+
+        // Create the new Swing window
+        JFrame reportFrame = new JFrame("Stock Report - " + today);
+        reportFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        reportFrame.setSize(800, 600);
+        reportFrame.setLayout(new BorderLayout());
+
+        // Create a panel to hold all components
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Summary information
+        JLabel titleLabel = new JLabel("Stock Report - " + today);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        mainPanel.add(titleLabel);
+
+        JLabel generatedByLabel = new JLabel("Generated by: " + manager);
+        generatedByLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        mainPanel.add(generatedByLabel);
+
+        JLabel stockInValueLabel = new JLabel("Total Stock In Value: $" + 
+            String.format("%.2f", stockInValue.values().stream().mapToDouble(Double::doubleValue).sum()));
+        stockInValueLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        mainPanel.add(stockInValueLabel);
+
+        JLabel stockOutValueLabel = new JLabel("Total Stock Out Value: $" + 
+            String.format("%.2f", stockOutValue.values().stream().mapToDouble(Double::doubleValue).sum()));
+        stockOutValueLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        mainPanel.add(stockOutValueLabel);
+
+        mainPanel.add(Box.createVerticalStrut(10)); // Spacer
+
+        // Stock In Table
+        JLabel stockInLabel = new JLabel("Stock In (Approved Purchase Orders for Today)");
+        stockInLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        mainPanel.add(stockInLabel);
+
+        DefaultTableModel stockInModel = new DefaultTableModel(
+            new String[]{"Item Code", "Quantity", "Supplier Code", "Required Date", "Payment Amount"}, 0);
+        JTable stockInTable = new JTable(stockInModel);
+        for (PurchaseOrder po : poList) {
+            if (po != null) {
+                try {
+                    LocalDate requiredDate = LocalDate.parse(po.getRequiredDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                    if (po.getStatus().equals(Status.APPROVED) && requiredDate.equals(today)) {
+                        stockInModel.addRow(new Object[]{
+                            po.getItemCode(),
+                            po.getQuantity(),
+                            po.getSupplierCode(),
+                            po.getRequiredDate(),
+                            String.format("%.2f", po.getPaymentAmount())
+                        });
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing requiredDate for PO " + po.getPoId() + " in table: " + e.getMessage());
+                }
+            }
+        }
+        JScrollPane stockInScrollPane = new JScrollPane(stockInTable);
+        stockInScrollPane.setPreferredSize(new Dimension(750, 100));
+        mainPanel.add(stockInScrollPane);
+
+        mainPanel.add(Box.createVerticalStrut(10)); // Spacer
+
+        // Stock Out Table
+        JLabel stockOutLabel = new JLabel("Stock Out (Today's Sales)");
+        stockOutLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        mainPanel.add(stockOutLabel);
+
+        DefaultTableModel stockOutModel = new DefaultTableModel(
+            new String[]{"Item Code", "Quantity Sold", "Retail Price", "Date", "Total Amount"}, 0);
+        JTable stockOutTable = new JTable(stockOutModel);
+        for (SalesData sales : salesList) {
+            if (sales != null) {
+                try {
+                    LocalDate saleDate = LocalDate.parse(sales.getDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+                    if (saleDate.equals(today)) {
+                        stockOutModel.addRow(new Object[]{
+                            sales.getItemCode(),
+                            sales.getQuantitySold(),
+                            String.format("%.2f", sales.getRetailPrice()),
+                            sales.getDate(),
+                            String.format("%.2f", sales.getTotalAmount())
+                        });
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing sale date for Sale " + sales.getSalesId() + " in table: " + e.getMessage());
+                }
+            }
+        }
+        JScrollPane stockOutScrollPane = new JScrollPane(stockOutTable);
+        stockOutScrollPane.setPreferredSize(new Dimension(750, 100));
+        mainPanel.add(stockOutScrollPane);
+
+        mainPanel.add(Box.createVerticalStrut(10)); // Spacer
+
+        // Inventory Summary Table
+        JLabel summaryLabel = new JLabel("Inventory Summary");
+        summaryLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        mainPanel.add(summaryLabel);
+
+        DefaultTableModel summaryModel = new DefaultTableModel(
+            new String[]{"Item Code", "Item Name", "Current Stock", "Stock In", "Stock Out", "Net Change", "Updated Stock"}, 0);
+        JTable summaryTable = new JTable(summaryModel);
+        for (Item item : itemList) {
+            if (item != null) {
+                String itemCode = item.getItemCode();
+                int currentStock = item.getStockLevel();
+                int stockIn = stockInQty.getOrDefault(itemCode, 0);
+                int stockOut = stockOutQty.getOrDefault(itemCode, 0);
+                int netChange = stockIn - stockOut;
+                int updatedStock = currentStock + netChange;
+                summaryModel.addRow(new Object[]{
+                    itemCode,
+                    item.getItemName(),
+                    currentStock,
+                    stockIn,
+                    stockOut,
+                    netChange,
+                    updatedStock
+                });
+            }
+        }
+        JScrollPane summaryScrollPane = new JScrollPane(summaryTable);
+        summaryScrollPane.setPreferredSize(new Dimension(750, 150));
+        mainPanel.add(summaryScrollPane);
+
+        // Add the main panel to a scroll pane in case the content is too large
+        JScrollPane mainScrollPane = new JScrollPane(mainPanel);
+        reportFrame.add(mainScrollPane, BorderLayout.CENTER);
+
+        // Make the frame visible
+        reportFrame.setLocationRelativeTo(null); // Center the window
+        reportFrame.setVisible(true);
+    }
+    
+    public Map<String, Integer> calculateStockReport(String date, DefaultTableModel tableModel, JTable jTable1) {
+
+    // Read current inventory
+    List<Item> itemList = fileManager.readFile(
+        fileManager.getItemFilePath(),
+        line -> {
+            if (line.trim().isEmpty() || line.startsWith("itemcode")) return null;
+            String[] data = line.split(",");
+            if (data.length < 4) {
+                System.out.println("Skipping Item line with insufficient columns: " + line);
+                return null;
+            }
+            System.out.println("Reading Item line: " + String.join(",", data));
+            try {
+                return new Item(data[0], data[1], Integer.parseInt(data[2]), Double.parseDouble(data[3]));
+            } catch (Exception e) {
+                System.err.println("Error creating Item from line '" + String.join(",", data) + "': " + e.getMessage());
+                return null;
+            }
+        }
+    );
+
+    // Read purchase orders to calculate stock in
+    List<PurchaseOrder> poList = fileManager.readFile(
+        fileManager.getPoFilePath(),
+        line -> {
+            if (line.trim().isEmpty() || !line.contains(",")) {
+                System.out.println("Skipping invalid PO line: " + line);
+                return null;
+            }
+            String[] data = line.split(",");
+            if (data.length < 11) {
+                System.out.println("Skipping PO line with insufficient columns: " + line);
+                return null;
+            }
+            System.out.println("Reading PO line: " + String.join(",", data));
+            try {
+                return new PurchaseOrder(data[0], data[1], data[2], data[3],
+                    Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
+                    Double.parseDouble(data[9]), Remark.valueOf(data[10]));
+            } catch (Exception e) {
+                System.err.println("Error creating PO from line '" + String.join(",", data) + "': " + e.getMessage());
+                return null;
+            }
+        }
+    );
+
+    Map<String, Integer> stockInQty = new HashMap<>();
+    for (PurchaseOrder po : poList) {
+        if (po != null && po.getStatus().equals(Status.APPROVED) && po.getRequiredDate().equals(date)) {
+            stockInQty.merge(po.getItemCode(), po.getQuantity(), Integer::sum);
+            System.out.println("Added to Stock In: " + po.getItemCode() + ", Qty: " + po.getQuantity() + " for date " + date);
+        }
+    }
+    System.out.println("Stock In Qty for " + date + ": " + stockInQty);
+
+    // Read sales to calculate stock out
+    List<SalesData> salesList = fileManager.readFile(
+        fileManager.getSalesDataFilePath(),
+        line -> {
+            if (line.trim().isEmpty() || line.startsWith("salesId")) return null;
+            String[] data = line.split(",");
+            if (data.length < 6) {
+                System.out.println("Skipping Sale line with insufficient columns: " + line);
+                return null;
+            }
+            System.out.println("Reading Sale line: " + String.join(",", data));
+            try {
+                return new SalesData(data[0], data[1],
+                    Integer.parseInt(data[2]), Double.parseDouble(data[3]), data[4], Double.parseDouble(data[5]));
+            } catch (Exception e) {
+                System.err.println("Error creating Sale from line '" + String.join(",", data) + "': " + e.getMessage());
+                return null;
+            }
+        }
+    );
+
+    Map<String, Integer> stockOutQty = new HashMap<>();
+    for (SalesData sales : salesList) {
+        if (sales != null) {
+            String saleDate = sales.getDate(); 
+            if (saleDate.equals(date)) {
+                stockOutQty.merge(sales.getItemCode(), sales.getQuantitySold(), Integer::sum);
+                System.out.println("Added to Stock Out: " + sales.getItemCode() + ", Qty: " + sales.getQuantitySold() + " for date " + date);
+            }
+        }
+    }
+    System.out.println("Stock Out Qty for " + date + ": " + stockOutQty);
+
+    // Populate table
+    tableModel.setRowCount(0); // Clear existing rows
+    for (Item item : itemList) {
+        if (item != null) {
+            String itemCode = item.getItemCode();
+            int currentStock = item.getStockLevel();
+            int stockIn = stockInQty.getOrDefault(itemCode, 0);
+            int stockOut = stockOutQty.getOrDefault(itemCode, 0);
+            int netChange = stockIn - stockOut;
+            int updatedStock = currentStock + netChange;
+
+            tableModel.addRow(new Object[] {
+                itemCode,
+                item.getItemName(),
+                currentStock,
+                stockIn,
+                stockOut,
+                netChange,
+                updatedStock
+            });
+        }
+    }
+    tableModel.fireTableDataChanged();
+    jTable1.repaint();
+
+    return stockInQty; // Return for potential future use
     }
     
     public void displayMenu() {
         
-    };
+    }
     
 }
