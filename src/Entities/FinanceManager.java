@@ -84,7 +84,6 @@ public class FinanceManager extends User {
                     po.setSupplierCode(newSupplierCode);
                 }
 
-                // Update quantity if provided
                 if (newQuantity > 0) {
                     po.setQuantity(newQuantity);
                 }
@@ -195,6 +194,33 @@ public class FinanceManager extends User {
     );
     System.out.println("Total POs read: " + poList.size());
     return poList;
+    }
+    
+    public List<PurchaseRequisition> getPurchaseRequisitions() {
+        List<PurchaseRequisition> prList = fileManager.readFile(
+            fileManager.getPrFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 7) {
+                    System.err.println("Invalid PR line: " + line);
+                    return null;
+                }
+                try {
+                    PurchaseRequisition pr = new PurchaseRequisition(
+                        data[0], data[1], data[2],
+                        Integer.parseInt(data[3]), data[4], data[5],
+                        Status.valueOf(data[6])
+                    );
+                    System.out.println("Parsed PR: " + pr.getPrId());
+                    return pr;
+                } catch (Exception e) {
+                    System.err.println("Error parsing PR line: " + line + " | Error: " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+        System.out.println("Total PRs read: " + prList.size());
+        return prList;
     }
 
     public String verifyInventoryUpdate(String poId) throws IllegalArgumentException {

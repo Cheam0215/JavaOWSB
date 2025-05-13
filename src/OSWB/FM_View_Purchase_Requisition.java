@@ -4,17 +4,66 @@
  */
 package OSWB;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
+import Entities.PurchaseRequisition;
+import Entities.FinanceManager;
+
 /**
  *
  * @author Maxcm
  */
 public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
+    private final FinanceManager financeManager;
+    private DefaultTableModel tableModel;
 
     /**
      * Creates new form FM_View_Purchase_Requisition
      */
-    public FM_View_Purchase_Requisition() {
+    public FM_View_Purchase_Requisition(FinanceManager financeManager) {
+        this.financeManager = financeManager;
+        tableModel = new DefaultTableModel(
+            new Object[][] {},
+            new String[] {
+                "PR ID", "Requested By", "Item Code", "Quantity", 
+                "Required Date", "Requested Date", "Status"
+            }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         initComponents();
+        prTable.setModel(tableModel);
+        populateTable();
+    }
+    
+    private void populateTable() {
+        List<PurchaseRequisition> prList = financeManager.getPurchaseRequisitions();
+        System.out.println("PRs received: " + prList.size());
+
+        tableModel.setRowCount(0);
+
+        int rowCount = 0;
+        for (PurchaseRequisition pr : prList) {
+            if (pr != null) {
+                tableModel.addRow(new Object[]{
+                    pr.getPrId(),
+                    pr.getRequestedBy(),
+                    pr.getItemCode(),
+                    pr.getQuantity(),
+                    pr.getRequiredDate(),
+                    pr.getRequestedDate(),
+                    pr.getStatus()
+                });
+                rowCount++;
+            }
+        }
+        System.out.println("Rows added to table: " + rowCount);
+        tableModel.fireTableDataChanged();
+        prTable.repaint();  
     }
 
     /**
@@ -27,23 +76,23 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        prTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        prTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "PR ID", "Requested By", "Item Code", "Supplier Code", "Quantity", "Required Date"
+                "PR ID", "Requested By", "Item Code", "Supplier Code", "Quantity", "Required Date", "Requested Date"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(prTable);
 
         jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 36)); // NOI18N
         jLabel1.setText("Purchase Requisition List");
@@ -103,7 +152,8 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FM_View_Purchase_Requisition().setVisible(true);
+                FinanceManager fm = new FinanceManager("FM001", "finance", "password");
+                new FM_View_Purchase_Requisition(fm).setVisible(true);
             }
         });
     }
@@ -111,6 +161,6 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable prTable;
     // End of variables declaration//GEN-END:variables
 }

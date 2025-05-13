@@ -4,11 +4,6 @@
  */
 package OSWB;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,12 +19,8 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
     private final FinanceManager financeManager;
     private DefaultTableModel tableModel;
 
-    /**
-     * Creates new form FM_Approve_Purchase_Order
-     */
     public FM_Approve_Purchase_Order(FinanceManager financeManager) {
         this.financeManager = financeManager;
-        // Initialize tableModel before initComponents
         tableModel = new DefaultTableModel(
             new Object[][] {},
             new String[] {
@@ -39,7 +30,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
         initComponents();
@@ -47,34 +38,11 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         setupTableSelection();
     }
 
-    /**
-     * Populates the table with Purchase Orders, sorted by requestedDate (latest first).
-     */
     private void populateTable() {
         List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
-        System.out.println("POs received: " + poList.size());
 
-        // Sort by requestedDate (latest first)
-        Collections.sort(poList, new Comparator<PurchaseOrder>() {
-            private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-
-            @Override
-            public int compare(PurchaseOrder po1, PurchaseOrder po2) {
-                try {
-                    Date date1 = dateFormat.parse(po1.getRequestedDate());
-                    Date date2 = dateFormat.parse(po2.getRequestedDate());
-                    return date2.compareTo(date1); // Latest first
-                } catch (ParseException e) {
-                    System.err.println("Date parse error: " + po1.getRequestedDate() + " or " + po2.getRequestedDate());
-                    return 0;
-                }
-            }
-        });
-
-        // Clear existing table data
         tableModel.setRowCount(0);
 
-        // Populate table
         int rowCount = 0;
         for (PurchaseOrder po : poList) {
             if (po != null) {
@@ -95,14 +63,10 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
             }
         }
         System.out.println("Rows added to table: " + rowCount);
-        tableModel.fireTableDataChanged(); // Notify table of data changes
+        tableModel.fireTableDataChanged(); 
         System.out.println("Table model row count after update: " + tableModel.getRowCount());
-        jTable1.repaint(); // Force table repaint
+        jTable1.repaint();
     }
-
-    /**
-     * Sets up table selection to allow only PENDING POs.
-     */
     private void setupTableSelection() {
         jTable1.getSelectionModel().addListSelectionListener(event -> {
             int selectedRow = jTable1.getSelectedRow();
@@ -205,7 +169,6 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         int currentQuantity = Integer.parseInt(tableModel.getValueAt(selectedRow, 5).toString());
         String currentSupplierCode = tableModel.getValueAt(selectedRow, 4).toString();
 
-        // Prompt for new quantity
         String quantityInput = JOptionPane.showInputDialog(this, 
             "Enter new quantity (leave blank to keep " + currentQuantity + "):", currentQuantity);
         int newQuantity = currentQuantity;
@@ -224,7 +187,6 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
             }
         }
 
-        // Prompt for new supplier code
         String newSupplierCode = JOptionPane.showInputDialog(this, 
             "Enter new supplier code (leave blank to keep " + currentSupplierCode + "):", currentSupplierCode);
         if (newSupplierCode != null && newSupplierCode.trim().isEmpty()) {
@@ -234,7 +196,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         try {
             String result = financeManager.approvePurchaseOrder(poId, newQuantity, newSupplierCode);
             JOptionPane.showMessageDialog(this, result, "Approval Result", JOptionPane.INFORMATION_MESSAGE);
-            populateTable(); // Refresh table
+            populateTable();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -252,7 +214,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         try {
             String result = financeManager.rejectPurchaseOrder(poId);
             JOptionPane.showMessageDialog(this, result, "Rejection Result", JOptionPane.INFORMATION_MESSAGE);
-            populateTable(); // Refresh table
+            populateTable();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
