@@ -4,16 +4,18 @@
  */
 package OSWB;
 
+import Entities.FinanceManager;
 /**
  *
  * @author Maxcm
  */
 public class FM_Dashboard extends javax.swing.JFrame {
-
+    private final FinanceManager financeManager;
     /**
      * Creates new form FM_Dashboard
      */
-    public FM_Dashboard() {
+    public FM_Dashboard(FinanceManager financeManager) {
+        this.financeManager = financeManager;
         initComponents();
     }
 
@@ -120,6 +122,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
         btnPurchaseRequisition4 = new javax.swing.JButton();
         btnProcessPayment4 = new javax.swing.JButton();
         jLabel40 = new javax.swing.JLabel();
+        LogOutBtn = new javax.swing.JButton();
 
         jFrame1.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -239,61 +242,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnPurchaseOrder.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseOrder.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseOrder.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseOrder.setText("Purchase Order List");
-        btnPurchaseOrder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseOrderActionPerformed(evt);
-            }
-        });
-
-        btnPurchaseRequisition.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseRequisition.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseRequisition.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseRequisition.setText("Purchase Requisition List");
-        btnPurchaseRequisition.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseRequisitionActionPerformed(evt);
-            }
-        });
-
-        btnProcessPayment.setBackground(new java.awt.Color(102, 102, 255));
-        btnProcessPayment.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnProcessPayment.setForeground(new java.awt.Color(255, 255, 255));
-        btnProcessPayment.setText("Process Payment");
-        btnProcessPayment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProcessPaymentActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel4.setText("Access Page To:");
-
-        jLabel5.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel5.setText("Access Page To:");
-
-        btnInventory.setBackground(new java.awt.Color(0, 153, 0));
-        btnInventory.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnInventory.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventory.setText("Inventory");
-        btnInventory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInventoryActionPerformed(evt);
-            }
-        });
-
-        btnFinancialReport.setBackground(new java.awt.Color(102, 102, 255));
-        btnFinancialReport.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnFinancialReport.setForeground(new java.awt.Color(255, 255, 255));
-        btnFinancialReport.setText("Financial Report");
-        btnFinancialReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinancialReportActionPerformed(evt);
-            }
-        });
+        
 
         jLabel8.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel8.setText("Access Page To:");
@@ -480,61 +429,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnPurchaseOrder1.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseOrder1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseOrder1.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseOrder1.setText("Purchase Order List");
-        btnPurchaseOrder1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseOrder1ActionPerformed(evt);
-            }
-        });
-
-        btnPurchaseRequisition1.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseRequisition1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseRequisition1.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseRequisition1.setText("Purchase Requisition List");
-        btnPurchaseRequisition1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseRequisition1ActionPerformed(evt);
-            }
-        });
-
-        btnProcessPayment1.setBackground(new java.awt.Color(102, 102, 255));
-        btnProcessPayment1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnProcessPayment1.setForeground(new java.awt.Color(255, 255, 255));
-        btnProcessPayment1.setText("Process Payment");
-        btnProcessPayment1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProcessPayment1ActionPerformed(evt);
-            }
-        });
-
-        jLabel14.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel14.setText("Access Page To:");
-
-        jLabel15.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel15.setText("Access Page To:");
-
-        btnInventory1.setBackground(new java.awt.Color(0, 153, 0));
-        btnInventory1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnInventory1.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventory1.setText("Inventory");
-        btnInventory1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInventory1ActionPerformed(evt);
-            }
-        });
-
-        btnFinancialReport1.setBackground(new java.awt.Color(102, 102, 255));
-        btnFinancialReport1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnFinancialReport1.setForeground(new java.awt.Color(255, 255, 255));
-        btnFinancialReport1.setText("Financial Report");
-        btnFinancialReport1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinancialReport1ActionPerformed(evt);
-            }
-        });
+        
 
         jLabel16.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel16.setText("Access Page To:");
@@ -721,61 +616,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnPurchaseOrder2.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseOrder2.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseOrder2.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseOrder2.setText("Purchase Order List");
-        btnPurchaseOrder2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseOrder2ActionPerformed(evt);
-            }
-        });
-
-        btnPurchaseRequisition2.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseRequisition2.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseRequisition2.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseRequisition2.setText("Purchase Requisition List");
-        btnPurchaseRequisition2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseRequisition2ActionPerformed(evt);
-            }
-        });
-
-        btnProcessPayment2.setBackground(new java.awt.Color(102, 102, 255));
-        btnProcessPayment2.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnProcessPayment2.setForeground(new java.awt.Color(255, 255, 255));
-        btnProcessPayment2.setText("Process Payment");
-        btnProcessPayment2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProcessPayment2ActionPerformed(evt);
-            }
-        });
-
-        jLabel22.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel22.setText("Access Page To:");
-
-        jLabel23.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel23.setText("Access Page To:");
-
-        btnInventory2.setBackground(new java.awt.Color(0, 153, 0));
-        btnInventory2.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnInventory2.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventory2.setText("Inventory");
-        btnInventory2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInventory2ActionPerformed(evt);
-            }
-        });
-
-        btnFinancialReport2.setBackground(new java.awt.Color(102, 102, 255));
-        btnFinancialReport2.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnFinancialReport2.setForeground(new java.awt.Color(255, 255, 255));
-        btnFinancialReport2.setText("Financial Report");
-        btnFinancialReport2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinancialReport2ActionPerformed(evt);
-            }
-        });
+        
 
         jLabel24.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel24.setText("Access Page To:");
@@ -962,61 +803,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnPurchaseOrder3.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseOrder3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseOrder3.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseOrder3.setText("Purchase Order List");
-        btnPurchaseOrder3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseOrder3ActionPerformed(evt);
-            }
-        });
-
-        btnPurchaseRequisition3.setBackground(new java.awt.Color(255, 102, 102));
-        btnPurchaseRequisition3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnPurchaseRequisition3.setForeground(new java.awt.Color(255, 255, 255));
-        btnPurchaseRequisition3.setText("Purchase Requisition List");
-        btnPurchaseRequisition3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPurchaseRequisition3ActionPerformed(evt);
-            }
-        });
-
-        btnProcessPayment3.setBackground(new java.awt.Color(102, 102, 255));
-        btnProcessPayment3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnProcessPayment3.setForeground(new java.awt.Color(255, 255, 255));
-        btnProcessPayment3.setText("Process Payment");
-        btnProcessPayment3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProcessPayment3ActionPerformed(evt);
-            }
-        });
-
-        jLabel30.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel30.setText("Access Page To:");
-
-        jLabel31.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jLabel31.setText("Access Page To:");
-
-        btnInventory3.setBackground(new java.awt.Color(0, 153, 0));
-        btnInventory3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnInventory3.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventory3.setText("Inventory");
-        btnInventory3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInventory3ActionPerformed(evt);
-            }
-        });
-
-        btnFinancialReport3.setBackground(new java.awt.Color(102, 102, 255));
-        btnFinancialReport3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        btnFinancialReport3.setForeground(new java.awt.Color(255, 255, 255));
-        btnFinancialReport3.setText("Financial Report");
-        btnFinancialReport3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinancialReport3ActionPerformed(evt);
-            }
-        });
+        
 
         jLabel32.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel32.setText("Access Page To:");
@@ -1262,6 +1049,13 @@ public class FM_Dashboard extends javax.swing.JFrame {
         jLabel40.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel40.setText("Access Page To:");
 
+        LogOutBtn.setText("Logout");
+        LogOutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LogOutBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1270,29 +1064,35 @@ public class FM_Dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel40)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnFinancialReport4)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnProcessPayment4)))
-                    .addComponent(jPanel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel36)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnInventory4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel33)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnPurchaseRequisition4)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnPurchaseOrder4)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jPanel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel40)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnFinancialReport4)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnProcessPayment4)))
+                            .addComponent(jPanel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel36)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnInventory4))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel33)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPurchaseRequisition4)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPurchaseOrder4)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LogOutBtn)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1301,7 +1101,8 @@ public class FM_Dashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addComponent(LogOutBtn)
+                        .addGap(22, 22, 22)
                         .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1329,105 +1130,37 @@ public class FM_Dashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnPurchaseOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrderActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseOrderActionPerformed
-
-    private void btnPurchaseRequisitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRequisitionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseRequisitionActionPerformed
-
-    private void btnProcessPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPaymentActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProcessPaymentActionPerformed
-
-    private void btnInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInventoryActionPerformed
-
-    private void btnFinancialReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReportActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinancialReportActionPerformed
-
-    private void btnPurchaseOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrder1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseOrder1ActionPerformed
-
-    private void btnPurchaseRequisition1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRequisition1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseRequisition1ActionPerformed
-
-    private void btnProcessPayment1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPayment1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProcessPayment1ActionPerformed
-
-    private void btnInventory1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventory1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInventory1ActionPerformed
-
-    private void btnFinancialReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReport1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinancialReport1ActionPerformed
-
-    private void btnPurchaseOrder2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrder2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseOrder2ActionPerformed
-
-    private void btnPurchaseRequisition2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRequisition2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseRequisition2ActionPerformed
-
-    private void btnProcessPayment2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPayment2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProcessPayment2ActionPerformed
-
-    private void btnInventory2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventory2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInventory2ActionPerformed
-
-    private void btnFinancialReport2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReport2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinancialReport2ActionPerformed
-
-    private void btnPurchaseOrder3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrder3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseOrder3ActionPerformed
-
-    private void btnPurchaseRequisition3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRequisition3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseRequisition3ActionPerformed
-
-    private void btnProcessPayment3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPayment3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProcessPayment3ActionPerformed
-
-    private void btnInventory3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventory3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInventory3ActionPerformed
-
-    private void btnFinancialReport3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReport3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFinancialReport3ActionPerformed
-
     private void btnInventory4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventory4ActionPerformed
-        // TODO add your handling code here:
+        FM_View_Inventory inventoryFrame = new FM_View_Inventory(financeManager);
+        inventoryFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnInventory4ActionPerformed
 
     private void btnFinancialReport4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReport4ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnFinancialReport4ActionPerformed
 
     private void btnPurchaseOrder4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrder4ActionPerformed
-        // TODO add your handling code here:
+        FM_Approve_Purchase_Order poFrame = new FM_Approve_Purchase_Order(financeManager);
+        poFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnPurchaseOrder4ActionPerformed
 
     private void btnPurchaseRequisition4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRequisition4ActionPerformed
-        // TODO add your handling code here:
+        FM_View_Purchase_Requisition prFrame = new FM_View_Purchase_Requisition(financeManager);
+        prFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnPurchaseRequisition4ActionPerformed
 
     private void btnProcessPayment4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPayment4ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnProcessPayment4ActionPerformed
+
+    private void LogOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogOutBtnActionPerformed
+        Login loginFrame = new Login();
+        loginFrame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_LogOutBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1459,12 +1192,14 @@ public class FM_Dashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FM_Dashboard().setVisible(true);
+                FinanceManager fm = new FinanceManager("FM001", "finance", "password");
+                new FM_Dashboard(fm).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton LogOutBtn;
     private javax.swing.JButton btnFinancialReport;
     private javax.swing.JButton btnFinancialReport1;
     private javax.swing.JButton btnFinancialReport2;

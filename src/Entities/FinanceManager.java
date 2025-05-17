@@ -55,7 +55,6 @@ public class FinanceManager extends User {
                     return "Purchase Order " + poId + " is already " + po.getStatus();
                 }
 
-                // Validate supplier if changed
                 if (newSupplierCode != null && !newSupplierCode.isEmpty() && !newSupplierCode.equals(po.getSupplierCode())) {
                     List<ItemSupply> itemSupplies = fileManager.readFile(
                         fileManager.getItemSupplyFilePath(),
