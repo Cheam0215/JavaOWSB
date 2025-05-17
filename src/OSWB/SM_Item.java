@@ -289,6 +289,11 @@ public class SM_Item extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel8.setText("Retail Price : ");
@@ -412,11 +417,11 @@ public class SM_Item extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(13, 13, 13)
                         .addComponent(editBtn)
-                        .addGap(42, 42, 42)
+                        .addGap(50, 50, 50)
                         .addComponent(saveBtn)
-                        .addGap(39, 39, 39)
+                        .addGap(51, 51, 51)
                         .addComponent(deleteBtn))
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -531,7 +536,7 @@ public class SM_Item extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Stock level and unit price must be integers, and retail price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Stock level must be integers, unit price and retail price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -634,6 +639,10 @@ public class SM_Item extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
