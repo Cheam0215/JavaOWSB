@@ -173,9 +173,9 @@ public class PurchaseManager extends User{
     public String generatePurchaseOrder(String prId, String supplierCode) {
         try {
              //Validate session userID
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                return "Error: No user logged in. Please log in to generate a Purchase Order.";
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                return "Error: No user logged in. Please log in to generate a Purchase Order.";
+//            }
 
             // Step 1: Find the PurchaseRequisition by prId
             List<PurchaseRequisition> prList = fileManager.readFile(
@@ -312,10 +312,10 @@ public class PurchaseManager extends User{
     public boolean editPurchaseOrder(String poId, int newQuantity , double new_payment_amount) {
         try {
             // Validate session
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                System.out.println("Error: No user logged in.");
-                return false;
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                System.out.println("Error: No user logged in.");
+//                return false;
+//            }
 
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
@@ -412,10 +412,10 @@ public class PurchaseManager extends User{
     public boolean deletePurchaseOrder(String poId) {
         try {
             // Validate session
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                System.out.println("Error: No user logged in.");
-                return false;
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                System.out.println("Error: No user logged in.");
+//                return false;
+//            }
 
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
