@@ -4,17 +4,83 @@
  */
 package OSWB;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+import Entities.PurchaseOrder;
+import Entities.FinanceManager;
+import Utility.Status;
 /**
  *
  * @author Maxcm
  */
 public class FM_Payment extends javax.swing.JFrame {
-
+    private final FinanceManager financeManager;
+    private DefaultTableModel tableModel;
     /**
      * Creates new form FM_Payment
      */
-    public FM_Payment() {
+    public FM_Payment(FinanceManager financeManager) {
+        this.financeManager = financeManager;
+        tableModel = new DefaultTableModel(
+            new Object[][] {},
+            new String[] {
+                "PO ID", "PR ID", "Raised By", "Item Code", "Supplier Code", "Quantity", 
+                "Requested Date", "Required Date", "Payment Amount", "Status", "Remark"
+            }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         initComponents();
+        populateTable();
+        setupTableSelection();
+    }
+    
+    private void populateTable() {
+        List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
+
+        tableModel.setRowCount(0);
+
+        int rowCount = 0;
+        for (PurchaseOrder po : poList) {
+            if (po != null) {
+                tableModel.addRow(new Object[]{
+                    po.getPoId(),
+                    po.getPrId(),
+                    po.getRaisedBy(),
+                    po.getItemCode(),
+                    po.getSupplierCode(),
+                    po.getQuantity(),
+                    po.getRequestedDate(),
+                    po.getRequiredDate(),
+                    po.getPaymentAmount(),
+                    po.getStatus(),
+                    po.getRemark()
+                });
+                rowCount++;
+            }
+        }
+        System.out.println("Rows added to table: " + rowCount);
+        tableModel.fireTableDataChanged(); 
+        System.out.println("Table model row count after update: " + tableModel.getRowCount());
+        jTable2.repaint();
+    }
+    private void setupTableSelection() {
+        jTable2.getSelectionModel().addListSelectionListener(event -> {
+            int selectedRow = jTable2.getSelectedRow();
+            if (selectedRow >= 0) {
+                String status = tableModel.getValueAt(selectedRow, 9).toString();
+                if (!status.equals(Status.APPROVED.toString())) {
+                    jTable2.clearSelection();
+                    JOptionPane.showMessageDialog(this, "Only APPROVED Purchase Orders can be selected.", 
+                        "Invalid Selection", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
     }
 
     /**
@@ -33,6 +99,8 @@ public class FM_Payment extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        BackBtn = new javax.swing.JButton();
+        PaymentBtn = new javax.swing.JButton();
 
         jFrame1.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,18 +147,22 @@ public class FM_Payment extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 36)); // NOI18N
         jLabel2.setText("Payment Process");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "PO ID", "PR ID", "Raised By", "Item Code", "Supplier Code", "Quantity", "Requested Date", "Required Date", "Payment Amount", "Status", "Remark"
-            }
-        ));
+        jTable2.setModel(tableModel);
         jScrollPane2.setViewportView(jTable2);
+
+        BackBtn.setText("Back");
+        BackBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackBtnActionPerformed(evt);
+            }
+        });
+
+        PaymentBtn.setText("Pay");
+        PaymentBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PaymentBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,23 +171,59 @@ public class FM_Payment extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1326, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jLabel2)
+                    .addComponent(BackBtn))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1117, Short.MAX_VALUE)
+                .addGap(56, 56, 56)
+                .addComponent(PaymentBtn)
+                .addGap(46, 46, 46))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(PaymentBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(BackBtn)
+                .addGap(56, 56, 56))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
+        FM_Dashboard prFrame = new FM_Dashboard(financeManager);
+        prFrame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BackBtnActionPerformed
+
+    private void PaymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PaymentBtnActionPerformed
+        int selectedRow = jTable2.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Only APPROVED Purchase Order can be selected.", 
+                "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String poId = tableModel.getValueAt(selectedRow, 0).toString();
+        try {
+            String result = financeManager.payPurchaseOrder(poId);
+            JOptionPane.showMessageDialog(this, result, "Payment Result", JOptionPane.INFORMATION_MESSAGE);
+            populateTable();
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_PaymentBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,12 +255,15 @@ public class FM_Payment extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FM_Payment().setVisible(true);
+                FinanceManager fm = new FinanceManager("006", "finance", "000000");
+                new FM_Payment(fm).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BackBtn;
+    private javax.swing.JButton PaymentBtn;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

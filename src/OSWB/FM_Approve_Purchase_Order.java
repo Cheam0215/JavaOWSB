@@ -268,7 +268,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                    FinanceManager fm = new FinanceManager("FM001", "finance", "password");
+                    FinanceManager fm = new FinanceManager("006", "finance", "000000");
                 new FM_Approve_Purchase_Order(fm).setVisible(true);
             }
         });

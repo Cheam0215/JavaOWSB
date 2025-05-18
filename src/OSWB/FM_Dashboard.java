@@ -5,6 +5,7 @@
 package OSWB;
 
 import Entities.FinanceManager;
+import Utility.Session;
 /**
  *
  * @author Maxcm
@@ -1137,7 +1138,9 @@ public class FM_Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInventory4ActionPerformed
 
     private void btnFinancialReport4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinancialReport4ActionPerformed
-        
+        FM_Generate_Financial_Report finReportFrame = new FM_Generate_Financial_Report(financeManager);
+        finReportFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnFinancialReport4ActionPerformed
 
     private void btnPurchaseOrder4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseOrder4ActionPerformed
@@ -1153,7 +1156,9 @@ public class FM_Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPurchaseRequisition4ActionPerformed
 
     private void btnProcessPayment4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessPayment4ActionPerformed
-        
+        FM_Payment prFrame = new FM_Payment(financeManager);
+        prFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnProcessPayment4ActionPerformed
 
     private void LogOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogOutBtnActionPerformed
@@ -1192,7 +1197,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FinanceManager fm = new FinanceManager("FM001", "finance", "password");
+                FinanceManager fm = new FinanceManager("006", "finance", "000000");
                 new FM_Dashboard(fm).setVisible(true);
             }
         });

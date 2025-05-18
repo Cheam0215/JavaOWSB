@@ -166,6 +166,60 @@ public class FinanceManager extends User {
         }
         return "Purchase Order " + poId + " not found";
     }
+    
+    public String payPurchaseOrder(String poId) throws IllegalArgumentException {
+        if (poId == null || poId.trim().isEmpty()) {
+            throw new IllegalArgumentException("PO ID cannot be empty");
+        }
+
+        List<PurchaseOrder> poList = fileManager.readFile(
+            fileManager.getPoFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 11) return null;
+                try {
+                    return new PurchaseOrder(
+                        data[0], data[1], data[2], data[3],
+                        Integer.parseInt(data[4]), data[5], data[6], data[7],
+                        Status.valueOf(data[8]), Double.parseDouble(data[9]),
+                        Remark.valueOf(data[10])
+                    );
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        );
+
+        for (PurchaseOrder po : poList) {
+            if (po != null && po.getPoId().equals(poId)) {
+                if (!po.getStatus().equals(Status.APPROVED)) {
+                    return "Purchase Order " + poId + " is already " + po.getStatus();
+                }
+
+                po.setStatus(Status.PAID);
+                boolean success = fileManager.updateToFile(
+                    po, fileManager.getPoFilePath(),
+                    PurchaseOrder::getPoId, PurchaseOrder::toString,
+                    line -> {
+                        String[] data = line.split(",");
+                        if (data.length < 11) return null;
+                        try {
+                            return new PurchaseOrder(
+                                data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],
+                                Status.valueOf(data[8]), Double.parseDouble(data[9]),
+                                Remark.valueOf(data[10])
+                            );
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    }
+                );
+                return success ? "Payment for Purchase Order: " + poId + " was successful." : "Failed to process payment for Purchase Order " + poId;
+            }
+        }
+        return "Purchase Order " + poId + " not found";
+    }
 
     public List<PurchaseOrder> getPurchaseOrders() {
         List<PurchaseOrder> poList = fileManager.readFile(
@@ -222,159 +276,197 @@ public class FinanceManager extends User {
         return prList;
     }
 
-        public List<InventoryItem> verifyInventoryUpdate() {
-            List<Item> itemList = fileManager.readFile(
-                fileManager.getItemFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    if (data.length < 4) {
-                        System.err.println("Invalid item data: " + line);
-                        return null;
-                    }
-                    try {
-                        int stockLevel = Integer.parseInt(data[2]);
-                        double retailPrice = Double.parseDouble(data[3]);
-                        if (stockLevel < 0 || retailPrice < 0) {
-                            System.err.println("Invalid stock level or retail price for item: " + data[0]);
-                            return null;
-                        }
-                        return new Item(data[0], data[1], stockLevel, retailPrice);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error parsing item: " + line);
-                        return null;
-                    }
-                }
-            );
-
-            List<ItemSupply> supplyList = fileManager.readFile(
-                fileManager.getItemSupplyFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    if (data.length < 4) {
-                        System.err.println("Invalid item supply data: " + line);
-                        return null;
-                    }
-                    try {
-                        double unitPrice = Double.parseDouble(data[3]);
-                        if (unitPrice < 0) {
-                            System.err.println("Negative unit price for item: " + data[0]);
-                            return null;
-                        }
-                        return new ItemSupply(data[0], data[1], data[2], unitPrice);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error parsing item supply: " + line);
-                        return null;
-                    }
-                }
-            );
-
-            List<InventoryItem> inventoryItems = new ArrayList<>();
-            for (Item item : itemList) {
-                if (item == null) continue;
-                String supplierCode = "N/A";
-                double unitPrice = 0.0;
-                for (ItemSupply supply : supplyList) {
-                    if (supply != null && supply.getItemCode().equals(item.getItemCode())) {
-                        supplierCode = supply.getSupplierCode();
-                        unitPrice = supply.getUnitPrice();
-                        break;
-                    }
-                }
-                inventoryItems.add(new InventoryItem(
-                    item.getItemCode(),
-                    item.getItemName(),
-                    item.getStockLevel(),
-                    supplierCode,
-                    unitPrice,
-                    item.getRetailPrice()
-                ));
-            }
-
-            System.out.println("Verified inventory items: " + inventoryItems.size());
-            return inventoryItems;
-        }
-
-        public static class InventoryItem {
-            private final String itemCode;
-            private final String itemName;
-            private final int stockLevel;
-            private final String supplierCode;
-            private final double unitPrice;
-            private final double retailPrice;
-
-            public InventoryItem(String itemCode, String itemName, int stockLevel,
-                                String supplierCode, double unitPrice, double retailPrice) {
-                this.itemCode = itemCode;
-                this.itemName = itemName;
-                this.stockLevel = stockLevel;
-                this.supplierCode = supplierCode;
-                this.unitPrice = unitPrice;
-                this.retailPrice = retailPrice;
-            }
-
-            public String getItemCode() {
-                return itemCode;
-            }
-
-            public String getItemName() {
-                return itemName;
-            }
-
-            public int getStockLevel() {
-                return stockLevel;
-            }
-
-            public String getSupplierCode() {
-                return supplierCode;
-            }
-
-            public double getUnitPrice() {
-                return unitPrice;
-            }
-
-            public double getRetailPrice() {
-                return retailPrice;
-            }
-        }
-
-
-    public String generateFinancialReport() {
-        List<PurchaseOrder> poList = fileManager.readFile(
-            fileManager.getPoFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                if (data.length < 11) return null;
-                try {
-                    return new PurchaseOrder(
-                        data[0], data[1], data[2], data[3],
-                        Integer.parseInt(data[4]), data[5], data[6], data[7],
-                        Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                        Remark.valueOf(data[10])
-                    );
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        );
-
+    public List<SalesData> getSalesData() {
         List<SalesData> salesList = fileManager.readFile(
             fileManager.getSalesDataFilePath(),
             line -> {
                 String[] data = line.split(",");
-                if (data.length < 6) return null;
+                if (data.length < 6) {
+                    System.err.println("Invalid sales data: " + line);
+                    return null;
+                }
                 try {
-                    return new SalesData(
+                    SalesData sale = new SalesData(
                         data[0], data[1],
                         Integer.parseInt(data[2]),
                         Double.parseDouble(data[3]),
                         data[4],
                         Double.parseDouble(data[5])
                     );
+                    System.out.println("Parsed Sales: " + sale.getSalesId());
+                    return sale;
                 } catch (Exception e) {
+                    System.err.println("Error parsing sales data: " + line + " | Error: " + e.getMessage());
                     return null;
                 }
             }
         );
+        System.out.println("Total Sales read: " + salesList.size());
+        return salesList;
+    }
+
+    public List<InventoryItem> verifyInventoryUpdate() {
+        List<Item> itemList = fileManager.readFile(
+            fileManager.getItemFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 4) {
+                    System.err.println("Invalid item data: " + line);
+                    return null;
+                }
+                try {
+                    int stockLevel = Integer.parseInt(data[2]);
+                    double retailPrice = Double.parseDouble(data[3]);
+                    if (stockLevel < 0 || retailPrice < 0) {
+                        System.err.println("Invalid stock level or retail price for item: " + data[0]);
+                        return null;
+                    }
+                    return new Item(data[0], data[1], stockLevel, retailPrice);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing item: " + line);
+                    return null;
+                }
+            }
+        );
+
+        List<ItemSupply> supplyList = fileManager.readFile(
+            fileManager.getItemSupplyFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 4) {
+                    System.err.println("Invalid item supply data: " + line);
+                    return null;
+                }
+                try {
+                    double unitPrice = Double.parseDouble(data[3]);
+                    if (unitPrice < 0) {
+                        System.err.println("Negative unit price for item: " + data[0]);
+                        return null;
+                    }
+                    return new ItemSupply(data[0], data[1], data[2], unitPrice);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing item supply: " + line);
+                    return null;
+                }
+            }
+        );
+
+        List<InventoryItem> inventoryItems = new ArrayList<>();
+        for (Item item : itemList) {
+            if (item == null) continue;
+            String supplierCode = "N/A";
+            double unitPrice = 0.0;
+            for (ItemSupply supply : supplyList) {
+                if (supply != null && supply.getItemCode().equals(item.getItemCode())) {
+                    supplierCode = supply.getSupplierCode();
+                    unitPrice = supply.getUnitPrice();
+                    break;
+                }
+            }
+            inventoryItems.add(new InventoryItem(
+                item.getItemCode(),
+                item.getItemName(),
+                item.getStockLevel(),
+                supplierCode,
+                unitPrice,
+                item.getRetailPrice()
+            ));
+        }
+
+        System.out.println("Verified inventory items: " + inventoryItems.size());
+        return inventoryItems;
+    }
+
+    public static class InventoryItem {
+        private final String itemCode;
+        private final String itemName;
+        private final int stockLevel;
+        private final String supplierCode;
+        private final double unitPrice;
+        private final double retailPrice;
+
+        public InventoryItem(String itemCode, String itemName, int stockLevel,
+                             String supplierCode, double unitPrice, double retailPrice) {
+            this.itemCode = itemCode;
+            this.itemName = itemName;
+            this.stockLevel = stockLevel;
+            this.supplierCode = supplierCode;
+            this.unitPrice = unitPrice;
+            this.retailPrice = retailPrice;
+        }
+
+        public String getItemCode() {
+            return itemCode;
+        }
+
+        public String getItemName() {
+            return itemName;
+        }
+
+        public int getStockLevel() {
+            return stockLevel;
+        }
+
+        public String getSupplierCode() {
+            return supplierCode;
+        }
+
+        public double getUnitPrice() {
+            return unitPrice;
+        }
+
+        public double getRetailPrice() {
+            return retailPrice;
+        }
+    }
+
+    public double calculateProfitLoss(int month, int year) {
+        List<SalesData> salesList = getSalesData();
+
+        List<PurchaseOrder> poList = getPurchaseOrders();
+
+        double totalRevenue = 0;
+        for (SalesData sale : salesList) {
+            if (sale != null && isInMonth(sale.getDate(), month, year)) {
+                totalRevenue += sale.getTotalAmount();
+            }
+        }
+
+        double totalExpenses = 0;
+        for (PurchaseOrder po : poList) {
+            if (po != null && po.getStatus().equals(Status.PAID) && isInMonth(po.getRequiredDate(), month, year)) {
+                totalExpenses += po.getPaymentAmount();
+            }
+        }
+
+        return totalRevenue - totalExpenses;
+    }
+
+    private boolean isInMonth(String date, int month, int year) {
+        try {
+            String[] parts = date.contains("-") ? date.split("-") : null;
+            if (parts == null || parts.length < 3) return false;
+
+            int dateMonth, dateYear;
+            if (parts[0].length() == 4) {
+                dateYear = Integer.parseInt(parts[0]);
+                dateMonth = Integer.parseInt(parts[1]);
+            } else {
+                dateYear = Integer.parseInt(parts[2]);
+                dateMonth = Integer.parseInt(parts[1]);
+            }
+
+            return dateMonth == (month + 1) && dateYear == year;
+        } catch (Exception e) {
+            System.err.println("Error parsing date: " + date);
+            return false;
+        }
+    }
+
+    public String generateFinancialReport() {
+        List<PurchaseOrder> poList = getPurchaseOrders();
+
+        List<SalesData> salesList = getSalesData();
 
         double totalRevenue = 0;
         for (SalesData sale : salesList) {
@@ -427,70 +519,8 @@ public class FinanceManager extends User {
         return report.toString();
     }
 
-    public String viewPurchaseRequisition() {
-        List<PurchaseRequisition> prList = fileManager.readFile(
-            fileManager.getPrFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                if (data.length < 7) return null;
-                try {
-                    return new PurchaseRequisition(
-                        data[0], data[1], data[2],
-                        Integer.parseInt(data[3]), data[4], data[5],
-                        Status.valueOf(data[6])
-                    );
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        );
-
-        StringBuilder view = new StringBuilder("Purchase Requisitions:\n");
-        view.append("PR ID | Item Code | Requested By | Quantity | Required Date | Request Date | Status\n");
-        view.append("--------------------------------------------------------------------------------\n");
-
-        for (PurchaseRequisition pr : prList) {
-            if (pr != null) {
-                view.append(String.format("%s | %s | %s | %d | %s | %s | %s\n",
-                    pr.getPrId(), pr.getItemCode(), pr.getRequestedBy(), pr.getQuantity(),
-                    pr.getRequiredDate(), pr.getRequestedDate(), pr.getStatus()));
-            }
-        }
-        return view.toString();
-    }
-
-    public String viewPurchaseOrder() {
-        List<PurchaseOrder> poList = fileManager.readFile(
-            fileManager.getPoFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                if (data.length < 11) return null;
-                try {
-                    return new PurchaseOrder(
-                        data[0], data[1], data[2], data[3],
-                        Integer.parseInt(data[4]), data[5], data[6], data[7],
-                        Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                        Remark.valueOf(data[10])
-                    );
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        );
-
-        StringBuilder view = new StringBuilder("Purchase Orders:\n");
-        view.append("PO ID | PR ID | Item Code | Quantity | Supplier | Status | Payment Amount | Date\n");
-        view.append("---------------------------------------------------------------------------\n");
-
-        for (PurchaseOrder po : poList) {
-            if (po != null) {
-                view.append(String.format("%s | %s | %s | %d | %s | %s | RM%.2f | %s\n",
-                    po.getPoId(), po.getPrId(), po.getItemCode(), 
-                    po.getQuantity(), po.getSupplierCode(), po.getStatus(), 
-                    po.getPaymentAmount(), po.getRequestedDate()));
-            }
-        }
-        return view.toString();
+    public FileManager getFileManager() {
+        return fileManager;
     }
     
 }
