@@ -565,14 +565,15 @@ public class SM_Item extends javax.swing.JFrame {
             return;
         }
 
-        if (salesManager.deleteItem(itemCode)) {
+        String result = salesManager.deleteItem(itemCode); // Capture the string result
+        if (result.startsWith("Item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadItems();
-            jTextField3.setText("");
-            jTextField2.setText("");
+            loadItems(); // Refresh the table
+            jTextField3.setText(""); // Clear item name field (assuming jTextField3 is for item name)
+            jTextField2.setText(""); // Clear stock level field (assuming jTextField2 is for stock)
             jTextField4.setText(""); // Clear unit price field
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to delete item " + itemCode + ". Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
@@ -602,7 +603,7 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (!isEditing || editingItemCode == null) {
+       if (!isEditing || editingItemCode == null) {
             JOptionPane.showMessageDialog(this, "No item is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -623,13 +624,18 @@ public class SM_Item extends javax.swing.JFrame {
         try {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
-            double unitPrice = Double.parseDouble(unitPriceStr);
+            double unitPrice = Double.parseDouble(unitPriceStr); // Keep as double for precision
             Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
-            if (salesManager.updateItem(updatedItem, supplierCode, (int) unitPrice)) { // Cast double to int if required
+
+            // Assuming updateItem returns a string indicating success or error
+            String result = salesManager.updateItem(updatedItem, supplierCode, unitPrice);
+            if (result.startsWith("Item ") && result.endsWith(" updated successfully.")) {
                 JOptionPane.showMessageDialog(this, "Item updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
+                isEditing = false;
+                editingItemCode = null; // Reset editing state
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update item.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Stock level must be an integer, and retail price and unit price must be numbers.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -481,8 +481,16 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please fill all fields and select valid options.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if (!supplierCode.equals((String) model.getValueAt(jTable1.getSelectedRow(), 1)) && isDuplicateItemSupply(itemCode, supplierCode)) {
+
+        // Validate table row selection for duplicate check
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a row to verify the update.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String currentSupplierCode = (String) model.getValueAt(selectedRow, 1); // Assuming column 1 is supplierCode
+        if (!supplierCode.equals(currentSupplierCode) && isDuplicateItemSupply(itemCode, supplierCode)) {
             JOptionPane.showMessageDialog(this, "This item code and supplier code combination already exists.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -490,11 +498,16 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
             ItemSupply updatedItemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
-            if (salesManager.updateItemSupply(updatedItemSupply)) {
+
+            // Assuming updateItemSupply returns a string
+            String result = salesManager.updateItemSupply(updatedItemSupply);
+            if (result.startsWith("Item supply ") && result.endsWith(" updated successfully.")) {
                 JOptionPane.showMessageDialog(this, "Item supply updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
+                isEditing = false; // Reset editing state
+                editingItemCode = null; // Reset editing item code
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update item supply.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unit price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -514,11 +527,12 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             return;
         }
 
-        if (salesManager.deleteItemSupply(itemCode)) {
+        String result = salesManager.deleteItemSupply(itemCode); // Capture the string result
+        if (result.startsWith("Item supply for item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item supply deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadItemSupplies();
+            loadItemSupplies(); // Refresh the table
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to delete item supply " + itemCode + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
