@@ -28,12 +28,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InventoryManager extends User{
     
-    private final Inventory inventory;
+//    private final Inventory inventory;
     private final FileManager fileManager;
 
     public InventoryManager(String userId, String username, String password) {
         super(userId, username, password, UserRoles.INVENTORY_MANAGER);
-        this.inventory = new Inventory();
+//        this.inventory = new Inventory();
         this.fileManager = new FileManager();
     }
     
@@ -259,10 +259,10 @@ public class InventoryManager extends User{
     
     }
     
-    public void trackLowStock() {
-        inventory.checkLowStock();
-    }
-    
+//    public void trackLowStock() {
+//        inventory.checkLowStock();
+//    }
+//    
     public String viewPurchaseOrder(){
         return null;
     }

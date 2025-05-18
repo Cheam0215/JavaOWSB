@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Entities.Administrator;
 import Entities.FinanceManager;
 import Entities.InventoryManager;
 import Entities.PurchaseManager;
@@ -28,11 +29,14 @@ import javax.swing.JOptionPane;
 public class ADMIN_CREATE_USER extends javax.swing.JFrame {
     
     private FileManager fileManager;
+    private final Administrator loggedInAdmin;
 
     /**
      * Creates new form ADMIN_CREATE_USER
+     * @param loggedInAdmin
      */
-    public ADMIN_CREATE_USER() {
+    public ADMIN_CREATE_USER(Administrator loggedInAdmin) {
+        this.loggedInAdmin = loggedInAdmin;
         initComponents();
         // Populate roleField with UserRoles, excluding ADMINISTRATOR
         FileManager fileManager = new FileManager();
@@ -96,6 +100,11 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         panel1.setBackground(new java.awt.Color(153, 204, 255));
 
         backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         regitserButton.setText("Register");
         regitserButton.addActionListener(new java.awt.event.ActionListener() {
@@ -218,110 +227,58 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldActionPerformed
 
     private void regitserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regitserButtonActionPerformed
-        String username     = usernameField.getText().trim();
-        String password     = String.valueOf(passwordField.getPassword());
-        String roleString   = (String) roleField.getSelectedItem();
-        UserRoles role      = UserRoles.valueOf(roleString);
+        String username = usernameField.getText().trim();
+        String password = String.valueOf(passwordField.getPassword()); 
+        UserRoles role  = null;
 
-        // Validate inputs
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            usernameField.requestFocusInWindow(); // Optional: set focus back to the field
             return;
         }
+
         if (password.length() < 6) {
-            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            passwordField.requestFocusInWindow(); // Optional
             return;
-        }
-
-        // Read existing users to check for duplicate username
-        List<User> existingUsers = fileManager.readFile(
-            fileManager.getUserFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                if (data.length < 4) {
-                    JOptionPane.showMessageDialog(this, "Invalid user data. Index out of bounds", "Error", JOptionPane.ERROR_MESSAGE);
-                    return null;
-                }
-                String passwordField = data[2];
-                // Try to deserialize the password; fall back to plain text if it fails
-                String deserializedPassword = passwordField;
-                try {
-                    byte[] decodedBytes = Base64.getDecoder().decode(passwordField);
-                    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(decodedBytes))) {
-                        deserializedPassword = (String) in.readObject();
-                    }
-                } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
-                    // If deserialization fails or not Base64, assume plain text
-                    System.out.println("Password not serialized or invalid Base64: " + passwordField);
-                }
-                try {
-                    return new User(
-                        data[0], // id
-                        data[1], // username
-                        deserializedPassword, // password (deserialized or plain)
-                        UserRoles.valueOf(data[3]) // role
-                    );
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Error parsing user data: " + line + " | " + e.getMessage());
-                    return null;
-                }
-            }
-        );
-
-        // Check for duplicate username
-        for (User user : existingUsers) {
-            if (user != null && user.getUsername().equalsIgnoreCase(username)) {
-                JOptionPane.showMessageDialog(this, "Username already exists.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-
-        // Serialize the password to Base64
-        String serializedPassword;
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ObjectOutputStream out = new ObjectOutputStream(baos)) {
-            out.writeObject(password);
-            out.flush();
-            serializedPassword = Base64.getEncoder().encodeToString(baos.toByteArray());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error serializing password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Generate a new ID
-        String userID = String.format("%03d", existingUsers.size() + 1);
-
-        // Create role-specific object
-        User roleSpecificUser;
-        switch (role) {
-            case FINANCE_MANAGER -> roleSpecificUser = new FinanceManager(userID, username, serializedPassword);
-            case INVENTORY_MANAGER -> roleSpecificUser = new InventoryManager(userID, username, serializedPassword);
-            case PURCHASE_MANAGER -> roleSpecificUser = new PurchaseManager(userID, username, serializedPassword);
-            case SALES_MANAGER -> roleSpecificUser = new SalesManager(userID, username, serializedPassword);
-            default -> {
-                JOptionPane.showMessageDialog(this, "Invalid role selected.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-
-        // Write user to file
-        boolean success = fileManager.writeToFile(
-            roleSpecificUser,
-            fileManager.getUserFilePath(),
-            User::getUserID,
-            user -> user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole().name()
-        );
-
-        if (success) {
-            JOptionPane.showMessageDialog(this, "User created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            usernameField.setText("");
-            passwordField.setText("");
-            roleField.setSelectedIndex(0);
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to create user.", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        // Get the selected role
+        if (roleField.getSelectedItem() != null) {
+            try {
+                role = UserRoles.valueOf((String) roleField.getSelectedItem());
+            } catch (IllegalArgumentException e) {
+                // Incase dropdown populate has errors
+                JOptionPane.showMessageDialog(this, "Invalid role selected from dropdown. Please report this issue.", "Configuration Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a role.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            roleField.requestFocusInWindow(); // Optional
+            return;
+        }
+        
+        //Register User after validating name, password and role.
+        String resultMessage = this.loggedInAdmin.registerUser(username, password, role);
+
+        if (resultMessage == null) { // Indicates success from the Administrator class
+            JOptionPane.showMessageDialog(this, "User created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Clear fields
+            usernameField.setText("");
+            passwordField.setText("");
+            if (roleField.getItemCount() > 0) { // Check if dropdown has items before setting index
+                roleField.setSelectedIndex(0); // Reset role dropdown to the first item
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, resultMessage, "Oops! Registration Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_regitserButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        ADMIN_USER adminUser = new ADMIN_USER(loggedInAdmin);
+        adminUser.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_backButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -350,12 +307,6 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ADMIN_CREATE_USER().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -106,10 +106,9 @@ public class User {
         }
     }
     
-    // For FileManager compatibility
     @Override
-    public String toString() {
-        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", role=" + role + '}';
+     public String toString() {
+        return userID + "," + username + "," + password + "," + role.name();
     }
     
     
