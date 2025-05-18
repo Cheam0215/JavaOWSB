@@ -5,11 +5,12 @@
 package OSWB;
 
 import Entities.FinanceManager;
-import Entities.Item;
-import Utility.FileManager;
+import Entities.FinanceManager.InventoryItem;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -17,16 +18,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FM_View_Inventory extends javax.swing.JFrame {
     private DefaultTableModel model;
-    private FileManager fileManager;
     private FinanceManager financeManager;
     
     private final String[] columnNames = {
-        "Item Code", "Item Name", "Supplier ID", "Stock Level"
+        "Item Code", "Item Name", "Stock Level", "Supplier Code", "Unit Price", "Retail Price"
     };
 
     public FM_View_Inventory(FinanceManager financeManager) {
         this.financeManager = financeManager;
-        this.fileManager = financeManager.getFileManager();
         initComponents();
         setupTable();
         viewTable();
@@ -34,30 +33,36 @@ public class FM_View_Inventory extends javax.swing.JFrame {
     
     
     private void setupTable() {
-        model = new DefaultTableModel(columnNames, 0);
-        tableItem.setModel(model);
+        model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        InventoryTable.setModel(model);
     }
     
     
     private void viewTable(){
-        model.setRowCount(0);
+     model.setRowCount(0);
         
-        List<Item> itemList = fileManager.readFile(
-                fileManager.getItemFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
-                }
-        );
+        List<InventoryItem> inventoryItems = financeManager.verifyInventoryUpdate();
         
-        for (Item item : itemList) {
+        int rowCount = 0;
+        for (InventoryItem item : inventoryItems) {
             model.addRow(new Object[] {
                 item.getItemCode(),
                 item.getItemName(),
-                item.getSupplierId(),
-                item.getStockLevel()
+                item.getStockLevel(),
+                item.getSupplierCode(),
+                item.getUnitPrice(),
+                item.getRetailPrice()
             });
+            rowCount++;
         }
+        System.out.println("Rows added to inventory table: " + rowCount);
+        model.fireTableDataChanged();
+        InventoryTable.repaint();   
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,14 +79,11 @@ public class FM_View_Inventory extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableItem = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        InventoryTable = new javax.swing.JTable();
+        SearchBtn = new javax.swing.JButton();
         txtSearch = new javax.swing.JTextField();
+        BackBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu5 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         menu1.setLabel("File");
         menuBar1.add(menu1);
@@ -94,25 +96,25 @@ public class FM_View_Inventory extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
-        jLabel1.setText("View Item List");
+        jLabel1.setText("Inventory");
 
-        tableItem.setModel(new javax.swing.table.DefaultTableModel(
+        InventoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Item Code", "Item Name", "Stock Level", "Supplier Code", "Unit Price", "Retail Price"
             }
         ));
-        jScrollPane1.setViewportView(tableItem);
+        jScrollPane1.setViewportView(InventoryTable);
 
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        SearchBtn.setText("Search");
+        SearchBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                SearchBtnActionPerformed(evt);
             }
         });
 
@@ -122,50 +124,35 @@ public class FM_View_Inventory extends javax.swing.JFrame {
             }
         });
 
-        jMenu5.setText("File");
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setText("Home");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        BackBtn.setText("Back");
+        BackBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                BackBtnActionPerformed(evt);
             }
         });
-        jMenu5.add(jMenuItem1);
-
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setText("Logout");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu5.add(jMenuItem2);
-
-        jMenuBar1.add(jMenu5);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(307, 307, 307))
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(343, 343, 343)
+                            .addComponent(jLabel1)
+                            .addGap(105, 105, 105)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(SearchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(BackBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,59 +161,70 @@ public class FM_View_Inventory extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(SearchBtn)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BackBtn)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        List<Item> itemList = fileManager.readFile(
-                fileManager.getItemFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    return new Item(data[0], data[1], data[2], Integer.parseInt(data[3]));
-                }
-        );
-               
-        for (Item item : itemList) {
-            if (item.getItemName().equals(txtSearch.getText()) || item.getItemCode().equals(txtSearch.getText())) {
-                model.setRowCount(0);
-                model.addRow(new Object[] {
-                item.getItemCode(),
-                item.getItemName(),
-                item.getSupplierId(),
-                item.getStockLevel()
-                });
-                break;
-            }else if(txtSearch.getText().equals("")){
-                viewTable();
-            }
-            
-            else{
-                JOptionPane.showMessageDialog(this, "Item Not Found", "Error", JOptionPane.ERROR_MESSAGE);
-                break;
+    private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
+        String searchText = txtSearch.getText().trim();
+        
+        List<InventoryItem> inventoryItems = financeManager.verifyInventoryUpdate();
+        
+        model.setRowCount(0);
+        
+        if (searchText.isEmpty()) {
+            viewTable();
+            return;
+        }
+        
+        List<InventoryItem> matches = new ArrayList<>();
+        for (InventoryItem item : inventoryItems) {
+            if (item.getItemCode().equalsIgnoreCase(searchText) || 
+                item.getItemName().equalsIgnoreCase(searchText)) {
+                matches.add(item);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        
+        if (matches.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Item Not Found", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Populate table with matches
+        int rowCount = 0;
+        for (InventoryItem item : matches) {
+            model.addRow(new Object[] {
+                item.getItemCode(),
+                item.getItemName(),
+                item.getStockLevel(),
+                item.getSupplierCode(),
+                item.getUnitPrice(),
+                item.getRetailPrice()
+            });
+            rowCount++;
+        }
+        System.out.println("Search results - Rows added: " + rowCount);
+        model.fireTableDataChanged();
+        InventoryTable.repaint();                    
+    }//GEN-LAST:event_SearchBtnActionPerformed
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-        // TODO add your handling code here:
+        SearchBtnActionPerformed(evt);
     }//GEN-LAST:event_txtSearchActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        IM_MAIN mainPage = new IM_MAIN();
-        mainPage.setVisible(true);
+    private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
+        FM_Dashboard dashboardFrame = new FM_Dashboard(financeManager);
+        dashboardFrame.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_BackBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,25 +259,23 @@ public class FM_View_Inventory extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FM_View_Inventory().setVisible(true);
+            FinanceManager fm = new FinanceManager("FM001", "finance", "password"); 
+            new FM_View_Inventory(fm).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton BackBtn;
+    private javax.swing.JTable InventoryTable;
+    private javax.swing.JButton SearchBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
-    private javax.swing.JTable tableItem;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }
