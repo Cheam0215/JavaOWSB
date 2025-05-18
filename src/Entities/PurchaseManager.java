@@ -76,20 +76,17 @@ public class PurchaseManager extends User{
             fileManager.getSupplierFilePath(),
             line -> {
                 String[] data = line.split(",");
-                // Create a supplier with the correct parameter order
-                // The format seems to be: supplierCode, supplierName, itemCode, contactNumber, address, bankAccount
-                Supplier supplier = new Supplier(data[0], data[1], 
-                    Integer.parseInt(data[2]), // contactNumber is in position 3
-                    data[3], // address is in position 4
-                    data[4]); // bankAccount is in position 5
-
-                // Add the itemCode to the supplier's list of item codes
-
+                Supplier supplier = new Supplier(
+                    data[0],               // supplierCode
+                    data[1],               // supplierName
+                    Integer.parseInt(data[2]),  // contactNumber
+                    data[3],               // address
+                    Integer.parseInt(data[4])   // bankAccount
+                );
                 return supplier;
             }
         );
 
-        // Convert the list of Supplier objects to List<String[]> for the table
         List<String[]> result = new ArrayList<>();
         for (Supplier supplier : supplierList) {
             String[] row = new String[]{
@@ -97,7 +94,7 @@ public class PurchaseManager extends User{
                 supplier.getSupplierName(),
                 String.valueOf(supplier.getContactNumber()),
                 supplier.getAddress(),
-                supplier.getBankAccount()
+                String.valueOf(supplier.getBankAccount())
             };
             result.add(row);
         }
@@ -173,9 +170,9 @@ public class PurchaseManager extends User{
     public String generatePurchaseOrder(String prId, String supplierCode) {
         try {
              //Validate session userID
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                return "Error: No user logged in. Please log in to generate a Purchase Order.";
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                return "Error: No user logged in. Please log in to generate a Purchase Order.";
+//            }
 
             // Step 1: Find the PurchaseRequisition by prId
             List<PurchaseRequisition> prList = fileManager.readFile(
@@ -312,10 +309,10 @@ public class PurchaseManager extends User{
     public boolean editPurchaseOrder(String poId, int newQuantity , double new_payment_amount) {
         try {
             // Validate session
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                System.out.println("Error: No user logged in.");
-                return false;
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                System.out.println("Error: No user logged in.");
+//                return false;
+//            }
 
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
@@ -412,10 +409,10 @@ public class PurchaseManager extends User{
     public boolean deletePurchaseOrder(String poId) {
         try {
             // Validate session
-            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-                System.out.println("Error: No user logged in.");
-                return false;
-            }
+//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
+//                System.out.println("Error: No user logged in.");
+//                return false;
+//            }
 
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {

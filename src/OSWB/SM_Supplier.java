@@ -390,6 +390,7 @@ public class SM_Supplier extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -411,21 +412,22 @@ public class SM_Supplier extends javax.swing.JFrame {
         String supplierName = jTextField2.getText().trim();
         String contactNumberStr = jTextField3.getText().trim();
         String address = jTextField4.getText().trim();
-        String bankAccount = jTextField5.getText().trim();
+        String bankAccountStr = jTextField5.getText().trim();
 
-        if (supplierName.isEmpty() || contactNumberStr.isEmpty() || address.isEmpty() || bankAccount.isEmpty()) {
+        if (supplierName.isEmpty() || contactNumberStr.isEmpty() || address.isEmpty() || bankAccountStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
             int contactNumber = Integer.parseInt(contactNumberStr);
+            int bankAccount = Integer.parseInt(bankAccountStr);
             Supplier supplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
             salesManager.addSupplier(supplier);
             JOptionPane.showMessageDialog(this, "Supplier added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Contact number must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Contact number and bank account must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addbtnActionPerformed
 
@@ -461,24 +463,28 @@ public class SM_Supplier extends javax.swing.JFrame {
         String supplierName = jTextField2.getText().trim();
         String contactNumberStr = jTextField3.getText().trim();
         String address = jTextField4.getText().trim();
-        String bankAccount = jTextField5.getText().trim();
+        String bankAccountStr = jTextField5.getText().trim();
 
-        if (supplierName.isEmpty() || contactNumberStr.isEmpty() || address.isEmpty() || bankAccount.isEmpty()) {
+        if (supplierName.isEmpty() || contactNumberStr.isEmpty() || address.isEmpty() || bankAccountStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
             int contactNumber = Integer.parseInt(contactNumberStr);
+            int bankAccount = Integer.parseInt(bankAccountStr); 
             Supplier updatedSupplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
             if (salesManager.updateSupplier(updatedSupplier)) {
                 JOptionPane.showMessageDialog(this, "Supplier updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                resetTable();
+                isEditing = false; // Reset editing state
+                editingSupplierCode = null; // Reset editing supplier code
                 resetTable();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to update supplier.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Contact number must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Contact number and bank account must be valid integers.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 

@@ -420,6 +420,7 @@ public class PM_List_items extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         tittle2.setBackground(new java.awt.Color(0, 102, 255));
         tittle2.setPreferredSize(new java.awt.Dimension(931, 186));
@@ -655,6 +656,7 @@ public class PM_List_items extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed

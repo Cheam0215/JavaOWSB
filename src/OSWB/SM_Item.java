@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import javax.swing.JTable;
 /**
  *
  * @author Edwin Chen
@@ -43,6 +46,7 @@ public class SM_Item extends javax.swing.JFrame {
     private void setupTable() {
         model.setColumnIdentifiers(columnName);
         jTable1.setModel(model);
+        jTable1.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
     }
     
     private void setupDeleteButtonListener() {
@@ -67,6 +71,42 @@ public class SM_Item extends javax.swing.JFrame {
         });
     }
     
+    private class CustomTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                                                      boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Get the stock level from the Stock Level column (column index 2)
+            Object stockLevelObj = table.getValueAt(row, 2); // Column 2 is Stock Level
+            int stockLevel = 0;
+            try {
+                stockLevel = Integer.parseInt(stockLevelObj.toString());
+            } catch (NumberFormatException e) {
+                System.out.println("Error parsing stock level: " + stockLevelObj);
+            }
+
+            // Set red background if stock level is less than 100
+            if (stockLevel < 100) {
+                cell.setBackground(Color.RED);
+                cell.setForeground(Color.WHITE); // Make text white for contrast
+            } else {
+                cell.setBackground(table.getBackground()); // Reset to default background
+                cell.setForeground(table.getForeground()); // Reset to default foreground
+            }
+
+            // Handle selection color
+            if (isSelected) {
+                cell.setBackground(table.getSelectionBackground());
+                cell.setForeground(table.getSelectionForeground());
+            }
+
+            return cell;
+        }
+    }
+    
+    
+    
     private void loadItems() {
         try {
             model.setRowCount(0);
@@ -88,6 +128,7 @@ public class SM_Item extends javax.swing.JFrame {
         editBtn.setEnabled(false);
         saveBtn.setEnabled(false);
         addButton.setEnabled(true);
+        
     }
      
     private void searchItems() {
@@ -505,6 +546,7 @@ public class SM_Item extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -565,14 +607,16 @@ public class SM_Item extends javax.swing.JFrame {
             return;
         }
 
-        if (salesManager.deleteItem(itemCode)) {
+        String result = salesManager.deleteItem(itemCode); // Capture the string result
+        if (result.startsWith("Item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadItems();
-            jTextField3.setText("");
-            jTextField2.setText("");
+            loadItems(); // Refresh the table
+            jTextField3.setText(""); // Clear item name field (assuming jTextField3 is for item name)
+            jTextField2.setText(""); // Clear stock level field (assuming jTextField2 is for stock)
             jTextField4.setText(""); // Clear unit price field
+            resetTable();
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to delete item " + itemCode + ". Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
@@ -602,7 +646,7 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (!isEditing || editingItemCode == null) {
+       if (!isEditing || editingItemCode == null) {
             JOptionPane.showMessageDialog(this, "No item is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -623,13 +667,19 @@ public class SM_Item extends javax.swing.JFrame {
         try {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
-            double unitPrice = Double.parseDouble(unitPriceStr);
+            double unitPrice = Double.parseDouble(unitPriceStr); // Keep as double for precision
             Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
-            if (salesManager.updateItem(updatedItem, supplierCode, (int) unitPrice)) { // Cast double to int if required
+
+            // Assuming updateItem returns a string indicating success or error
+            String result = salesManager.updateItem(updatedItem, supplierCode, unitPrice);
+            if (result.startsWith("Item ") && result.endsWith(" updated successfully.")) {
                 JOptionPane.showMessageDialog(this, "Item updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
+                isEditing = false;
+                editingItemCode = null; // Reset editing state
+                resetTable();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to update item.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Stock level must be an integer, and retail price and unit price must be numbers.", "Error", JOptionPane.ERROR_MESSAGE);

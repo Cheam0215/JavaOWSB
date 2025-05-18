@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Calendar;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -153,11 +154,15 @@ public class SM_PR extends javax.swing.JFrame {
     }
 
     private void setDefaultValues() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to get tomorrow's date
+        java.util.Date tomorrow = calendar.getTime();
         jLabel11.setText(salesManager.getUsername()); 
         jLabel12.setText("PENDING");
         Date today = Date.now();
         jLabel7.setText(today.toIsoString());
-        jDateChooser1.setDate(new java.util.Date());
+        jDateChooser1.setDate(tomorrow);
+        jDateChooser1.setMinSelectableDate(tomorrow);
     }
     
     private String generateNextPrID() {
@@ -282,6 +287,11 @@ public class SM_PR extends javax.swing.JFrame {
         jLabel8.setText("Requested Date : ");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
 
@@ -353,7 +363,7 @@ public class SM_PR extends javax.swing.JFrame {
 
         jLabel4.setText("Requested By : ");
 
-        jLabel5.setText("Quanity: ");
+        jLabel5.setText("Quantity: ");
 
         jLabel6.setText("Required Date : ");
 
@@ -485,6 +495,7 @@ public class SM_PR extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
@@ -529,6 +540,7 @@ public class SM_PR extends javax.swing.JFrame {
         jDateChooser1.setDate(new java.util.Date());
         
         loadPR();
+        resetTable();
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -556,6 +568,7 @@ public class SM_PR extends javax.swing.JFrame {
         salesManager.deletePurchaseRequisition(prId);
         JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         loadPR(); // Refresh the table
+        resetTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
@@ -647,6 +660,10 @@ public class SM_PR extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Failed to update Purchase Requisition. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments

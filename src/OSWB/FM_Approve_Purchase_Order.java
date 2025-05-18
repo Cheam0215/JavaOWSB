@@ -98,6 +98,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         BackBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTable1.setModel(tableModel);
         jScrollPane1.setViewportView(jTable1);
@@ -167,6 +168,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void ApprovePOBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApprovePOBtnActionPerformed

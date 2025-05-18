@@ -16,10 +16,10 @@ public class Supplier {
     private String supplierName;
     private int contactNumber;
     private String address;
-    private String bankAccount;
+    private int bankAccount;
     
     
-    public Supplier(String supplierCode, String supplierName, int contactNumber, String address, String bankAccount) {
+    public Supplier(String supplierCode, String supplierName, int contactNumber, String address, int bankAccount) {
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
         this.contactNumber = contactNumber;
@@ -62,15 +62,17 @@ public class Supplier {
 
     @Override
     public String toString() {
-        return "Supplier{" + "supplierCode=" + supplierCode + ", supplierName=" + supplierName + ", contactNumber=" + contactNumber + ", address=" + address + ", bankAccount=" + bankAccount + '}';
+        return supplierCode + "," + supplierName + "," + contactNumber + "," + address + "," + bankAccount;
     }
     
 
-    public String getBankAccount() {
+    
+
+    public int getBankAccount() {
         return bankAccount;
     }
 
-    public void setBankAccount(String bankAccount) {
+    public void setBankAccount(int bankAccount) {
         this.bankAccount = bankAccount;
 
     }
