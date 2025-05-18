@@ -244,6 +244,9 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
                         FinanceManager loggedInFM = new FinanceManager(userID, username, password);
+                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM);
+                        this.dispose();
+                        FMDashboard.setVisible(true);
                         loggedInFM.displayMenu();
                     }
                     case UserRoles.INVENTORY_MANAGER -> { 
@@ -255,6 +258,9 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
+                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM);
+                        this.dispose();
+                        PMOrder.setVisible(true);
                         loggedInPM.displayMenu();
                     }
                     case UserRoles.SALES_MANAGER -> { 

@@ -23,10 +23,21 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
     /**
      * Creates new form PM_List_purchase_order
+     * @param loggedInPM
+     * @param previousPage
      */
     public PM_List_purchase_order(PurchaseManager loggedInPM, JFrame previousPage) {
         this.purchaseManager = loggedInPM;    
         this.previousPage = previousPage;
+        initComponents();
+        setupTable();
+        loadPO();
+        edit();
+        saveButton.setEnabled(false);
+    }
+    
+    public PM_List_purchase_order(PurchaseManager loggedInPM) {
+        this.purchaseManager = loggedInPM;    
         initComponents();
         setupTable();
         loadPO();
