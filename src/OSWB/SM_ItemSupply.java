@@ -506,6 +506,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                 resetTable();
                 isEditing = false; // Reset editing state
                 editingItemCode = null; // Reset editing item code
+                resetTable();
             } else {
                 JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -530,7 +531,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         String result = salesManager.deleteItemSupply(itemCode); // Capture the string result
         if (result.startsWith("Item supply for item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item supply deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadItemSupplies(); // Refresh the table
+            loadItemSupplies(); 
         } else {
             JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }

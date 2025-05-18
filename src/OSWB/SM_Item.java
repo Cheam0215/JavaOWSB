@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import javax.swing.JTable;
 /**
  *
  * @author Edwin Chen
@@ -43,6 +46,7 @@ public class SM_Item extends javax.swing.JFrame {
     private void setupTable() {
         model.setColumnIdentifiers(columnName);
         jTable1.setModel(model);
+        jTable1.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
     }
     
     private void setupDeleteButtonListener() {
@@ -67,6 +71,42 @@ public class SM_Item extends javax.swing.JFrame {
         });
     }
     
+    private class CustomTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                                                      boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Get the stock level from the Stock Level column (column index 2)
+            Object stockLevelObj = table.getValueAt(row, 2); // Column 2 is Stock Level
+            int stockLevel = 0;
+            try {
+                stockLevel = Integer.parseInt(stockLevelObj.toString());
+            } catch (NumberFormatException e) {
+                System.out.println("Error parsing stock level: " + stockLevelObj);
+            }
+
+            // Set red background if stock level is less than 100
+            if (stockLevel < 100) {
+                cell.setBackground(Color.RED);
+                cell.setForeground(Color.WHITE); // Make text white for contrast
+            } else {
+                cell.setBackground(table.getBackground()); // Reset to default background
+                cell.setForeground(table.getForeground()); // Reset to default foreground
+            }
+
+            // Handle selection color
+            if (isSelected) {
+                cell.setBackground(table.getSelectionBackground());
+                cell.setForeground(table.getSelectionForeground());
+            }
+
+            return cell;
+        }
+    }
+    
+    
+    
     private void loadItems() {
         try {
             model.setRowCount(0);
@@ -88,6 +128,7 @@ public class SM_Item extends javax.swing.JFrame {
         editBtn.setEnabled(false);
         saveBtn.setEnabled(false);
         addButton.setEnabled(true);
+        
     }
      
     private void searchItems() {
@@ -572,6 +613,7 @@ public class SM_Item extends javax.swing.JFrame {
             jTextField3.setText(""); // Clear item name field (assuming jTextField3 is for item name)
             jTextField2.setText(""); // Clear stock level field (assuming jTextField2 is for stock)
             jTextField4.setText(""); // Clear unit price field
+            resetTable();
         } else {
             JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -634,6 +676,7 @@ public class SM_Item extends javax.swing.JFrame {
                 resetTable();
                 isEditing = false;
                 editingItemCode = null; // Reset editing state
+                resetTable();
             } else {
                 JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
