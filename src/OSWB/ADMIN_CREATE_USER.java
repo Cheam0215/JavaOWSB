@@ -5,21 +5,9 @@
 package OSWB;
 
 import Entities.Administrator;
-import Entities.FinanceManager;
-import Entities.InventoryManager;
-import Entities.PurchaseManager;
-import Entities.SalesManager;
-import Entities.User;
 import Utility.UserRoles;
-import java.util.List;
 import Utility.FileManager;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.Base64;
 import javax.swing.JOptionPane;
 
 /**
@@ -276,8 +264,9 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         ADMIN_USER adminUser = new ADMIN_USER(loggedInAdmin);
-        adminUser.setVisible(true);
         this.dispose();
+        adminUser.setVisible(true);
+        
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**

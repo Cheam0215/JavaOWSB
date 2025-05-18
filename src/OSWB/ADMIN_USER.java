@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Color; // For placeholder text color
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent; // For live search
 import javax.swing.event.DocumentListener; // For live search
 
@@ -40,6 +41,13 @@ public class ADMIN_USER extends javax.swing.JFrame {
         setupSearchAndFilter(); 
         loadUserTable(); 
         this.setTitle("User Management - Logged in as: " + loggedInAdmin.getUsername());
+        
+        SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            userTable.requestFocusInWindow();
+        }
+    });
     }
      
      private void setupSearchAndFilter() {
@@ -99,15 +107,6 @@ public class ADMIN_USER extends javax.swing.JFrame {
         userTable.setModel(tableModel);
     }
      
-     // Keep the original loadUserTable for the initial full load
-    private void initialLoadUserTable() {
-        tableModel.setRowCount(0);
-        List<User> allNonAdminUsers = loggedInAdmin.getAllUsers().stream()
-                                            .filter(user -> user.getRole() != UserRoles.ADMINISTRATOR)
-                                            .collect(java.util.stream.Collectors.toList());
-        displayUsersInTable(allNonAdminUsers);
-    }
-
     // New method to display a given list of users
     private void displayUsersInTable(List<User> usersToDisplay) {
         tableModel.setRowCount(0); // Clear existing rows
@@ -141,46 +140,46 @@ public class ADMIN_USER extends javax.swing.JFrame {
     }
     
     private void applyFilters() {
-    String searchText = searchField.getText().trim().toLowerCase();
-    if (searchText.equals(SEARCH_PLACEHOLDER.toLowerCase())) {
-        searchText = ""; // Treat placeholder as empty search
+        String searchText = searchField.getText().trim().toLowerCase();
+        if (searchText.equals(SEARCH_PLACEHOLDER.toLowerCase())) {
+            searchText = ""; // Treat placeholder as empty search
+        }
+
+        String selectedRoleString = (String) filterRoles.getSelectedItem();
+        UserRoles selectedRole = null;
+        if (selectedRoleString != null && !selectedRoleString.equals("All")) {
+            try {
+                selectedRole = UserRoles.valueOf(selectedRoleString);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Invalid role in filter: " + selectedRoleString);
+                // Optionally, reset to "All" or show an error
+            }
+        }
+
+        // Get all non-admin users once
+        List<User> allNonAdminUsers = loggedInAdmin.getAllUsers().stream()
+                                            .filter(user -> user.getRole() != UserRoles.ADMINISTRATOR)
+                                            .collect(java.util.stream.Collectors.toList());
+
+        // Apply filters
+        List<User> filteredUsers = new java.util.ArrayList<>();
+        for (User user : allNonAdminUsers) {
+            boolean matchesSearch = true;
+            if (!searchText.isEmpty()) {
+                matchesSearch = user.getUsername().toLowerCase().contains(searchText) ||
+                                user.getUserID().toLowerCase().contains(searchText);
+            }
+
+            boolean matchesRole = true;
+            if (selectedRole != null) {
+                matchesRole = user.getRole() == selectedRole;
+            }
+
+            if (matchesSearch && matchesRole) {
+                filteredUsers.add(user);
+            }
     }
-
-    String selectedRoleString = (String) filterRoles.getSelectedItem();
-    UserRoles selectedRole = null;
-    if (selectedRoleString != null && !selectedRoleString.equals("All")) {
-        try {
-            selectedRole = UserRoles.valueOf(selectedRoleString);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid role in filter: " + selectedRoleString);
-            // Optionally, reset to "All" or show an error
-        }
-    }
-
-    // Get all non-admin users once
-    List<User> allNonAdminUsers = loggedInAdmin.getAllUsers().stream()
-                                        .filter(user -> user.getRole() != UserRoles.ADMINISTRATOR)
-                                        .collect(java.util.stream.Collectors.toList());
-
-    // Apply filters
-    List<User> filteredUsers = new java.util.ArrayList<>();
-    for (User user : allNonAdminUsers) {
-        boolean matchesSearch = true;
-        if (!searchText.isEmpty()) {
-            matchesSearch = user.getUsername().toLowerCase().contains(searchText) ||
-                            user.getUserID().toLowerCase().contains(searchText);
-        }
-
-        boolean matchesRole = true;
-        if (selectedRole != null) {
-            matchesRole = user.getRole() == selectedRole;
-        }
-
-        if (matchesSearch && matchesRole) {
-            filteredUsers.add(user);
-        }
-    }
-    displayUsersInTable(filteredUsers); // Update table with filtered list
+        displayUsersInTable(filteredUsers); // Update table with filtered list
 }
 
     /**
@@ -376,7 +375,7 @@ public class ADMIN_USER extends javax.swing.JFrame {
         UserRoles currentRole = UserRoles.valueOf((String) tableModel.getValueAt(selectedRow, 2));
 
         // --- Let admin choose what to update ---
-        String[] updateOptions = {"Username", "Password", "Role", "Multiple Fields"};
+        String[] updateOptions = {"Username", "Password", "Role"};
         String chosenOption = (String) JOptionPane.showInputDialog(
                 this,
                 "What would you like to update for user: " + currentUsername + " (ID: " + userIdToUpdate + ")?",
@@ -399,7 +398,7 @@ public class ADMIN_USER extends javax.swing.JFrame {
 
         // --- Process based on chosen option ---
         switch (chosenOption) {
-            case "Username":
+            case "Username" -> {
                 String usernameInput = JOptionPane.showInputDialog(this, "Enter new username:", currentUsername);
                 if (usernameInput != null && !usernameInput.trim().isEmpty() && !usernameInput.trim().equals(currentUsername)) {
                     newUsername = usernameInput.trim();
@@ -408,11 +407,11 @@ public class ADMIN_USER extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Username update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 } else { // Entered same username or empty
-                     JOptionPane.showMessageDialog(this, "No change to username.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No change to username.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
-                break;
+            }
 
-            case "Password":
+            case "Password" -> {
                 JPasswordField pf1 = new JPasswordField(20);
                 JPasswordField pf2 = new JPasswordField(20);
                 JLabel label1 = new JLabel("New Password:");
@@ -441,13 +440,13 @@ public class ADMIN_USER extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Password update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-                break;
+            }
 
-            case "Role":
+            case "Role" -> {
                 String[] availableRoles = java.util.Arrays.stream(UserRoles.values())
-                                             .filter(r -> r != UserRoles.ADMINISTRATOR)
-                                             .map(Enum::name)
-                                             .toArray(String[]::new);
+                        .filter(r -> r != UserRoles.ADMINISTRATOR)
+                        .map(Enum::name)
+                        .toArray(String[]::new);
                 String newRoleString = (String) JOptionPane.showInputDialog(this, "Select new role:",
                         "Update Role for " + currentUsername, JOptionPane.QUESTION_MESSAGE, null,
                         availableRoles, currentRole.name());
@@ -455,84 +454,12 @@ public class ADMIN_USER extends javax.swing.JFrame {
                     newRole = UserRoles.valueOf(newRoleString);
                     changeAttempted = true;
                 } else if (newRoleString == null) { // Cancelled
-                     JOptionPane.showMessageDialog(this, "Role update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Role update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 } else { // Selected same role
                     JOptionPane.showMessageDialog(this, "No change to role.", "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
-                break;
-
-            case "Multiple Fields":
-                // For "Multiple Fields", you would ideally open a dedicated JDialog
-                // where the admin can change any/all of the fields at once.
-                // This is more complex to implement with just JOptionPanes.
-                // For this example, let's just show a message and you can expand this later.
-                // Or, you could chain the individual prompts like the previous version.
-                // For now, let's do a simplified chain for "Multiple Fields":
-
-                boolean anyChangeInMultiple = false;
-
-                // 1. Username
-                String multiUsernameInput = JOptionPane.showInputDialog(this, "Enter new username (or leave as is):", currentUsername);
-                if (multiUsernameInput != null && !multiUsernameInput.trim().isEmpty() && !multiUsernameInput.trim().equals(currentUsername)) {
-                    newUsername = multiUsernameInput.trim();
-                    anyChangeInMultiple = true;
-                } else if (multiUsernameInput == null) { // Cancelled username part
-                    JOptionPane.showMessageDialog(this, "Update process cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-
-
-                // 2. Password (optional)
-                int changePassMulti = JOptionPane.showConfirmDialog(this, "Change password for this user?", "Change Password?", JOptionPane.YES_NO_OPTION);
-                if (changePassMulti == JOptionPane.YES_OPTION) {
-                    JPasswordField mPf1 = new JPasswordField(20);
-                    JPasswordField mPf2 = new JPasswordField(20);
-                    JLabel mLabel1 = new JLabel("New Password:");
-                    JLabel mLabel2 = new JLabel("Confirm New Password:");
-                    Box mBox = Box.createVerticalBox();
-                    mBox.add(mLabel1); mBox.add(mPf1);
-                    mBox.add(Box.createVerticalStrut(15));
-                    mBox.add(mLabel2); mBox.add(mPf2);
-                    int mOkCxl = JOptionPane.showConfirmDialog(this, mBox, "Set New Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                    if (mOkCxl == JOptionPane.OK_OPTION) {
-                        String mPass1 = String.valueOf(mPf1.getPassword());
-                        String mPass2 = String.valueOf(mPf2.getPassword());
-                        if (mPass1.isEmpty()) { JOptionPane.showMessageDialog(this, "New password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE); return; }
-                        if (!mPass1.equals(mPass2)) { JOptionPane.showMessageDialog(this, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE); return; }
-                        if (mPass1.length() < 6) { JOptionPane.showMessageDialog(this, "Password must be at least 6 characters.", "Error", JOptionPane.ERROR_MESSAGE); return; }
-                        newPassword = mPass1;
-                        anyChangeInMultiple = true;
-                    } else { // Cancelled password part
-                        JOptionPane.showMessageDialog(this, "Password change cancelled. Update process continues.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                }
-
-                // 3. Role
-                String[] mAvailableRoles = java.util.Arrays.stream(UserRoles.values())
-                                             .filter(r -> r != UserRoles.ADMINISTRATOR)
-                                             .map(Enum::name)
-                                             .toArray(String[]::new);
-                String mNewRoleString = (String) JOptionPane.showInputDialog(this, "Select new role (or leave as is):",
-                        "Update Role", JOptionPane.QUESTION_MESSAGE, null,
-                        mAvailableRoles, currentRole.name());
-                if (mNewRoleString != null && !UserRoles.valueOf(mNewRoleString).equals(currentRole)) {
-                    newRole = UserRoles.valueOf(mNewRoleString);
-                    anyChangeInMultiple = true;
-                } else if (mNewRoleString == null) { // Cancelled role part
-                     JOptionPane.showMessageDialog(this, "Update process cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-
-                if (!anyChangeInMultiple) {
-                     JOptionPane.showMessageDialog(this, "No changes specified in 'Multiple Fields' update.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-                changeAttempted = true; // Mark that an attempt was made under "Multiple Fields"
-                break;
-
-            default: // Should not happen
-                return;
+            }
         }
 
         // If no change was actually attempted (e.g., user cancelled all individual prompts or entered same values)
@@ -557,14 +484,16 @@ public class ADMIN_USER extends javax.swing.JFrame {
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         ADMIN_CREATE_USER adminCreate = new ADMIN_CREATE_USER(loggedInAdmin);
-        adminCreate.setVisible(true);
         this.dispose();
+        adminCreate.setVisible(true);
+        
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         ADMIN_DASHBOARD adminDashboard  = new ADMIN_DASHBOARD(loggedInAdmin);
-        adminDashboard.setVisible(true);
         this.dispose();
+        adminDashboard.setVisible(true);
+        
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed

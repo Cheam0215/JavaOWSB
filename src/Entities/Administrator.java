@@ -379,30 +379,24 @@ public class Administrator extends User {
         // and also the format that will be written to the file.
         User updatedUserObject;
         switch (finalRole) { // Use finalRole for instantiation
-            case FINANCE_MANAGER:
-                updatedUserObject = new FinanceManager(userIdToUpdate, finalUsername, finalStorablePassword);
-                break;
-            case INVENTORY_MANAGER:
-                updatedUserObject = new InventoryManager(userIdToUpdate, finalUsername, finalStorablePassword);
-                break;
-            case PURCHASE_MANAGER:
-                updatedUserObject = new PurchaseManager(userIdToUpdate, finalUsername, finalStorablePassword);
-                break;
-            case SALES_MANAGER:
-                updatedUserObject = new SalesManager(userIdToUpdate, finalUsername, finalStorablePassword);
-                break;
-            default:
-                 // This case should ideally not be reached if role validation is done prior
-                 // or if existingUser.getRole() is always a valid non-admin role for updatable users.
-                 // Fallback to a generic User if User class is not abstract.
-                 // If User is abstract, this is an error.
-                 // For this example, assuming role has been validated or is one of the above.
-                 // If User can be instantiated:
-                 // updatedUserObject = new User(userIdToUpdate, finalUsername, finalStorablePassword, finalRole);
-                 // break;
+            case FINANCE_MANAGER -> updatedUserObject = new FinanceManager(userIdToUpdate, finalUsername, finalStorablePassword);
+            case INVENTORY_MANAGER -> updatedUserObject = new InventoryManager(userIdToUpdate, finalUsername, finalStorablePassword);
+            case PURCHASE_MANAGER -> updatedUserObject = new PurchaseManager(userIdToUpdate, finalUsername, finalStorablePassword);
+            case SALES_MANAGER -> updatedUserObject = new SalesManager(userIdToUpdate, finalUsername, finalStorablePassword);
+            default -> {
+                // This case should ideally not be reached if role validation is done prior
+                // or if existingUser.getRole() is always a valid non-admin role for updatable users.
+                // Fallback to a generic User if User class is not abstract.
+                // If User is abstract, this is an error.
+                // For this example, assuming role has been validated or is one of the above.
+                // If User can be instantiated:
+                // updatedUserObject = new User(userIdToUpdate, finalUsername, finalStorablePassword, finalRole);
+                // break;
                 return "Internal error: Invalid role encountered during user update.";
+            }
         }
-        // If your User class constructor doesn't take role but it's set via a setter:
+        // Use finalRole for instantiation
+                // If your User class constructor doesn't take role but it's set via a setter:
         // updatedUserObject.setRole(finalRole);
 
 

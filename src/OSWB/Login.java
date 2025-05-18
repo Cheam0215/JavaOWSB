@@ -238,8 +238,8 @@ public class Login extends javax.swing.JFrame {
                     case UserRoles.ADMINISTRATOR -> { 
                         Administrator loggedInAdmin = new Administrator(userID, username, password);
                         ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin);
-                        adminDashboard.setVisible(true);
                         this.dispose();
+                        adminDashboard.setVisible(true);
                         loggedInAdmin.displayMenu();
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
@@ -249,8 +249,9 @@ public class Login extends javax.swing.JFrame {
                     case UserRoles.INVENTORY_MANAGER -> { 
                         InventoryManager loggedInIM = new InventoryManager(userID, username, password);
                         Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM);
-                        IM_MAIN.setVisible(true);
                         this.dispose();
+                        IM_MAIN.setVisible(true);
+                        
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
@@ -259,8 +260,9 @@ public class Login extends javax.swing.JFrame {
                     case UserRoles.SALES_MANAGER -> { 
                         SalesManager loggedInSM = new SalesManager(userID, username, password);
                         SM_Main smMain = new SM_Main(loggedInSM);
-                        smMain.setVisible(true);
                         this.dispose();
+                        smMain.setVisible(true);
+                        
                     }
                 }
             } else {

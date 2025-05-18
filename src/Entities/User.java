@@ -77,10 +77,10 @@ public class User {
             .anyMatch(user -> user.getUserID().equals(userID) && user.getPassword().equals(password));
         }
 
-       public boolean logout () {
-           Session logout = new Session();
-           logout.setUserID("");
-           return true;
+    public boolean logout () {
+        Session logout = new Session();
+        logout.setUserID("");
+        return true;
     }
     
     public void displayMenu(){};

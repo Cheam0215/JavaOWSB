@@ -58,8 +58,6 @@ public class FileManager {
 
                 // Compare username and password
                 if (fileUsername.equals(username) && storedPassword.equals(password)) {
-                    System.out.println("username : " +username);
-                    System.out.println("password : "+ password);
                     try {
                         Session loginSession = new Session();
                         loginSession.setUserID(fileUserID);
@@ -158,7 +156,6 @@ public class FileManager {
         List<T> dataList = new ArrayList<>();
         try {
             File file = new File(getResourcePath(filePath));
-            System.out.println("Reading file: " + file.getAbsolutePath());
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
