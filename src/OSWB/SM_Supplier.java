@@ -426,7 +426,7 @@ public class SM_Supplier extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Supplier added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Contact number must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Contact number and bank account must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addbtnActionPerformed
 
