@@ -478,6 +478,7 @@ public class SM_Supplier extends javax.swing.JFrame {
                 resetTable();
                 isEditing = false; // Reset editing state
                 editingSupplierCode = null; // Reset editing supplier code
+                resetTable();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to update supplier.", "Error", JOptionPane.ERROR_MESSAGE);
             }

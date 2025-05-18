@@ -619,7 +619,8 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
 
         if (success) {
             JOptionPane.showMessageDialog(this, "Sales data with ID " + salesId + " deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadSales(); // Refresh the table
+            loadSales(); 
+            resetTable();
         } else {
             JOptionPane.showMessageDialog(this, "Failed to delete sales data with ID " + salesId + ".", "Error", JOptionPane.ERROR_MESSAGE);
         }

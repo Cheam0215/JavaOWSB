@@ -363,7 +363,7 @@ public class SM_PR extends javax.swing.JFrame {
 
         jLabel4.setText("Requested By : ");
 
-        jLabel5.setText("Quanity: ");
+        jLabel5.setText("Quantity: ");
 
         jLabel6.setText("Required Date : ");
 
@@ -567,6 +567,7 @@ public class SM_PR extends javax.swing.JFrame {
         salesManager.deletePurchaseRequisition(prId);
         JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         loadPR(); // Refresh the table
+        resetTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
