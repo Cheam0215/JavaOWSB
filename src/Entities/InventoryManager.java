@@ -24,10 +24,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InventoryManager extends User{
     
+//    private final Inventory inventory;
     private final FileManager fileManager;
 
     public InventoryManager(String userId, String username, String password) {
         super(userId, username, password, UserRoles.INVENTORY_MANAGER);
+//        this.inventory = new Inventory();
         this.fileManager = new FileManager();
     }
     
@@ -253,10 +255,17 @@ public class InventoryManager extends User{
     
     }
     
+//    public void trackLowStock() {
+//        inventory.checkLowStock();
+//    }
+//    
+    public String viewPurchaseOrder(){
+        return null;
+    }
     
-    public void displayStockReport(String name, String startDate, String endDate) {
-        String manager = name;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public void displayStockReport() {
+        LocalDate today = LocalDate.now();
+        String manager = getUsername();
 
         System.out.println("Generating report for range: " + startDate + " to " + endDate);
 
