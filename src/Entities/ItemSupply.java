@@ -57,8 +57,11 @@ public class ItemSupply {
 
     @Override
     public String toString() {
-        return "ItemSupply{" + "itemCode=" + itemCode + ", supplierCode=" + supplierCode + ", itemName=" + itemName + ", unitPrice=" + unitPrice + '}';
+        return itemCode + "," + supplierCode + "," + itemName + "," + unitPrice;
     }
+
+
+
     
     
 }

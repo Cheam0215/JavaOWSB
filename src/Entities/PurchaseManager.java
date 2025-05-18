@@ -76,20 +76,17 @@ public class PurchaseManager extends User{
             fileManager.getSupplierFilePath(),
             line -> {
                 String[] data = line.split(",");
-                // Create a supplier with the correct parameter order
-                // The format seems to be: supplierCode, supplierName, itemCode, contactNumber, address, bankAccount
-                Supplier supplier = new Supplier(data[0], data[1], 
-                    Integer.parseInt(data[2]), // contactNumber is in position 3
-                    data[3], // address is in position 4
-                    data[4]); // bankAccount is in position 5
-
-                // Add the itemCode to the supplier's list of item codes
-
+                Supplier supplier = new Supplier(
+                    data[0],               // supplierCode
+                    data[1],               // supplierName
+                    Integer.parseInt(data[2]),  // contactNumber
+                    data[3],               // address
+                    Integer.parseInt(data[4])   // bankAccount
+                );
                 return supplier;
             }
         );
 
-        // Convert the list of Supplier objects to List<String[]> for the table
         List<String[]> result = new ArrayList<>();
         for (Supplier supplier : supplierList) {
             String[] row = new String[]{
@@ -97,7 +94,7 @@ public class PurchaseManager extends User{
                 supplier.getSupplierName(),
                 String.valueOf(supplier.getContactNumber()),
                 supplier.getAddress(),
-                supplier.getBankAccount()
+                String.valueOf(supplier.getBankAccount())
             };
             result.add(row);
         }
