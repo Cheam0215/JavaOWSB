@@ -56,8 +56,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
     }
 
     private void populateTables() {
-        // Default to current month (May 2025)
-        int selectedMonth = 4; // 0-based (May is 4)
+        int selectedMonth = 4; 
         int year = 2025;
 
         salesTableModel.setRowCount(0);
@@ -453,7 +452,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FinanceManager fm = new FinanceManager("006", "finance", "000000");
+                FinanceManager fm = new FinanceManager("", "", "");
                 new FM_Generate_Financial_Report(fm).setVisible(true);
             }
         });

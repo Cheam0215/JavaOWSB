@@ -171,7 +171,7 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FinanceManager fm = new FinanceManager("006", "finance", "000000");
+                FinanceManager fm = new FinanceManager("", "", "");
                 new FM_View_Purchase_Requisition(fm).setVisible(true);
             }
         });
