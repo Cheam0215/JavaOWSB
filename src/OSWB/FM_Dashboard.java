@@ -5,7 +5,6 @@
 package OSWB;
 
 import Entities.FinanceManager;
-import Utility.Session;
 /**
  *
  * @author Maxcm
