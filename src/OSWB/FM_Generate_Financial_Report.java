@@ -330,6 +330,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void totalRevenueTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalRevenueTxtActionPerformed
