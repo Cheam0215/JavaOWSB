@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class InventoryManager extends User{
     
     private final FileManager fileManager;
+    
 
     public InventoryManager(String userId, String username, String password) {
         super(userId, username, password, UserRoles.INVENTORY_MANAGER);

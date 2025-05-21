@@ -4,9 +4,11 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseManager;
+import Interface.ItemViewingServices;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
@@ -20,12 +22,17 @@ public class PM_List_items extends javax.swing.JFrame {
     private String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
     private JFrame previousPage;
     private PurchaseManager purchaseManager;
+    private ItemViewingServices itemViewer;
 
     /**
      * Creates new form PM_Items
+     * @param loggedInPM
+     * @param previousPage
+     * @param itemViewer
      */
-    public PM_List_items(PurchaseManager loggedInPM, JFrame previousPage) {
+    public PM_List_items(PurchaseManager loggedInPM, JFrame previousPage, ItemViewingServices itemViewer) {
         this.purchaseManager = loggedInPM;  
+        this.itemViewer = itemViewer;
         this.previousPage = previousPage;
         initComponents();
         setupTable();
@@ -49,7 +56,7 @@ public class PM_List_items extends javax.swing.JFrame {
     private void loadItems() {
         try {
             model.setRowCount(0);
-            List<String[]> items = purchaseManager.viewItems();
+            List<String[]> items = itemViewer.viewItems();
             if (items.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no items available.", "Load Items", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -74,7 +81,7 @@ public class PM_List_items extends javax.swing.JFrame {
         
         try {
             model.setRowCount(0);
-            List<String[]> allItems = purchaseManager.viewItems();
+            List<String[]> allItems =itemViewer.viewItems();
             boolean foundMatch = false;
             for (String[] item : allItems) {
                 if ((item[0] != null && item[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
@@ -712,12 +719,12 @@ public class PM_List_items extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(purchaseManager,this).setVisible(true);
+        new PM_List_items(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        new PM_Suppliers(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
@@ -797,12 +804,12 @@ public class PM_List_items extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PurchaseManager item = new PurchaseManager("", "", "");
-                new PM_List_items(item,null).setVisible(true);
-            }
-        });                                                         
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                PurchaseManager item = new PurchaseManager("", "", "");
+//                new PM_List_items(item,null).setVisible(true);
+//            }
+//        });                                                         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

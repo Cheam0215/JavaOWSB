@@ -4,7 +4,9 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Entities.PurchaseManager;
+import Interface.ItemViewingServices;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,13 +21,15 @@ public class PM_List_requisition extends javax.swing.JFrame {
     private String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
     private PurchaseManager purchaseManager;
     private JFrame previousPage;
+    private ItemViewingServices itemViewer;
 
     /**
      * Creates new form PM_List_requisition
      */
-    public PM_List_requisition(PurchaseManager loggedInPM, JFrame previousPage) {
+    public PM_List_requisition(PurchaseManager loggedInPM, JFrame previousPage, ItemController itemViewer) {
         this.purchaseManager = loggedInPM;    
         this.previousPage = previousPage;
+        this.itemViewer = itemViewer;
         initComponents();
         setupTable();
         loadPR();
@@ -527,12 +531,12 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton3ActionPerformed
-        new PM_List_items(purchaseManager,this).setVisible(true);
+        new PM_List_items(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton3ActionPerformed
 
     private void supplierPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton3ActionPerformed
-        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        new PM_Suppliers(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton3ActionPerformed
 
@@ -725,12 +729,12 @@ public class PM_List_requisition extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PurchaseManager pr = new PurchaseManager("", "", "");
-                new PM_List_requisition(pr,null).setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                PurchaseManager pr = new PurchaseManager("", "", "");
+//                new PM_List_requisition(pr,null).setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

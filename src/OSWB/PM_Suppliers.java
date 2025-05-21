@@ -4,9 +4,11 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseManager;
+import Interface.ItemViewingServices;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,13 +21,15 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
     private JFrame previousPage;
     private PurchaseManager purchaseManager;
+    private ItemViewingServices itemViewer;
 
     /**
      * Creates new form PM_Suppliers
      */
-    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage) {
+    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage, ItemController itemViewer) {
         this.purchaseManager = loggedInPM;    
         this.previousPage = previousPage;
+        this.itemViewer = itemViewer;
         initComponents();
         setupTable();
         loadSuppliers();
@@ -531,12 +535,12 @@ public class PM_Suppliers extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(purchaseManager,this).setVisible(true);
+        new PM_List_items(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose();                 // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        new PM_Suppliers(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
@@ -617,12 +621,12 @@ public class PM_Suppliers extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PurchaseManager supplier = new PurchaseManager("","","");
-                new PM_Suppliers(supplier,null).setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                PurchaseManager supplier = new PurchaseManager("","","");
+//                new PM_Suppliers(supplier,null).setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

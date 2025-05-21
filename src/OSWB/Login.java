@@ -4,6 +4,12 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
 import Entities.Administrator;
 import Entities.FinanceManager;
 import Entities.InventoryManager;
@@ -21,6 +27,13 @@ import javax.swing.JOptionPane;
  * @author Sheng Ting
  */
 public class Login extends javax.swing.JFrame {
+    
+    private ItemController itemController;
+    private ItemSupplyController itemSupplyController;
+    private PurchaseOrderController purchaseOrderController;  
+    private PurchaseRequisitionController  purchaseRequisitionController;
+    private SalesDataController salesDataController;
+    private SupplierController supplierController;
 
     /**
      * Creates new form Login
@@ -28,6 +41,17 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
     }
+    
+    public Login(ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController) {
+        this.itemController = itemController;
+        this.itemSupplyController = itemSupplyController;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.supplierController = supplierController;
+        initComponents();
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -259,14 +283,14 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
-                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM);
+                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM, itemController);
                         this.dispose();
                         PMOrder.setVisible(true);
                         loggedInPM.displayMenu();
                     }
                     case UserRoles.SALES_MANAGER -> { 
                         SalesManager loggedInSM = new SalesManager(userID, username, password);
-                        SM_Main smMain = new SM_Main(loggedInSM);
+                        SM_Main smMain = new SM_Main(loggedInSM, itemController, itemSupplyController, purchaseOrderController, purchaseRequisitionController, salesDataController, supplierController);
                         this.dispose();
                         smMain.setVisible(true);
                         

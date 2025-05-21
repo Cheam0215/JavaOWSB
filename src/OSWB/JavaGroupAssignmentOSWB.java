@@ -4,17 +4,29 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
+import Utility.FileManager;
+
 /**
  *
  * @author Sheng Ting
  */
 public class JavaGroupAssignmentOSWB {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        Login login = new Login();
+        FileManager fileManager = new FileManager();
+        ItemController itemController                                   = new ItemController(fileManager);
+        ItemSupplyController itemSupplyController                       = new ItemSupplyController(fileManager);
+        PurchaseOrderController purchaseOrderController                 = new PurchaseOrderController(fileManager);
+        PurchaseRequisitionController purchaseRequisitionController     = new PurchaseRequisitionController(fileManager);
+        SalesDataController salesDataController                         = new SalesDataController(fileManager);
+        SupplierController supplierController                           = new SupplierController(fileManager);
+        
+        Login login = new Login(itemController, itemSupplyController, purchaseOrderController, purchaseRequisitionController, salesDataController,supplierController);
         login.setVisible(true);
     }
     

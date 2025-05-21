@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.PurchaseRequisitionController;
 import Entities.PurchaseRequisition;
 import Entities.SalesManager;
 import Utility.FileManager;
@@ -22,18 +23,22 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_PR extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
+    private final SalesManager salesManager;
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingPrId = null; // Track the PR ID being edited
+    private final PurchaseRequisitionController purchaseRequisitionController;
 
     /**
      * Creates new form SM_PR
+     * @param loggedInSM
+     * @param purchaseRequisitionController
      */
-    public SM_PR(SalesManager loggedInSM) {
+    public SM_PR(SalesManager loggedInSM, PurchaseRequisitionController purchaseRequisitionController) {
         this.salesManager = loggedInSM;
+        this.purchaseRequisitionController = purchaseRequisitionController;
         fileManager = new FileManager();
         initComponents();
         setupTable();
@@ -56,7 +61,7 @@ public class SM_PR extends javax.swing.JFrame {
             // Clear existing data from the table model
             model.setRowCount(0);
 
-            List<String[]> PR = salesManager.viewPurchaseRequisition(); // Assuming viewItems returns List<String[]>
+            List<String[]> PR = purchaseRequisitionController.viewPurchaseRequisition(); // Assuming viewItems returns List<String[]>
             if (PR.isEmpty()) {
                 // Optional: Show a message if the overall item list is empty
                  JOptionPane.showMessageDialog(this, "There are no Purchase Requisition available.", "Load Purchase Requisition", JOptionPane.WARNING_MESSAGE);
@@ -89,7 +94,7 @@ public class SM_PR extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allPR = salesManager.viewPurchaseRequisition();
+            List<String[]> allPR = purchaseRequisitionController.viewPurchaseRequisition();
             boolean foundMatch = false;
             
             for (String[] pr : allPR) {
@@ -529,7 +534,7 @@ public class SM_PR extends javax.swing.JFrame {
         }
 
         // Add the purchase requisition
-        salesManager.addPurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+        purchaseRequisitionController.addPurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
         JOptionPane.showMessageDialog(this, "Purchase Requisition added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
         // Clear the form
@@ -565,7 +570,7 @@ public class SM_PR extends javax.swing.JFrame {
         }
 
         String prId = (String) model.getValueAt(selectedRow, 0); // PR ID is in the first column
-        salesManager.deletePurchaseRequisition(prId);
+        purchaseRequisitionController.deletePurchaseRequisition(prId);
         JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         loadPR(); // Refresh the table
         resetTable();
@@ -652,7 +657,7 @@ public class SM_PR extends javax.swing.JFrame {
         PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
 
         // Update the purchase requisition
-        if (salesManager.updatePurchaseRequisition(updatedPR)) {
+        if (purchaseRequisitionController.updatePurchaseRequisition(updatedPR)) {
             JOptionPane.showMessageDialog(this, "Purchase Requisition updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadPR(); // Refresh the table
             resetTable(); // Reset the form
@@ -692,13 +697,6 @@ public class SM_PR extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager pr = new SalesManager("", "", "");
-                new SM_PR(pr).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Entities.PurchaseManager;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -19,6 +20,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private DefaultTableModel model = new DefaultTableModel();
     private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
     private PurchaseManager purchaseManager;
+    private ItemController itemController;
     private JFrame previousPage;
 
     /**
@@ -36,8 +38,9 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         saveButton.setEnabled(false);
     }
     
-    public PM_List_purchase_order(PurchaseManager loggedInPM) {
+    public PM_List_purchase_order(PurchaseManager loggedInPM, ItemController itemController) {
         this.purchaseManager = loggedInPM;    
+        this.itemController = itemController;
         initComponents();
         setupTable();
         loadPO();
@@ -760,12 +763,12 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePageButton3ActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(purchaseManager,this).setVisible(true);
+        new PM_List_items(purchaseManager,this, itemController).setVisible(true);
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        new PM_Suppliers(purchaseManager,this, itemController).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
@@ -1142,12 +1145,12 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PurchaseManager po = new PurchaseManager("", "", "");
-                new PM_List_purchase_order(po,null).setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                PurchaseManager po = new PurchaseManager("", "", "");
+//                new PM_List_purchase_order(po,null).setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

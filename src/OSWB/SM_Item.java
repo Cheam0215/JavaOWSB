@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Entities.Item;
 import Utility.FileManager;
 import Entities.SalesManager;
@@ -22,15 +23,17 @@ import javax.swing.JTable;
  * @author Edwin Chen
  */
 public class SM_Item extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final ItemController itemController;
+    private final String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
+    private final SalesManager salesManager;
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingItemCode = null; // Track the item code being edited
     
-    public SM_Item(SalesManager loggedInSM) {
+    public SM_Item(SalesManager loggedInSM, ItemController itemController) {
         this.salesManager = loggedInSM;       
+        this.itemController = itemController;
         fileManager = new FileManager();
         initComponents();
         initializeFileManager();
@@ -110,7 +113,7 @@ public class SM_Item extends javax.swing.JFrame {
     private void loadItems() {
         try {
             model.setRowCount(0);
-            List<String[]> items = salesManager.viewItems();
+            List<String[]> items = itemController.viewItems();
             if (items.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no items available.", "Load Items", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -141,7 +144,7 @@ public class SM_Item extends javax.swing.JFrame {
         
         try {
             model.setRowCount(0);
-            List<String[]> allItems = salesManager.viewItems();
+            List<String[]> allItems = itemController.viewItems();
             boolean foundMatch = false;
             for (String[] item : allItems) {
                 if ((item[0] != null && item[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
@@ -574,7 +577,7 @@ public class SM_Item extends javax.swing.JFrame {
             double retailPrice = Double.parseDouble(retailPriceStr);
             double unitPrice = Double.parseDouble(unitPriceStr);
             Item item = new Item(itemCode, itemName, stockLevel, retailPrice);
-            salesManager.addItem(item, supplierCode, unitPrice); // Use unitPrice from jTextField4
+            itemController.addItem(item, supplierCode, unitPrice); // Use unitPrice from jTextField4
             JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
@@ -607,7 +610,7 @@ public class SM_Item extends javax.swing.JFrame {
             return;
         }
 
-        String result = salesManager.deleteItem(itemCode); // Capture the string result
+        String result = itemController.deleteItem(itemCode); // Capture the string result
         if (result.startsWith("Item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadItems(); // Refresh the table
@@ -671,7 +674,7 @@ public class SM_Item extends javax.swing.JFrame {
             Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
 
             // Assuming updateItem returns a string indicating success or error
-            String result = salesManager.updateItem(updatedItem, supplierCode, unitPrice);
+            String result = itemController.updateItem(updatedItem, supplierCode, unitPrice);
             if (result.startsWith("Item ") && result.endsWith(" updated successfully.")) {
                 JOptionPane.showMessageDialog(this, "Item updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
@@ -698,12 +701,8 @@ public class SM_Item extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager item = new SalesManager("", "", "");
-                new SM_Item(item).setVisible(true);
-            }
-        });
+               
+     
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

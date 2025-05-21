@@ -5,6 +5,7 @@
 package OSWB;
 
 import Entities.SalesManager;
+import Interface.PurchaseOrderViewServices;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -14,12 +15,14 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_View_PO extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
+    private final SalesManager salesManager;
+    private final PurchaseOrderViewServices purchaseOrderViewer;
     
-    public SM_View_PO(SalesManager loggedinSM) {
+    public SM_View_PO(SalesManager loggedinSM, PurchaseOrderViewServices purchaseOrderViewer) {
         this.salesManager = loggedinSM;
+        this.purchaseOrderViewer = purchaseOrderViewer;
         initComponents();
         setupTable();
         loadPO();
@@ -33,7 +36,7 @@ public class SM_View_PO extends javax.swing.JFrame {
     private void loadPO() {
         try {
             model.setRowCount(0);
-            List<String[]> PO = salesManager.viewPurchaseOrder();
+            List<String[]> PO = purchaseOrderViewer.viewPurchaseOrder();
             if (PO.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no Purchase Order yet.", "View Purchase Order", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -61,7 +64,7 @@ public class SM_View_PO extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allPOs = salesManager.viewPurchaseOrder();
+            List<String[]> allPOs = purchaseOrderViewer.viewPurchaseOrder();
             boolean foundMatch = false;
             
             for (String[] po : allPOs) {
@@ -277,13 +280,6 @@ public class SM_View_PO extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager po = new SalesManager("","","");
-                new SM_View_PO(po).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

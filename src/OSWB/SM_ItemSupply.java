@@ -5,8 +5,12 @@
 package OSWB;
 
 
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.SupplierController;
 import Entities.ItemSupply;
 import Entities.SalesManager;
+import Interface.ItemSupplyServices;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -15,16 +19,28 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_ItemSupply extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[] = {"Item Code", "Supplier Code", "Item Name", "Unit Price"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[] = {"Item Code", "Supplier Code", "Item Name", "Unit Price"};
+    private final SalesManager salesManager;
     private boolean isEditing = false;
     private String editingItemCode = null;
+    private final ItemSupplyServices itemSupplyController;
+    private final ItemController itemController;
+    private final SupplierController supplierController;
+    
     /**
      * Creates new form SM_ItemSupply
+     * @param loggedinSM
+     * @param itemController
+     * @param supplierController
+     * @param itemSupplyController
+     
      */
-    public SM_ItemSupply(SalesManager loggedinSM) {
+    public SM_ItemSupply(SalesManager loggedinSM, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController) {
         this.salesManager = loggedinSM;
+        this.itemController = itemController;
+        this.supplierController = supplierController;
+        this.itemSupplyController = itemSupplyController;
         initComponents();
         setupTable();
         loadItemSupplies();
@@ -53,7 +69,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         String itemCode = (String) jComboBox1.getSelectedItem();
         if (itemCode != null && !itemCode.equals("No items found")) {
             try {
-                List<String[]> items = salesManager.viewItems();
+                List<String[]> items = itemController.viewItems();
                 for (String[] item : items) {
                     if (item[0].equals(itemCode)) {
                         jLabel6.setText(item[1]); // Set Item Name from viewItems
@@ -70,7 +86,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     private void loadItemSupplies() {
         try {
             model.setRowCount(0);
-            List<String[]> itemSupplies = salesManager.viewItemSupplies();
+            List<String[]> itemSupplies = itemSupplyController.viewItemSupplies();
             if (itemSupplies.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no item supplies available.", "Load Item Supplies", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -91,7 +107,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     private void loadItemCodes() {
         jComboBox1.removeAllItems();
         try {
-            List<String[]> items = salesManager.viewItems();
+            List<String[]> items = itemController.viewItems();
             for (String[] item : items) {
                 jComboBox1.addItem(item[0]); // Item Code
             }
@@ -108,7 +124,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     private void loadSupplierCodes() {
         jComboBox2.removeAllItems();
         try {
-            List<String[]> suppliers = salesManager.viewSuppliers();
+            List<String[]> suppliers = supplierController.viewSuppliers();
             for (String[] supplier : suppliers) {
                 jComboBox2.addItem(supplier[0]); // Supplier Code
             }
@@ -123,7 +139,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     
     private boolean isDuplicateItemSupply(String itemCode, String supplierCode) {
         try {
-            List<String[]> itemSupplies = salesManager.viewItemSupplies();
+            List<String[]> itemSupplies = itemSupplyController.viewItemSupplies();
             for (String[] itemSupply : itemSupplies) {
                 if (itemSupply[0].equals(itemCode) && itemSupply[1].equals(supplierCode)) {
                     return true; // Duplicate found
@@ -144,7 +160,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
 
         try {
             model.setRowCount(0);
-            List<String[]> itemSupplies = salesManager.viewItemSupplies();
+            List<String[]> itemSupplies = itemSupplyController.viewItemSupplies();
             boolean foundMatch = false;
             for (String[] itemSupply : itemSupplies) {
                 if (itemSupply[0].toLowerCase().contains(searchTerm.toLowerCase()) ||
@@ -442,7 +458,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
             ItemSupply itemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
-            salesManager.addItemSupply(itemSupply);
+            itemSupplyController.addItemSupply(itemSupply);
             JOptionPane.showMessageDialog(this, "Item supply added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
@@ -501,7 +517,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             ItemSupply updatedItemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
 
             // Assuming updateItemSupply returns a string
-            String result = salesManager.updateItemSupply(updatedItemSupply);
+            String result = itemSupplyController.updateItemSupply(updatedItemSupply);
             if (result.startsWith("Item supply ") && result.endsWith(" updated successfully.")) {
                 JOptionPane.showMessageDialog(this, "Item supply updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
@@ -529,7 +545,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             return;
         }
 
-        String result = salesManager.deleteItemSupply(itemCode); // Capture the string result
+        String result = itemSupplyController.deleteItemSupply(itemCode); // Capture the string result
         if (result.startsWith("Item supply for item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item supply deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadItemSupplies(); 
@@ -574,12 +590,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager itemsupply = new SalesManager("","","");
-                new SM_ItemSupply(itemsupply).setVisible(true);
-            }
-        });
+       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

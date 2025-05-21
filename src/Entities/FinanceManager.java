@@ -192,7 +192,7 @@ public class FinanceManager extends User {
 
         for (PurchaseOrder po : poList) {
             if (po != null && po.getPoId().equals(poId)) {
-                if (!po.getStatus().equals(Status.APPROVED)) {
+                if (!po.getStatus().equals(Status.RECEIVED)) {
                     return "Purchase Order " + poId + " is already " + po.getStatus();
                 }
 

@@ -4,10 +4,12 @@
  */
 package Interface;
 
+import java.util.List;
+
 /**
  *
  * @author Sheng Ting
  */
-public interface PurchaseRequisitionInterface {
-    
+public interface PurchaseOrderViewServices {
+    public List<String[]> viewPurchaseOrder();
 }

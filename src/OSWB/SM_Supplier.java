@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.SupplierController;
 import Entities.SalesManager;
 import Entities.Supplier;
 import javax.swing.table.DefaultTableModel;
@@ -14,18 +15,21 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_Supplier extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
+    private final SalesManager salesManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingSupplierCode = null; // Track the supplier code being edited
-    
+    private final SupplierController supplierController;
     
     /**
      * Creates new form SM_Supplier
+     * @param loggedinSM
+     * @param supplierController
      */
-    public SM_Supplier(SalesManager loggedinSM) {
+    public SM_Supplier(SalesManager loggedinSM, SupplierController supplierController) {
         this.salesManager = loggedinSM;
+        this.supplierController = supplierController;
         initComponents();
         setupTable();
         loadSuppliers();
@@ -47,7 +51,7 @@ public class SM_Supplier extends javax.swing.JFrame {
             // Clear existing data from the table model
             model.setRowCount(0);
 
-            List<String[]> items = salesManager.viewSuppliers(); // Assuming viewItems returns List<String[]>
+            List<String[]> items = supplierController.viewSuppliers(); // Assuming viewItems returns List<String[]>
             if (items.isEmpty()) {
                 // Optional: Show a message if the overall item list is empty
                  JOptionPane.showMessageDialog(this, "There are no suppliers available.", "Load Suppliers", JOptionPane.WARNING_MESSAGE);
@@ -80,7 +84,7 @@ public class SM_Supplier extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allSuppliers = salesManager.viewSuppliers();
+            List<String[]> allSuppliers = supplierController.viewSuppliers();
             boolean foundMatch = false;
             
             for (String[] suppliers : allSuppliers) {
@@ -133,7 +137,7 @@ public class SM_Supplier extends javax.swing.JFrame {
     private String generateNextSupplierCode() {
         String nextSupplierCode = "SUP001"; // Default if no suppliers exist
         try {
-            List<String[]> suppliers = salesManager.viewSuppliers();
+            List<String[]> suppliers = supplierController.viewSuppliers();
             int highestNumber = 0;
             for (String[] supplier : suppliers) {
                 if (supplier[0] != null && supplier[0].startsWith("SUP")) {
@@ -423,7 +427,7 @@ public class SM_Supplier extends javax.swing.JFrame {
             int contactNumber = Integer.parseInt(contactNumberStr);
             int bankAccount = Integer.parseInt(bankAccountStr);
             Supplier supplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
-            salesManager.addSupplier(supplier);
+            supplierController.addSupplier(supplier);
             JOptionPane.showMessageDialog(this, "Supplier added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
@@ -474,7 +478,7 @@ public class SM_Supplier extends javax.swing.JFrame {
             int contactNumber = Integer.parseInt(contactNumberStr);
             int bankAccount = Integer.parseInt(bankAccountStr); 
             Supplier updatedSupplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
-            if (salesManager.updateSupplier(updatedSupplier)) {
+            if (supplierController.updateSupplier(updatedSupplier)) {
                 JOptionPane.showMessageDialog(this, "Supplier updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 resetTable();
                 isEditing = false; // Reset editing state
@@ -496,7 +500,7 @@ public class SM_Supplier extends javax.swing.JFrame {
         }
 
         String supplierCode = (String) model.getValueAt(selectedRow, 0); // Supplier Code
-        if (salesManager.deleteSupplier(supplierCode)) {
+        if (supplierController.deleteSupplier(supplierCode)) {
             JOptionPane.showMessageDialog(this, "Supplier deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } else {
@@ -531,13 +535,6 @@ public class SM_Supplier extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager supplier = new SalesManager("","","");
-                new SM_Supplier(supplier).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

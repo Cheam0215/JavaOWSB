@@ -4,6 +4,12 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
 import Entities.SalesManager;
 
 /**
@@ -12,12 +18,34 @@ import Entities.SalesManager;
  */
 public class SM_Main extends javax.swing.JFrame {
     private SalesManager loggedinSM;
+    private ItemController itemController;
+    private ItemSupplyController itemSupplyController;
+    private PurchaseOrderController purchaseOrderController;  
+    private PurchaseRequisitionController  purchaseRequisitionController;
+    private SalesDataController salesDataController;
+    private SupplierController supplierController;
     
     /**
      * Creates new form SM_Main
+     * @param loggedInSM
      */
     public SM_Main(SalesManager loggedInSM) {
         this.loggedinSM = loggedInSM;
+        initComponents();
+        if (loggedInSM != null) {
+            jLabel1.setText(loggedInSM.getUsername() + " SM Home Page");
+        } else {
+            jLabel1.setText("Unknown User SM Home Page"); // Fallback if loggedInSM is null
+        }
+    }
+    
+    public SM_Main(SalesManager loggedInSM, ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController) {
+        this.loggedinSM = loggedInSM;
+        this.itemSupplyController = itemSupplyController;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.supplierController = supplierController;
         initComponents();
         if (loggedInSM != null) {
             jLabel1.setText(loggedInSM.getUsername() + " SM Home Page");
@@ -176,37 +204,37 @@ public class SM_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        SM_Item smItem = new SM_Item(loggedinSM);
+        SM_Item smItem = new SM_Item(loggedinSM, itemController);
         smItem.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        SM_Supplier smSupplier = new SM_Supplier(loggedinSM);
+        SM_Supplier smSupplier = new SM_Supplier(loggedinSM, supplierController);
         smSupplier.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM);
+        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM, salesDataController);
         smDaily.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        SM_PR smPr = new SM_PR(loggedinSM);
+        SM_PR smPr = new SM_PR(loggedinSM, purchaseRequisitionController);
         smPr.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        SM_View_PO smPo = new SM_View_PO(loggedinSM);
+        SM_View_PO smPo = new SM_View_PO(loggedinSM, purchaseOrderController);
         smPo.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        SM_ItemSupply smitemsup = new SM_ItemSupply(loggedinSM);
+        SM_ItemSupply smitemsup = new SM_ItemSupply(loggedinSM, itemController, supplierController, itemSupplyController);
         smitemsup.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
