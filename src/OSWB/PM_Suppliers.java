@@ -5,10 +5,13 @@
 package OSWB;
 
 import Controllers.ItemController;
+import Controllers.PurchaseOrderController;
 import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseManager;
 import Interface.ItemViewingServices;
+import Interface.PurchaseRequisitionViewServices;
+import Interface.SupplierViewingServices;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -17,19 +20,31 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class PM_Suppliers extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
-    private JFrame previousPage;
-    private PurchaseManager purchaseManager;
-    private ItemViewingServices itemViewer;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
+    private final JFrame previousPage;
+    private final PurchaseManager purchaseManager;
+    private final ItemViewingServices itemViewer;
+    private final PurchaseOrderController purchaseOrderController;  
+    private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
+    private final SupplierViewingServices supplierViewer;
 
     /**
      * Creates new form PM_Suppliers
+     * @param loggedInPM
+     * @param previousPage
+     * @param itemViewer
+     * @param purchaseOrderController
+     * @param supplierViewer
+     * @param purchaseRequisitionViewer
      */
-    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage, ItemController itemViewer) {
+    public PM_Suppliers(PurchaseManager loggedInPM, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
         this.purchaseManager = loggedInPM;    
         this.previousPage = previousPage;
         this.itemViewer = itemViewer;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionViewer = purchaseRequisitionViewer;
+        this.supplierViewer = supplierViewer;
         initComponents();
         setupTable();
         loadSuppliers();
@@ -55,7 +70,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
             // Clear existing data from the table model
             model.setRowCount(0);
 
-            List<String[]> items = purchaseManager.viewSuppliers(); // Assuming viewItems returns List<String[]>
+            List<String[]> items = supplierViewer.viewSuppliers(); // Assuming viewItems returns List<String[]>
             if (items.isEmpty()) {
                 // Optional: Show a message if the overall item list is empty
                  JOptionPane.showMessageDialog(this, "There are no suppliers available.", "Load Suppliers", JOptionPane.WARNING_MESSAGE);
@@ -88,7 +103,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allSuppliers = purchaseManager.viewSuppliers();
+            List<String[]> allSuppliers = supplierViewer.viewSuppliers();
             boolean foundMatch = false;
             
             for (String[] suppliers : allSuppliers) {
@@ -535,17 +550,17 @@ public class PM_Suppliers extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
+        new PM_List_items(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();                 // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(purchaseManager,this, (ItemController) itemViewer).setVisible(true);
+        new PM_Suppliers(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-       new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+       new PM_List_purchase_order(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();  // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 

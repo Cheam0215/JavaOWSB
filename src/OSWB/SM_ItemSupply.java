@@ -27,6 +27,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     private final ItemSupplyServices itemSupplyController;
     private final ItemController itemController;
     private final SupplierController supplierController;
+    private final SM_Main previousScreen;
     
     /**
      * Creates new form SM_ItemSupply
@@ -36,11 +37,12 @@ public class SM_ItemSupply extends javax.swing.JFrame {
      * @param itemSupplyController
      
      */
-    public SM_ItemSupply(SalesManager loggedinSM, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController) {
+    public SM_ItemSupply(SalesManager loggedinSM, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
         this.itemController = itemController;
         this.supplierController = supplierController;
         this.itemSupplyController = itemSupplyController;
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadItemSupplies();
@@ -432,8 +434,14 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 

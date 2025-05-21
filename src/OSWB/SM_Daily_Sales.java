@@ -32,7 +32,8 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     private boolean isEditing = false;
     private String editingSalesId;
     private String originalItemCode;
-    private SalesDataController salesDataController;
+    private final SalesDataController salesDataController;
+    private SM_Main previousScreen;
 
 
     private static class ItemDetails {
@@ -48,10 +49,12 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
      * Creates new form SM_Daily_Sales
      * @param loggedinSM
      * @param salesDataController
+     * @param previousScreen
      */
-    public SM_Daily_Sales(SalesManager loggedinSM, SalesDataController salesDataController) {
+    public SM_Daily_Sales(SalesManager loggedinSM, SalesDataController salesDataController, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
         this.salesDataController = salesDataController;
+        this.previousScreen = previousScreen;
         fileManager = new FileManager();
         initComponents();
         setupTable();
@@ -592,9 +595,16 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed

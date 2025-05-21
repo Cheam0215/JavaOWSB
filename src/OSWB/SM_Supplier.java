@@ -21,15 +21,17 @@ public class SM_Supplier extends javax.swing.JFrame {
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingSupplierCode = null; // Track the supplier code being edited
     private final SupplierController supplierController;
+    private final SM_Main previousScreen;
     
     /**
      * Creates new form SM_Supplier
      * @param loggedinSM
      * @param supplierController
      */
-    public SM_Supplier(SalesManager loggedinSM, SupplierController supplierController) {
+    public SM_Supplier(SalesManager loggedinSM, SupplierController supplierController, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
         this.supplierController = supplierController;
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadSuppliers();
@@ -398,8 +400,14 @@ public class SM_Supplier extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

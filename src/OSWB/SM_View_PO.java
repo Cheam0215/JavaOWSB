@@ -19,10 +19,12 @@ public class SM_View_PO extends javax.swing.JFrame {
     private final String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
     private final SalesManager salesManager;
     private final PurchaseOrderViewServices purchaseOrderViewer;
+    private final SM_Main previousScreen;
     
-    public SM_View_PO(SalesManager loggedinSM, PurchaseOrderViewServices purchaseOrderViewer) {
+    public SM_View_PO(SalesManager loggedinSM, PurchaseOrderViewServices purchaseOrderViewer, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
         this.purchaseOrderViewer = purchaseOrderViewer;
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadPO();
@@ -236,8 +238,14 @@ public class SM_View_PO extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

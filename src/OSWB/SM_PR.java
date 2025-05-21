@@ -30,15 +30,17 @@ public class SM_PR extends javax.swing.JFrame {
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingPrId = null; // Track the PR ID being edited
     private final PurchaseRequisitionController purchaseRequisitionController;
+    private SM_Main previousScreen;
 
     /**
      * Creates new form SM_PR
      * @param loggedInSM
      * @param purchaseRequisitionController
      */
-    public SM_PR(SalesManager loggedInSM, PurchaseRequisitionController purchaseRequisitionController) {
+    public SM_PR(SalesManager loggedInSM, PurchaseRequisitionController purchaseRequisitionController, SM_Main previousScreen) {
         this.salesManager = loggedInSM;
         this.purchaseRequisitionController = purchaseRequisitionController;
+        this.previousScreen = previousScreen;
         fileManager = new FileManager();
         initComponents();
         setupTable();
@@ -549,8 +551,14 @@ public class SM_PR extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

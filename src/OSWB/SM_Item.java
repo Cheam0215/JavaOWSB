@@ -30,10 +30,12 @@ public class SM_Item extends javax.swing.JFrame {
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingItemCode = null; // Track the item code being edited
+    private SM_Main previousScreen;
     
-    public SM_Item(SalesManager loggedInSM, ItemController itemController) {
+    public SM_Item(SalesManager loggedInSM, ItemController itemController, SM_Main previousScreen) {
         this.salesManager = loggedInSM;       
         this.itemController = itemController;
+        this.previousScreen = previousScreen;
         fileManager = new FileManager();
         initComponents();
         initializeFileManager();
@@ -553,8 +555,14 @@ public class SM_Item extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
