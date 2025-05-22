@@ -38,11 +38,21 @@ public class Login extends javax.swing.JFrame {
     private SupplierController supplierController;
     private InventoryController inventoryController;
     private FinanceController financeController;
+    
 
     /**
      * Creates new form Login
      */
     public Login() {
+        FileManager fm = new FileManager();
+        this.itemController = new ItemController(fm);
+        this.itemSupplyController = new ItemSupplyController(fm);
+        this.purchaseOrderController = new PurchaseOrderController(fm);
+        this.purchaseRequisitionController = new PurchaseRequisitionController(fm);
+        this.salesDataController = new SalesDataController(fm);
+        this.supplierController = new SupplierController(fm);
+        this.inventoryController = new InventoryController(this.purchaseOrderController, this.itemController, this.itemSupplyController);
+        this.financeController = new FinanceController(fm);
         initComponents();
     }
     
