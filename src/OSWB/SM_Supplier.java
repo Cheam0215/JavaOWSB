@@ -7,8 +7,10 @@ package OSWB;
 import Controllers.SupplierController;
 import Entities.SalesManager;
 import Entities.Supplier;
+import Entities.User;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -17,19 +19,20 @@ import javax.swing.JOptionPane;
 public class SM_Supplier extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[]= {"Supplier Code","Supplier Name","Contact Number","Address","Bank Account"};
-    private final SalesManager salesManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingSupplierCode = null; // Track the supplier code being edited
+    private final User currentUser;
     private final SupplierController supplierController;
-    private final SM_Main previousScreen;
+    private final JFrame previousScreen;
     
     /**
      * Creates new form SM_Supplier
-     * @param loggedinSM
+     * @param currentUser
      * @param supplierController
+     * @param previousScreen
      */
-    public SM_Supplier(SalesManager loggedinSM, SupplierController supplierController, SM_Main previousScreen) {
-        this.salesManager = loggedinSM;
+    public SM_Supplier(User currentUser, SupplierController supplierController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.supplierController = supplierController;
         this.previousScreen = previousScreen;
         initComponents();
@@ -41,6 +44,8 @@ public class SM_Supplier extends javax.swing.JFrame {
         editBtn.setEnabled(false); // Disable Edit button initially
         saveBtn.setEnabled(false); // Disable Save button initially
         deleteBtn.setEnabled(false); // Disable Delete button initially
+
+        
     }
     
     private void setupTable() {

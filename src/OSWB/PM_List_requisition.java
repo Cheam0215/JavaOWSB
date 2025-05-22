@@ -7,6 +7,7 @@ package OSWB;
 import Controllers.ItemController;
 import Controllers.PurchaseOrderController;
 import Entities.PurchaseManager;
+import Entities.User;
 import Interface.ItemViewingServices;
 import Interface.PurchaseRequisitionViewServices;
 import Interface.SupplierViewingServices;
@@ -22,7 +23,7 @@ import javax.swing.JFrame;
 public class PM_List_requisition extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
-    private final PurchaseManager purchaseManager;
+    private final User currentUser;
     private final JFrame previousPage;
     private final ItemViewingServices itemViewer;
     private final PurchaseOrderController purchaseOrderController;  
@@ -31,7 +32,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
 
      /**
      * Creates new form PM_Items
-     * @param loggedInPM
+     * @param currentUser
      * @param previousPage
      * @param itemViewer
      * @param purchaseOrderController
@@ -39,8 +40,8 @@ public class PM_List_requisition extends javax.swing.JFrame {
      * @param supplierViewer
      
      */
-    public PM_List_requisition(PurchaseManager loggedInPM, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
-        this.purchaseManager = loggedInPM;    
+    public PM_List_requisition(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
+        this.currentUser = currentUser;
         this.previousPage = previousPage;
         this.purchaseOrderController = purchaseOrderController;
         this.itemViewer = itemViewer;
@@ -547,17 +548,17 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton3ActionPerformed
-        new PM_List_items(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton3ActionPerformed
 
     private void supplierPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton3ActionPerformed
-        new PM_Suppliers(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton3ActionPerformed
 
     private void purchaseOrderPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton3ActionPerformed
-        new PM_List_purchase_order(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton3ActionPerformed
 
@@ -676,7 +677,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
         }
 
         // Proceed with generating the PurchaseOrder
-        String result = purchaseOrderController.generatePurchaseOrder(prId, supplierCode, purchaseManager);
+        String result = purchaseOrderController.generatePurchaseOrder(prId, supplierCode, currentUser);
         if (result.startsWith("Error")) {
             JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         } else {

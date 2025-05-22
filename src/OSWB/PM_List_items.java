@@ -4,13 +4,9 @@
  */
 package OSWB;
 
-import Controllers.ItemController;
 import Controllers.PurchaseOrderController;
-import Controllers.PurchaseRequisitionController;
-import Controllers.SupplierController;
-import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
-import Entities.PurchaseManager;
+import Entities.User;
 import Interface.ItemViewingServices;
 import Interface.PurchaseRequisitionViewServices;
 import Interface.SupplierViewingServices;
@@ -25,8 +21,8 @@ import javax.swing.JFrame;
 public class PM_List_items extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
+    private final User currentUser;
     private final JFrame previousPage;
-    private final PurchaseManager purchaseManager;
     private final ItemViewingServices itemViewer;
     private final PurchaseOrderController purchaseOrderController;  
     private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
@@ -34,7 +30,7 @@ public class PM_List_items extends javax.swing.JFrame {
    
     /**
      * Creates new form PM_Items
-     * @param loggedInPM
+     * @param currentUser
      * @param previousPage
      * @param itemViewer
      * @param purchaseOrderController
@@ -42,8 +38,8 @@ public class PM_List_items extends javax.swing.JFrame {
      * @param supplierViewer
      
      */
-    public PM_List_items(PurchaseManager loggedInPM, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
-        this.purchaseManager = loggedInPM;
+    public PM_List_items(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
+        this.currentUser = currentUser;
         this.previousPage = previousPage;
         this.purchaseOrderController = purchaseOrderController;
         this.itemViewer = itemViewer;
@@ -735,17 +731,17 @@ public class PM_List_items extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton5ActionPerformed
 
     private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton5ActionPerformed
 
     private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        new PM_List_purchase_order(purchaseManager,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 

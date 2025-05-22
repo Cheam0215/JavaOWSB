@@ -268,7 +268,7 @@ public class Login extends javax.swing.JFrame {
                 switch (role) {
                     case UserRoles.ADMINISTRATOR -> { 
                         Administrator loggedInAdmin = new Administrator(userID, username, password);
-                        ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin);
+                        ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin, supplierController, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController, itemSupplyController, itemController);
                         this.dispose();
                         adminDashboard.setVisible(true);
                         loggedInAdmin.displayMenu();
