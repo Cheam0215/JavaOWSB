@@ -4,6 +4,7 @@
  */
 package Interface;
 
+import Entities.SalesData;
 import java.util.List;
 
 /**
@@ -12,4 +13,5 @@ import java.util.List;
  */
 public interface SalesDataViewingServices {
     public List<String[]> viewSalesData();
+    public List<SalesData> getSalesData();
 }

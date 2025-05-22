@@ -4,6 +4,8 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
+import Controllers.InventoryController;
 import Controllers.ItemController;
 import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
@@ -25,8 +27,10 @@ public class JavaGroupAssignmentOSWB {
         PurchaseRequisitionController purchaseRequisitionController     = new PurchaseRequisitionController(fileManager);
         SalesDataController salesDataController                         = new SalesDataController(fileManager);
         SupplierController supplierController                           = new SupplierController(fileManager);
+        InventoryController inventoryController                         = new InventoryController(purchaseOrderController, itemController, itemSupplyController);
+        FinanceController financeController                             = new FinanceController(fileManager);
         
-        Login login = new Login(itemController, itemSupplyController, purchaseOrderController, purchaseRequisitionController, salesDataController,supplierController);
+        Login login = new Login(itemController, itemSupplyController, purchaseOrderController, purchaseRequisitionController, salesDataController,supplierController, inventoryController, financeController);
         login.setVisible(true);
     }
     

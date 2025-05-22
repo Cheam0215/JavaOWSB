@@ -132,6 +132,66 @@ public class PurchaseOrder {
     public String toString() {
         return poId + "," + prId + "," + raisedBy + "," + itemCode + "," + quantity + "," + supplierCode + "," + requiredDate + "," + requestedDate + "," + status + "," + paymentAmount + "," + remark;
     }
+    
+    /**
+     * Creates a PurchaseOrder object from a CSV string line.
+     * @param line The CSV string line from the data file.
+     * @return A PurchaseOrder object, or null if the line is invalid or cannot be parsed.
+     */
+    public static PurchaseOrder fromDataString(String line) {
+        if (line == null || line.trim().isEmpty()) {
+            return null;
+        }
+        String[] data = line.split(",", -1); // Use -1 to keep trailing empty strings
+
+        // Expecting 11 fields based on your constructor and toString
+        if (data.length < 11) {
+            System.err.println("Invalid data line for PurchaseOrder (not enough fields): " + line);
+            return null;
+        }
+
+        try {
+            String poId = data[0].trim();
+            String prId = data[1].trim();
+            String raisedBy = data[2].trim();
+            String itemCode = data[3].trim();
+            int quantity = Integer.parseInt(data[4].trim());
+            String supplierCode = data[5].trim();
+            String requiredDate = data[6].trim();
+            String requestedDate = data[7].trim();
+            Status status = Status.valueOf(data[8].trim().toUpperCase()); // Be robust with enum parsing
+            double paymentAmount = Double.parseDouble(data[9].trim());
+            Remark remark = Remark.valueOf(data[10].trim().toUpperCase()); // Be robust
+
+            return new PurchaseOrder(poId, prId, raisedBy, itemCode, quantity, supplierCode,
+                                     requiredDate, requestedDate, status, paymentAmount, remark);
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing number in PurchaseOrder line: " + line + " | " + e.getMessage());
+            return null;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error parsing enum (Status or Remark) in PurchaseOrder line: " + line + " | " + e.getMessage());
+            return null;
+        } catch (Exception e) { // Catch any other unexpected errors during parsing
+            System.err.println("Unexpected error parsing PurchaseOrder line: " + line + " | " + e.getMessage());
+            e.printStackTrace(); // Good to see the stack trace for unexpected issues
+            return null;
+        }
+    }
+
+    // Optional: Consider implementing equals() and hashCode() if you store these in Sets or use them as Map keys.
+    // Based on poId for example.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PurchaseOrder that = (PurchaseOrder) o;
+        return poId.equals(that.poId);
+    }
+
+    @Override
+    public int hashCode() {
+        return poId.hashCode();
+    }
 
    
 }

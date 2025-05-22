@@ -4,14 +4,13 @@
  */
 package Interface;
 
-import Entities.ItemSupply;
-import java.util.List;
+import Entities.User;
 
 /**
  *
  * @author Sheng Ting
  */
-public interface ItemSupplyViewingServices {
-    public List<String[]> viewItemSupplies();
-    public List<ItemSupply> getAllItemSupply();
+public interface InventoryServices {
+    String receiveStockAndUpdateInventory(String itemCode, int quantityReceived, User performingUser);
+    
 }

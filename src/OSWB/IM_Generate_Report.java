@@ -23,6 +23,7 @@ public class IM_Generate_Report extends javax.swing.JFrame {
      */
     
     private InventoryManager inventoryManager;
+    private Inventory_Manager_Main previousScreen;
     private FileManager fileManager;
     private DefaultTableModel tableModel;
 
@@ -30,9 +31,10 @@ public class IM_Generate_Report extends javax.swing.JFrame {
         "Item Code", "Item Name", "Current Stock", "Stock In", "Stock Out", "Net Change", "Updated Stock"
     };
     
-    public IM_Generate_Report(InventoryManager inventoryManager) {
+    public IM_Generate_Report(InventoryManager inventoryManager, Inventory_Manager_Main previousScreen) {
         this.inventoryManager = inventoryManager;
         this.fileManager = inventoryManager.getFileManager();
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadStockData();
@@ -261,8 +263,14 @@ public class IM_Generate_Report extends javax.swing.JFrame {
     }//GEN-LAST:event_dateSearchBtnActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Inventory_Manager_Main main = new Inventory_Manager_Main(inventoryManager);
-        main.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -276,14 +284,6 @@ public class IM_Generate_Report extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-       try {
-            InventoryManager im = new InventoryManager("","","");
-            new IM_Generate_Report(im).setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace(); // Print the cause
-            JOptionPane.showMessageDialog(null, "Initialization failed: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

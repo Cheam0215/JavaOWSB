@@ -4,6 +4,7 @@
  */
 package Interface;
 
+import Entities.Item;
 import java.util.List;
 
 /**
@@ -12,4 +13,7 @@ import java.util.List;
  */
 public interface ItemViewingServices {
      public List<String[]> viewItems();
+     public List<Item> getAllItems();
+     public Item getItemByCode(String itemCode);
+     
 }

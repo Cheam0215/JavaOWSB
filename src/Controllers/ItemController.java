@@ -11,6 +11,9 @@ import Interface.ItemServices;
 import Utility.FileManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -25,8 +28,8 @@ public class ItemController implements ItemServices{
     }
     
     @Override
-    public List<String[]> viewItems() {
-        List<Item> itemList = fileManager.readFile(
+    public List<Item> getAllItems(){
+         List<Item> itemList = fileManager.readFile(
             fileManager.getItemFilePath(),
             line -> {
                 String[] data = line.split(",");
@@ -48,6 +51,14 @@ public class ItemController implements ItemServices{
                 }
             }
         );
+         
+        return itemList;
+         
+    }
+    
+    @Override
+    public List<String[]> viewItems() {
+        List<Item> itemList = this.getAllItems();
 
         // Filter out null entries (invalid lines)
         List<String[]> result = new ArrayList<>();
@@ -62,6 +73,19 @@ public class ItemController implements ItemServices{
             result.add(row);
         }
         return result;
+    }
+    
+    @Override
+    public Item getItemByCode(String itemCode) {
+        if (itemCode == null || itemCode.trim().isEmpty()) {
+            return null; // Or throw new IllegalArgumentException("Item code cannot be null or empty.");
+        }
+
+        List<Item> allItems = getAllItemsInternal(); // Use a helper to get all items
+        return allItems.stream()
+                .filter(item -> item.getItemCode().equals(itemCode))
+                .findFirst()
+                .orElse(null);
     }
     
     @Override
@@ -296,6 +320,74 @@ public class ItemController implements ItemServices{
         } catch (Exception e) {
             return "Error deleting item: " + e.getMessage();
         }
+    }
+    
+    @Override
+    public boolean updateItemStockLevel(String itemCode, int newStockLevel) { // Return type changed to boolean
+    if (itemCode == null || itemCode.trim().isEmpty()) {
+        System.err.println("Error: Item code cannot be null or empty for stock update.");
+        return false;
+    }
+    if (newStockLevel < 0) {
+        System.err.println("Error: New stock level cannot be negative.");
+        return false;
+    }
+
+    List<Item> allItems = getAllItemsInternal();
+    Optional<Item> itemToUpdateOpt = allItems.stream()
+            .filter(item -> item.getItemCode().equals(itemCode))
+            .findFirst();
+
+    if (itemToUpdateOpt.isPresent()) {
+        Item itemToUpdate = itemToUpdateOpt.get();
+        itemToUpdate.setStockLevel(newStockLevel);
+
+        boolean success = fileManager.updateToFile(
+                itemToUpdate,
+                fileManager.getItemFilePath(),
+                Item::getItemCode,
+                item -> String.format("%s,%s,%d,%.1f",
+                        item.getItemCode(),
+                        item.getItemName(),
+                        item.getStockLevel(),
+                        item.getRetailPrice()).replaceAll("\\.0$", ".0"),
+                this::parseItemLine
+        );
+        if (!success) {
+            System.err.println("Error: Failed to persist item stock update to file for item " + itemCode + ".");
+        }
+        return success;
+    } else {
+        System.err.println("Error: Item with code '" + itemCode + "' not found for stock update.");
+        return false;
+    }
+}
+    
+    private Item parseItemLine(String line) {
+        if (line == null || line.trim().isEmpty()) return null;
+        String[] data = line.split(",");
+        if (data.length < 4) {
+            System.err.println("Skipping malformed item data line for parsing: " + line);
+            return null;
+        }
+        try {
+            return new Item(
+                    data[0], // itemCode
+                    data[1], // itemName
+                    Integer.parseInt(data[2].trim()), // stockLevel
+                    Double.parseDouble(data[3].trim()) // retailPrice
+            );
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing numeric values in item data line: " + line + " | " + e.getMessage());
+            return null;
+        }
+    }
+
+    private List<Item> getAllItemsInternal() {
+        return fileManager.readFile(fileManager.getItemFilePath(), this::parseItemLine)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
     
     public String validateSupplierCode(String supplierCode) {

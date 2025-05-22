@@ -5,16 +5,14 @@
 package Interface;
 
 import Entities.PurchaseOrder;
+import Entities.SalesData;
 import java.util.List;
 
 /**
  *
  * @author Sheng Ting
  */
-public interface PurchaseOrderViewServices {
-    public List<String[]> viewPurchaseOrder();
-    public List<PurchaseOrder> getAllPOs();
-    PurchaseOrder findApprovedPOByItemCode(String itemCode);
-    PurchaseOrder getPOById(String poId);
-    
+public interface FinanceServices {
+    public String generateFinancialReport(List<SalesData> salesList, List<PurchaseOrder> poList);
+    public double calculateProfitLoss(List<SalesData> salesList, List<PurchaseOrder> poList, int month, int year);
 }

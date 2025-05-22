@@ -4,10 +4,17 @@
  */
 package Interface;
 
+import Entities.PurchaseOrder;
+import Utility.Remark;
+import java.util.List;
+
 /**
  *
  * @author Sheng Ting
  */
 public interface FinanceManagerPOServices {
-     public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode);
+    public List<PurchaseOrder> getAllPOs();
+    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode);
+    public void rejectPurchaseOrder(String poId, Remark rejectionReason);
+    public String payPurchaseOrder(String poId);
 }

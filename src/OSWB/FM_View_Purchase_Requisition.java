@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import Entities.PurchaseRequisition;
 import Entities.FinanceManager;
+import Interface.PurchaseRequisitionViewServices;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,12 +19,19 @@ import Entities.FinanceManager;
 public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
     private final FinanceManager financeManager;
     private DefaultTableModel tableModel;
+    private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
+    private final FM_Dashboard previousScreen;
 
     /**
      * Creates new form FM_View_Purchase_Requisition
+     * @param financeManager
+     * @param purchaseRequisitionViewer
+     * @param previousScreen
      */
-    public FM_View_Purchase_Requisition(FinanceManager financeManager) {
+    public FM_View_Purchase_Requisition(FinanceManager financeManager, PurchaseRequisitionViewServices purchaseRequisitionViewer, FM_Dashboard previousScreen) {
         this.financeManager = financeManager;
+        this.purchaseRequisitionViewer = purchaseRequisitionViewer;
+        this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
             new Object[][] {},
             new String[] {
@@ -38,10 +47,11 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
         initComponents();
         prTable.setModel(tableModel);
         populateTable();
+        
     }
     
     private void populateTable() {
-        List<PurchaseRequisition> prList = financeManager.getPurchaseRequisitions();
+        List<PurchaseRequisition> prList = purchaseRequisitionViewer.getAllPRs();
         System.out.println("PRs received: " + prList.size());
 
         tableModel.setRowCount(0);
@@ -141,14 +151,18 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
-        FM_Dashboard prFrame = new FM_Dashboard(financeManager);
-        prFrame.setVisible(true);
-        this.dispose();
+
     }//GEN-LAST:event_BackBtnActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        FM_Dashboard prFrame = new FM_Dashboard(financeManager);
-        prFrame.setVisible(true);
+         if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
@@ -156,36 +170,7 @@ public class FM_View_Purchase_Requisition extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Purchase_Requisition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Purchase_Requisition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Purchase_Requisition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Purchase_Requisition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FinanceManager fm = new FinanceManager("", "", "");
-                new FM_View_Purchase_Requisition(fm).setVisible(true);
-            }
-        });
+      
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

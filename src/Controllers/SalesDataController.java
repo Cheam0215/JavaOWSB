@@ -25,20 +25,7 @@ public class SalesDataController implements SalesDataServices{
     
     @Override
     public List<String[]> viewSalesData() {
-        List<SalesData> salesList = fileManager.readFile(
-            fileManager.getSalesDataFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                return new SalesData(
-                    data[0],                     // salesId
-                    data[1],                     // itemCode
-                    Integer.parseInt(data[2]),   // quantitySold
-                    Double.parseDouble(data[3]), // retailPrice
-                    data[4],                     // date
-                    Double.parseDouble(data[5])  // totalAmount
-                );
-            }
-        );
+        List<SalesData> salesList = this.getSalesData();
 
         // Convert the list of SalesData objects to List<String[]> for the table
         List<String[]> result = new ArrayList<>();
@@ -145,24 +132,7 @@ public class SalesDataController implements SalesDataServices{
             String filePath = fileManager.getSalesDataFilePath();
 
             // Read the original sales data before updating
-            List<SalesData> salesList = fileManager.readFile(
-                filePath,
-                line -> {
-                    String[] parts = line.split(",");
-                    try {
-                        if (parts.length >= 6) {
-                            return new SalesData(
-                                parts[0], parts[1], Integer.parseInt(parts[2]),
-                                Double.parseDouble(parts[3]), parts[4], Double.parseDouble(parts[5])
-                            );
-                        }
-                        return null;
-                    } catch (Exception e) {
-                        System.out.println("Error parsing sales data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
-            );
+            List<SalesData> salesList = this.getSalesData();
 
             SalesData originalSales = salesList.stream()
                 .filter(sales -> sales != null && sales.getSalesId().equals(updatedSales.getSalesId()))
@@ -271,27 +241,10 @@ public class SalesDataController implements SalesDataServices{
     @Override
     public boolean deleteSalesData(String salesId) {
         try {
-            String filePath = fileManager.getSalesDataFilePath();
 
             // First, retrieve the SalesData to be deleted to get quantitySold and itemCode
-            List<SalesData> salesList = fileManager.readFile(
-                filePath,
-                line -> {
-                    String[] parts = line.split(",");
-                    try {
-                        if (parts.length >= 6) {
-                            return new SalesData(
-                                parts[0], parts[1], Integer.parseInt(parts[2]),
-                                Double.parseDouble(parts[3]), parts[4], Double.parseDouble(parts[5])
-                            );
-                        }
-                        return null;
-                    } catch (Exception e) {
-                        System.out.println("Error parsing sales data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
-            );
+            List<SalesData> salesList = this.getSalesData();
+            
 
             SalesData deletedSales = salesList.stream()
                 .filter(sales -> sales != null && sales.getSalesId().equals(salesId))
@@ -306,7 +259,7 @@ public class SalesDataController implements SalesDataServices{
             // Delete sales data using FileManager (remove the extra formatter argument)
             boolean deleted = fileManager.deleteFromFile(
                 salesId,
-                filePath,
+                fileManager.getSalesDataFilePath(),
                 sales -> sales.getSalesId(), // Key function
                 line -> {
                     String[] parts = line.split(",");
@@ -387,5 +340,35 @@ public class SalesDataController implements SalesDataServices{
             System.out.println("Error deleting sales data: " + e.getMessage());
             return false;
         }
+    }
+    
+    @Override
+    public List<SalesData> getSalesData() {
+        List<SalesData> salesList = fileManager.readFile(
+            fileManager.getSalesDataFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 6) {
+                    System.err.println("Invalid sales data: " + line);
+                    return null;
+                }
+                try {
+                    SalesData sale = new SalesData(
+                        data[0], data[1],
+                        Integer.parseInt(data[2]),
+                        Double.parseDouble(data[3]),
+                        data[4],
+                        Double.parseDouble(data[5])
+                    );
+                    System.out.println("Parsed Sales: " + sale.getSalesId());
+                    return sale;
+                } catch (Exception e) {
+                    System.err.println("Error parsing sales data: " + line + " | Error: " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+        System.out.println("Total Sales read: " + salesList.size());
+        return salesList;
     }
 }

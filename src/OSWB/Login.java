@@ -4,6 +4,8 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
+import Controllers.InventoryController;
 import Controllers.ItemController;
 import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
@@ -34,6 +36,8 @@ public class Login extends javax.swing.JFrame {
     private PurchaseRequisitionController  purchaseRequisitionController;
     private SalesDataController salesDataController;
     private SupplierController supplierController;
+    private InventoryController inventoryController;
+    private FinanceController financeController;
 
     /**
      * Creates new form Login
@@ -42,14 +46,17 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
     
-    public Login(ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController) {
+    public Login(ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController, InventoryController inventoryController, FinanceController financeController) {
         this.itemController = itemController;
         this.itemSupplyController = itemSupplyController;
         this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.salesDataController = salesDataController;
         this.supplierController = supplierController;
+        this.inventoryController = inventoryController;
+        this.financeController = financeController;
         initComponents();
+        
     }
     
 
@@ -268,7 +275,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
                         FinanceManager loggedInFM = new FinanceManager(userID, username, password);
-                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM);
+                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController);
                         this.dispose();
                         FMDashboard.setVisible(true);
                         loggedInFM.displayMenu();
@@ -276,7 +283,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.INVENTORY_MANAGER -> { 
                         InventoryManager loggedInIM = new InventoryManager(userID, username, password);
-                        Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM);
+                        Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM, inventoryController, purchaseOrderController);
                         this.dispose();
                         IM_MAIN.setVisible(true);
                         

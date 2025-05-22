@@ -4,8 +4,10 @@
  */
 package OSWB;
 
+import Controllers.InventoryController;
 import Entities.InventoryManager;
 import Entities.PurchaseOrder;
+import Interface.InventoryManagerPOServices;
 import Utility.FileManager;
 import Utility.Remark;
 import Utility.Status;
@@ -28,6 +30,9 @@ public class IM_Update_Stock extends javax.swing.JFrame {
     private DefaultTableModel model;
     private InventoryManager inventoryManager;
     private FileManager fileManager;
+    private InventoryController inventoryController;
+    private InventoryManagerPOServices poServices;
+    private Inventory_Manager_Main previousScreen;
         
 
     /**
@@ -40,10 +45,17 @@ public class IM_Update_Stock extends javax.swing.JFrame {
 
     /**
      * Creates new form IM_Update_Stock_Level
+     * @param inventoryManager
+     * @param inventoryController
+     * @param poServices
+     * @param previousScreen
      */
     
-    public IM_Update_Stock(InventoryManager inventoryManager) {
+    public IM_Update_Stock(InventoryManager inventoryManager, InventoryController inventoryController, InventoryManagerPOServices poServices, Inventory_Manager_Main previousScreen) {
         this.inventoryManager = inventoryManager;
+        this.inventoryController = inventoryController;
+        this.poServices = poServices;
+        this.previousScreen = previousScreen;
         this.fileManager = inventoryManager.getFileManager(); // Initialize fileManager
         initComponents();
         setupTable();
@@ -233,7 +245,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
 
         try {
             // Update stock using InventoryManager
-            inventoryManager.updateStock(itemCode, quantity);
+            inventoryController.receiveStockAndUpdateInventory(itemCode, quantity, inventoryManager);
             javax.swing.JOptionPane.showMessageDialog(this, "Stock updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             // Refresh table to show only remaining APPROVED POs
             loadApprovedPOs();
@@ -264,7 +276,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             try {
                 Remark rejectionReason = (Remark) reasonComboBox.getSelectedItem();
-                inventoryManager.rejectPurchaseOrder(poId, rejectionReason); 
+                poServices.rejectPurchaseOrder(poId, rejectionReason); 
                 JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.",
                     "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadApprovedPOs();
@@ -276,8 +288,14 @@ public class IM_Update_Stock extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Inventory_Manager_Main main = new Inventory_Manager_Main(inventoryManager);
-        main.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

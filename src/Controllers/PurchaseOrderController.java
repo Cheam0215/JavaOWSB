@@ -4,21 +4,27 @@
  */
 package Controllers;
 
+import Entities.ItemSupply;
 import Entities.PurchaseOrder;
 import Entities.PurchaseRequisition;
 import Entities.User;
+import Interface.FinanceManagerPOServices;
+import Interface.InventoryManagerPOServices;
 import Interface.PurchaseOrderServices;
 import Utility.FileManager;
 import Utility.Remark;
 import Utility.Status;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author Sheng Ting
  */
-public class PurchaseOrderController implements PurchaseOrderServices{
+public class PurchaseOrderController implements PurchaseOrderServices, InventoryManagerPOServices, FinanceManagerPOServices{
     
     private final FileManager fileManager;
 
@@ -26,16 +32,9 @@ public class PurchaseOrderController implements PurchaseOrderServices{
         this.fileManager = fileManager;
     }
     
+    @Override
     public List<String[]> viewPurchaseOrder() {
-        List<PurchaseOrder> poList = fileManager.readFile(
-            fileManager.getPoFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                return new PurchaseOrder(data[0], data[1], data[2], data[3],
-                    Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
-                    Double.parseDouble(data[9]), Remark.valueOf(data[10]));
-            }
-        );
+        List<PurchaseOrder> poList = this.getAllPOs();
 
         // Convert the list of PurchaseOrder objects to List<String[]> for the table
         List<String[]> result = new ArrayList<>();
@@ -58,6 +57,7 @@ public class PurchaseOrderController implements PurchaseOrderServices{
         return result;
     }
     
+    @Override
     public String generatePurchaseOrder(String prId, String supplierCode, User performingUser) {
         try {
              //Validate session userID
@@ -126,23 +126,7 @@ public class PurchaseOrderController implements PurchaseOrderServices{
             }
 
             // Step 3: Generate next poId by scanning existing PurchaseOrders
-            List<PurchaseOrder> poList = fileManager.readFile(
-                fileManager.getPoFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    try {
-                        return new PurchaseOrder(
-                            data[0], data[1], data[2], data[3],
-                            Integer.parseInt(data[4]), data[5], data[6], data[7],
-                            Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                            Remark.valueOf(data[10])
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error parsing PO data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
-            );
+            List<PurchaseOrder> poList = this.getAllPOs();
 
             int maxPoNumber = 0;
             for (PurchaseOrder po : poList) {
@@ -197,14 +181,9 @@ public class PurchaseOrderController implements PurchaseOrderServices{
         }
     }
     
+    @Override
     public boolean editPurchaseOrder(String poId, int newQuantity , double new_payment_amount) {
         try {
-            // Validate session
-//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-//                System.out.println("Error: No user logged in.");
-//                return false;
-//            }
-
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
                 System.out.println("Error: Invalid Purchase Order ID.");
@@ -218,23 +197,7 @@ public class PurchaseOrderController implements PurchaseOrderServices{
             }
 
             // Read all PurchaseOrders
-            List<PurchaseOrder> poList = fileManager.readFile(
-                fileManager.getPoFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    try {
-                        return new PurchaseOrder(
-                            data[0], data[1], data[2], data[3],
-                            Integer.parseInt(data[4]), data[5], data[6], data[7],
-                            Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                            Remark.valueOf(data[10])
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error parsing PO data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
-            );
+            List<PurchaseOrder> poList = this.getAllPOs();
 
             // Find the target PurchaseOrder
             PurchaseOrder targetPo = null;
@@ -297,14 +260,9 @@ public class PurchaseOrderController implements PurchaseOrderServices{
         }
     }
     
+    @Override
     public boolean deletePurchaseOrder(String poId) {
         try {
-            // Validate session
-//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-//                System.out.println("Error: No user logged in.");
-//                return false;
-//            }
-
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
                 System.out.println("Error: Invalid Purchase Order ID.");
@@ -312,23 +270,7 @@ public class PurchaseOrderController implements PurchaseOrderServices{
             }
 
             // Read all PurchaseOrders
-            List<PurchaseOrder> poList = fileManager.readFile(
-                fileManager.getPoFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    try {
-                        return new PurchaseOrder(
-                            data[0], data[1], data[2], data[3],
-                            Integer.parseInt(data[4]), data[5], data[6], data[7],
-                            Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                            Remark.valueOf(data[10])
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error parsing PO data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
-            );
+            List<PurchaseOrder> poList = this.getAllPOs();
 
             // Find the target PurchaseOrder
             PurchaseOrder targetPo = null;
@@ -359,24 +301,8 @@ public class PurchaseOrderController implements PurchaseOrderServices{
                 targetPo,
                 fileManager.getPoFilePath(),
                 po -> po.getPoId(),
-                po -> String.join(",", po.getPoId(), po.getPrId(), po.getRaisedBy(),
-                    po.getItemCode(), String.valueOf(po.getQuantity()), po.getSupplierCode(),
-                    po.getRequiredDate(), po.getRequestedDate(), po.getStatus().toString(),
-                    String.valueOf(po.getPaymentAmount()), po.getRemark().toString()),
-                line -> {
-                    String[] data = line.split(",");
-                    try {
-                        return new PurchaseOrder(
-                            data[0], data[1], data[2], data[3],
-                            Integer.parseInt(data[4]), data[5], data[6], data[7],
-                            Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                            Remark.valueOf(data[10])
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error parsing PO data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
+                PurchaseOrder::toString,
+                PurchaseOrder::fromDataString
             );
 
             if (!updated) {
@@ -390,5 +316,217 @@ public class PurchaseOrderController implements PurchaseOrderServices{
             System.out.println("Error deleting Purchase Order: " + e.getMessage());
             return false;
         }
+    }
+    
+    @Override
+    public PurchaseOrder findApprovedPOByItemCode(String itemCode) {
+        if (itemCode == null || itemCode.trim().isEmpty()) {
+            // Or throw new IllegalArgumentException("Item code cannot be null or empty.");
+            return null;
+        }
+
+        List<PurchaseOrder> allPOs = getAllPOs(); // Helper method to read all POs
+        
+        return allPOs.stream()
+                .filter(po -> po.getItemCode().equals(itemCode) && po.getStatus() == Status.APPROVED)
+                .findFirst() // Get the first one that matches (assuming one item per approved PO for simplicity here)
+                .orElse(null);
+    }
+
+    @Override
+    public boolean updatePurchaseOrderStatus(String poId, Status newStatus) {
+        if (poId == null || poId.trim().isEmpty() || newStatus == null) {
+            System.err.println("Error: PO ID or new status is null/empty in updatePurchaseOrderStatus.");
+            return false;
+        }
+
+        // Read all POs, find the one to update, modify it, then write all back
+        List<PurchaseOrder> allPOs = getAllPOs();
+        Optional<PurchaseOrder> poToUpdateOpt = allPOs.stream()
+                .filter(po -> po.getPoId().equals(poId))
+                .findFirst();
+
+        if (poToUpdateOpt.isPresent()) {
+            PurchaseOrder poToUpdate = poToUpdateOpt.get();
+            poToUpdate.setStatus(newStatus); // Update the status in the object
+
+            // Now, use FileManager.updateToFile (or a more direct rewrite if that's simpler for your FM)
+            // updateToFile typically expects the full updated object.
+            // For simplicity and consistency with how updateToFile usually works (replacing an existing line
+            // or rewriting the whole file after modification), we'll use it.
+            // Ensure PurchaseOrder has toDataString() and a static fromDataString()
+            return fileManager.updateToFile(
+                    poToUpdate,
+                    fileManager.getPoFilePath(),
+                    PurchaseOrder::getPoId,       // idExtractor
+                    PurchaseOrder::toString,  // toStringConverter (e.g. po -> po.toCSV())
+                    PurchaseOrder::fromDataString // parser (e.g. line -> PurchaseOrder.fromCSV(line))
+            );
+        } else {
+            System.err.println("Purchase Order with ID '" + poId + "' not found for status update.");
+            return false; // PO not found
+        }
+    }
+
+    @Override
+    public PurchaseOrder getPOById(String poId) {
+        if (poId == null || poId.trim().isEmpty()) {
+            return null;
+        }
+        List<PurchaseOrder> allPOs = getAllPOs();
+        return allPOs.stream()
+                .filter(po -> po.getPoId().equals(poId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<PurchaseOrder> getAllPOs() {
+        // Ensure PurchaseOrder.fromDataString method is robust (handles nulls, exceptions)
+        return fileManager.readFile(fileManager.getPoFilePath(), PurchaseOrder::fromDataString)
+                .stream()
+                .filter(Objects::nonNull) // Filter out any nulls from parsing errors
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public void rejectPurchaseOrder(String poId, Remark rejectionReason) {
+        List<PurchaseOrder> poList = this.getAllPOs();
+
+        boolean poFound = false;
+        PurchaseOrder matchedPO = null;
+
+        for (PurchaseOrder po : poList) {
+             if (po.getPoId().equals(poId) ) {
+                poFound = true;
+                matchedPO = po;
+                break;
+            }
+        }
+
+        if (!poFound) {
+            throw new IllegalArgumentException("No valid APPROVED PO found for PO ID: " + poId);
+        }
+
+        try {
+            matchedPO.setStatus(Status.REJECTED); // Use Status enum
+            matchedPO.setRemark(rejectionReason);
+
+            boolean poUpdated = fileManager.updateToFile(
+                matchedPO,
+                fileManager.getPoFilePath(),
+                PurchaseOrder::getPoId,
+                PurchaseOrder::toString,
+                PurchaseOrder::fromDataString
+            );
+
+            if (!poUpdated) {
+                throw new RuntimeException("Failed to update PO file with rejection");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to reject PO: " + e.getMessage(), e);
+        }
+    
+    }
+    
+    @Override
+    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode) throws IllegalArgumentException {
+        if (poId == null || poId.trim().isEmpty()) {
+            throw new IllegalArgumentException("PO ID cannot be empty");
+        }
+        if (newQuantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
+
+        List<PurchaseOrder> poList = this.getAllPOs();
+
+        for (PurchaseOrder po : poList) {
+            if (po != null && po.getPoId().equals(poId)) {
+                if (!po.getStatus().equals(Status.PENDING)) {
+                    return "Purchase Order " + poId + " is already " + po.getStatus();
+                }
+
+                if (newSupplierCode != null && !newSupplierCode.isEmpty() && !newSupplierCode.equals(po.getSupplierCode())) {
+                    List<ItemSupply> itemSupplies = fileManager.readFile(
+                        fileManager.getItemSupplyFilePath(),
+                        line -> {
+                            String[] data = line.split(",");
+                            if (data.length < 4) return null;
+                            try {
+                                return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
+                            } catch (Exception e) {
+                                return null;
+                            }
+                        }
+                    );
+                    boolean validSupplier = false;
+                    for (ItemSupply supply : itemSupplies) {
+                        if (supply != null && 
+                            supply.getItemCode().equals(po.getItemCode()) && 
+                            supply.getSupplierCode().equals(newSupplierCode)) {
+                            validSupplier = true;
+                            break;
+                        }
+                    }
+                    if (!validSupplier) {
+                        return "Supplier " + newSupplierCode + " does not supply item " + po.getItemCode();
+                    }
+                    po.setSupplierCode(newSupplierCode);
+                }
+
+                if (newQuantity > 0) {
+                    po.setQuantity(newQuantity);
+                }
+
+                po.setStatus(Status.APPROVED);
+                boolean success = fileManager.updateToFile(
+                    po, fileManager.getPoFilePath(),
+                    PurchaseOrder::getPoId, PurchaseOrder::toString,
+                    line -> {
+                        String[] data = line.split(",");
+                        if (data.length < 11) return null;
+                        try {
+                            return new PurchaseOrder(
+                                data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],
+                                Status.valueOf(data[8]), Double.parseDouble(data[9]),
+                                Remark.valueOf(data[10])
+                            );
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    }
+                );
+                return success ? "Purchase Order " + poId + " approved successfully" : "Failed to update Purchase Order " + poId;
+            }
+        }
+        return "Purchase Order " + poId + " not found";
+    }
+    
+    @Override
+    public String payPurchaseOrder(String poId) throws IllegalArgumentException {
+        if (poId == null || poId.trim().isEmpty()) {
+            throw new IllegalArgumentException("PO ID cannot be empty");
+        }
+
+        List<PurchaseOrder> poList = this.getAllPOs();
+
+        for (PurchaseOrder po : poList) {
+            if (po != null && po.getPoId().equals(poId)) {
+                if (!po.getStatus().equals(Status.RECEIVED)) {
+                    return "Purchase Order " + poId + " is already " + po.getStatus();
+                }
+
+                po.setStatus(Status.PAID);
+                boolean success = fileManager.updateToFile(
+                    po, fileManager.getPoFilePath(),
+                    PurchaseOrder::getPoId, 
+                    PurchaseOrder::toString,
+                    PurchaseOrder::fromDataString
+                );
+                return success ? "Payment for Purchase Order: " + poId + " was successful." : "Failed to process payment for Purchase Order " + poId;
+            }
+        }
+        return "Purchase Order " + poId + " not found";
     }
 }

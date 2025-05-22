@@ -4,6 +4,7 @@
  */
 package Interface;
 
+import Entities.PurchaseRequisition;
 import java.util.List;
 
 /**
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface PurchaseRequisitionViewServices {
     public List<String[]> viewPurchaseRequisition();
+    public List<PurchaseRequisition> getAllPRs();
+    
 }

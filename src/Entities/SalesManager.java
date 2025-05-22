@@ -17,5 +17,4 @@ public class SalesManager extends User {
         super(userId, username, password, UserRoles.SALES_MANAGER);
     
     }
-    
 }

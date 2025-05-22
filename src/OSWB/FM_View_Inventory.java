@@ -6,6 +6,7 @@ package OSWB;
 
 import Entities.FinanceManager;
 import Entities.FinanceManager.InventoryItem;
+import Interface.InventoryVerificationServices;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -23,12 +24,17 @@ public class FM_View_Inventory extends javax.swing.JFrame {
     private final String[] columnNames = {
         "Item Code", "Item Name", "Stock Level", "Supplier Code", "Unit Price", "Retail Price"
     };
+    private final InventoryVerificationServices IVService;
+    private final FM_Dashboard previousScreen;
 
-    public FM_View_Inventory(FinanceManager financeManager) {
+    public FM_View_Inventory(FinanceManager financeManager, InventoryVerificationServices IVService, FM_Dashboard previousScreen) {
         this.financeManager = financeManager;
+        this.IVService = IVService;
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         viewTable();
+        
     }
     
     
@@ -46,7 +52,7 @@ public class FM_View_Inventory extends javax.swing.JFrame {
     private void viewTable(){
      model.setRowCount(0);
         
-        List<InventoryItem> inventoryItems = financeManager.verifyInventoryUpdate();
+        List<InventoryItem> inventoryItems = IVService.verifyInventoryUpdate();
         
         int rowCount = 0;
         for (InventoryItem item : inventoryItems) {
@@ -178,7 +184,7 @@ public class FM_View_Inventory extends javax.swing.JFrame {
     private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
         String searchText = txtSearch.getText().trim();
         
-        List<InventoryItem> inventoryItems = financeManager.verifyInventoryUpdate();
+        List<InventoryItem> inventoryItems = IVService.verifyInventoryUpdate();
         
         model.setRowCount(0);
         
@@ -223,8 +229,14 @@ public class FM_View_Inventory extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
-        FM_Dashboard dashboardFrame = new FM_Dashboard(financeManager);
-        dashboardFrame.setVisible(true);
+         if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_BackBtnActionPerformed
 
@@ -232,39 +244,7 @@ public class FM_View_Inventory extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Inventory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Inventory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Inventory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FM_View_Inventory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FinanceManager fm = new FinanceManager("", "", "");
-            new FM_View_Inventory(fm).setVisible(true);
-            }
-        });
+     
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

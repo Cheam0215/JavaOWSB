@@ -4,26 +4,43 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
 import Entities.FinanceManager;
 
 import Entities.PurchaseOrder;
 import Entities.SalesData;
+import Interface.PurchaseOrderViewServices;
+import Interface.SalesDataViewingServices;
 import Utility.Status;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Maxcm
  */
 public class FM_Generate_Financial_Report extends javax.swing.JFrame {
     private final FinanceManager financeManager;
+    private final PurchaseOrderViewServices purchaseOrderViewer;
+    private SalesDataViewingServices salesDataViewer;
+    private final FinanceController financeController;
+    private final FM_Dashboard previousScreen;
     private DefaultTableModel salesTableModel;
     private DefaultTableModel poTableModel;
     /**
      * Creates new form FM_Generate_Financial_Report
+     * @param financeManager
+     * @param purchaseOrderViewer
+     * @param salesDataViewer
+     * @param financeController
+     * @param previousScreen
      */
-    public FM_Generate_Financial_Report(FinanceManager financeManager) {
+    public FM_Generate_Financial_Report(FinanceManager financeManager, PurchaseOrderViewServices purchaseOrderViewer, SalesDataViewingServices salesDataViewer, FinanceController financeController, FM_Dashboard previousScreen) {
         this.financeManager = financeManager;
+        this.purchaseOrderViewer = purchaseOrderViewer;
+        this.salesDataViewer = salesDataViewer;
+        this.financeController = financeController;
+        this.previousScreen = previousScreen;
         // Initialize table models before initComponents
         setupTables();
         initComponents();
@@ -66,8 +83,8 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         profitTxt.setText("");
         lossTxt.setText("");
 
-        List<SalesData> salesList = financeManager.getSalesData();
-        List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
+        List<SalesData> salesList = salesDataViewer.getSalesData();
+        List<PurchaseOrder> poList = purchaseOrderViewer.getAllPOs();
 
         double totalRevenue = 0;
         int salesRowCount = 0;
@@ -110,7 +127,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         totalRevenueTxt.setText(String.format("%.2f", totalRevenue));
         totalExpensesTxt.setText(String.format("%.2f", totalExpenses));
 
-        double profitLoss = financeManager.calculateProfitLoss(selectedMonth, year);
+        double profitLoss = financeController.calculateProfitLoss(salesDataViewer.getSalesData(), purchaseOrderViewer.getAllPOs(), selectedMonth, year);
         if (profitLoss >= 0) {
             profitTxt.setText(String.format("%.2f", profitLoss));
             lossTxt.setText("0.00");
@@ -360,8 +377,8 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         profitTxt.setText("");
         lossTxt.setText("");
 
-        List<SalesData> salesList = financeManager.getSalesData();
-        List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
+        List<SalesData> salesList = salesDataViewer.getSalesData();
+        List<PurchaseOrder> poList = purchaseOrderViewer.getAllPOs();
 
         double totalRevenue = 0;
         int salesRowCount = 0;
@@ -404,7 +421,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
         totalRevenueTxt.setText(String.format("%.2f", totalRevenue));
         totalExpensesTxt.setText(String.format("%.2f", totalExpenses));
 
-        double profitLoss = financeManager.calculateProfitLoss(selectedMonth, year);
+        double profitLoss = financeController.calculateProfitLoss(salesDataViewer.getSalesData(), purchaseOrderViewer.getAllPOs(), selectedMonth, year);
         if (profitLoss >= 0) {
             profitTxt.setText(String.format("%.2f", profitLoss));
             lossTxt.setText("0.00");
@@ -418,8 +435,14 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
     }//GEN-LAST:event_genFinReportBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        FM_Dashboard dashboardFrame = new FM_Dashboard(financeManager);
-        dashboardFrame.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
@@ -427,36 +450,7 @@ public class FM_Generate_Financial_Report extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FM_Generate_Financial_Report.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FM_Generate_Financial_Report.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FM_Generate_Financial_Report.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FM_Generate_Financial_Report.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FinanceManager fm = new FinanceManager("", "", "");
-                new FM_Generate_Financial_Report(fm).setVisible(true);
-            }
-        });
+      
     }
     
     private boolean isInMonth(String date, int month, int year) {

@@ -4,6 +4,7 @@
  */
 package Interface;
 
+import Entities.Supplier;
 import java.util.List;
 
 /**
@@ -12,4 +13,5 @@ import java.util.List;
  */
 public interface SupplierViewingServices {
     public List<String[]> viewSuppliers();
+    public List<Supplier> getAllSupplier();
 }

@@ -23,8 +23,8 @@ public class SupplierController implements SupplierServices{
     }
     
     @Override
-    public List<String[]> viewSuppliers() {
-        List<Supplier> supplierList = fileManager.readFile(
+    public List<Supplier> getAllSupplier() {
+         List<Supplier> supplierList = fileManager.readFile(
             fileManager.getSupplierFilePath(),
             line -> {
                 String[] data = line.split(",");
@@ -38,6 +38,12 @@ public class SupplierController implements SupplierServices{
                 return supplier;
             }
         );
+         return supplierList;
+    }
+    
+    @Override
+    public List<String[]> viewSuppliers() {
+        List<Supplier> supplierList = this.getAllSupplier();
 
         List<String[]> result = new ArrayList<>();
         for (Supplier supplier : supplierList) {

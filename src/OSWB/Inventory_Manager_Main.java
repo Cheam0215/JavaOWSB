@@ -4,20 +4,29 @@
  */
 package OSWB;
 
+import Controllers.InventoryController;
 import Entities.InventoryManager;
+import Interface.InventoryManagerPOServices;
 import javax.swing.JOptionPane;
 
 /**
  *
  */
 public class Inventory_Manager_Main extends javax.swing.JFrame {
-    private InventoryManager loggedinIM;
+    private final InventoryManager loggedinIM;
+    private final InventoryController inventoryController;
+    private InventoryManagerPOServices poServices;
 
     /**
      * Creates new form Inventory_Manager_Main
+     * @param loggedInIM
+     * @param inventoryController
+     * @param poServices
      */
-    public Inventory_Manager_Main(InventoryManager loggedInIM) {
+    public Inventory_Manager_Main(InventoryManager loggedInIM, InventoryController inventoryController, InventoryManagerPOServices poServices) {
         this.loggedinIM = loggedInIM;
+        this.inventoryController = inventoryController;
+        this.poServices = poServices;
         initComponents();
         jLabel1.setText(loggedInIM.getUsername() + " Inventory Manager Dashboard");
     }
@@ -171,19 +180,19 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        IM_Generate_Report report = new IM_Generate_Report(loggedinIM);
+        IM_Generate_Report report = new IM_Generate_Report(loggedinIM, this);
         report.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        IM_VIEW_ITEM_LIST viewPage = new IM_VIEW_ITEM_LIST(loggedinIM);
+        IM_VIEW_ITEM_LIST viewPage = new IM_VIEW_ITEM_LIST(loggedinIM, this);
         viewPage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        IM_Update_Stock update = new IM_Update_Stock(loggedinIM);
+        IM_Update_Stock update = new IM_Update_Stock(loggedinIM, inventoryController, poServices, this);
         update.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -202,27 +211,6 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(Inventory_Manager_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                InventoryManager im = new InventoryManager("", "", "");
-                new Inventory_Manager_Main(im).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

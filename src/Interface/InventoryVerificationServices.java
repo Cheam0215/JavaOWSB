@@ -4,14 +4,13 @@
  */
 package Interface;
 
-import Entities.ItemSupply;
+import Entities.FinanceManager;
 import java.util.List;
 
 /**
  *
  * @author Sheng Ting
  */
-public interface ItemSupplyViewingServices {
-    public List<String[]> viewItemSupplies();
-    public List<ItemSupply> getAllItemSupply();
+public interface InventoryVerificationServices {
+     public List<FinanceManager.InventoryItem> verifyInventoryUpdate();
 }

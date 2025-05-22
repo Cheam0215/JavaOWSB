@@ -59,8 +59,8 @@ public class ItemSupplyController implements ItemSupplyServices{
     }
     
     @Override
-    public List<String[]> viewItemSupplies() {
-        List<ItemSupply> itemSupplyList = fileManager.readFile(
+    public List<ItemSupply> getAllItemSupply(){
+         List<ItemSupply> itemSupplyList = fileManager.readFile(
             fileManager.getItemSupplyFilePath(),
             line -> {
                 String[] data = line.split(",");
@@ -81,6 +81,13 @@ public class ItemSupplyController implements ItemSupplyServices{
                 }
             }
         );
+         
+         return itemSupplyList;
+    }
+    
+    @Override
+    public List<String[]> viewItemSupplies() {
+        List<ItemSupply> itemSupplyList = this.getAllItemSupply();
 
         // Convert the list of ItemSupply objects to List<String[]> for the table
         List<String[]> result = new ArrayList<>();

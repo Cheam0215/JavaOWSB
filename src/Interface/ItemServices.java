@@ -14,4 +14,5 @@ public interface ItemServices extends ItemViewingServices{
     public String addItem(Item item, String supplierCode, double unitPrice);
     public String updateItem(Item updatedItem, String supplierCode, double unitPrice);
     public String deleteItem(String itemCode);
+    public boolean updateItemStockLevel(String itemCode, int newStockLevel);
 }
