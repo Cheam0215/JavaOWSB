@@ -5,30 +5,38 @@
 package OSWB;
 
 import Controllers.InventoryController;
+import Controllers.ItemController;
+import Controllers.SalesDataController;
 import Entities.InventoryManager;
 import Interface.InventoryManagerPOServices;
-import javax.swing.JOptionPane;
-
 /**
  *
  */
 public class Inventory_Manager_Main extends javax.swing.JFrame {
-    private final InventoryManager loggedinIM;
+    private final InventoryManager inventoryManager;
     private final InventoryController inventoryController;
-    private InventoryManagerPOServices poServices;
+    private final SalesDataController salesDataController;
+    private final InventoryManagerPOServices poServices;
+    private final ItemController itemController;
 
     /**
      * Creates new form Inventory_Manager_Main
-     * @param loggedInIM
+     * @param inventoryManager
      * @param inventoryController
+     * @param itemController
+     * @param salesDataController
      * @param poServices
      */
-    public Inventory_Manager_Main(InventoryManager loggedInIM, InventoryController inventoryController, InventoryManagerPOServices poServices) {
-        this.loggedinIM = loggedInIM;
+    public Inventory_Manager_Main(InventoryManager inventoryManager, InventoryController inventoryController,  ItemController itemController, SalesDataController salesDataController, InventoryManagerPOServices poServices) {
+        this.inventoryManager = inventoryManager;
         this.inventoryController = inventoryController;
+        this.salesDataController = salesDataController;
         this.poServices = poServices;
+        this.itemController = itemController;
         initComponents();
-        jLabel1.setText(loggedInIM.getUsername() + " Inventory Manager Dashboard");
+        jLabel1.setText(inventoryManager.getUsername() + " Inventory Manager Dashboard");
+        
+        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -180,19 +188,19 @@ public class Inventory_Manager_Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        IM_Generate_Report report = new IM_Generate_Report(loggedinIM, this);
+        IM_Generate_Report report = new IM_Generate_Report(inventoryManager ,inventoryController, poServices, itemController, salesDataController, this);
         report.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        IM_VIEW_ITEM_LIST viewPage = new IM_VIEW_ITEM_LIST(loggedinIM, this);
+        IM_VIEW_ITEM_LIST viewPage = new IM_VIEW_ITEM_LIST(inventoryManager, itemController, this);
         viewPage.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        IM_Update_Stock update = new IM_Update_Stock(loggedinIM, inventoryController, poServices, this);
+        IM_Update_Stock update = new IM_Update_Stock(inventoryManager, inventoryController, poServices, this);
         update.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed

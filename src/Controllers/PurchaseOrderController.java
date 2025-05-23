@@ -60,11 +60,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     @Override
     public String generatePurchaseOrder(String prId, String supplierCode, User performingUser) {
         try {
-             //Validate session userID
-//            if (session.getUserID() == null || session.getUserID().isEmpty()) {
-//                return "Error: No user logged in. Please log in to generate a Purchase Order.";
-//            }
-
+            
             // Step 1: Find the PurchaseRequisition by prId
             List<PurchaseRequisition> prList = fileManager.readFile(
                 fileManager.getPrFilePath(),
@@ -227,24 +223,8 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 targetPo,
                 fileManager.getPoFilePath(),
                 po -> po.getPoId(),
-                po -> String.join(",", po.getPoId(), po.getPrId(), po.getRaisedBy(),
-                    po.getItemCode(), String.valueOf(po.getQuantity()), po.getSupplierCode(),
-                    po.getRequiredDate(), po.getRequestedDate(), po.getStatus().toString(),
-                    String.valueOf(po.getPaymentAmount()), po.getRemark().toString()),
-                line -> {
-                    String[] data = line.split(",");
-                    try {
-                        return new PurchaseOrder(
-                            data[0], data[1], data[2], data[3],
-                            Integer.parseInt(data[4]), data[5], data[6], data[7],
-                            Status.valueOf(data[8]), Double.parseDouble(data[9]),
-                            Remark.valueOf(data[10])
-                        );
-                    } catch (Exception e) {
-                        System.out.println("Error parsing PO data: " + line + " | " + e.getMessage());
-                        return null;
-                    }
-                }
+                PurchaseOrder::toString,
+                PurchaseOrder::fromDataString
             );
 
             if (!updated) {
@@ -340,7 +320,6 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
             return false;
         }
 
-        // Read all POs, find the one to update, modify it, then write all back
         List<PurchaseOrder> allPOs = getAllPOs();
         Optional<PurchaseOrder> poToUpdateOpt = allPOs.stream()
                 .filter(po -> po.getPoId().equals(poId))
@@ -350,11 +329,6 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
             PurchaseOrder poToUpdate = poToUpdateOpt.get();
             poToUpdate.setStatus(newStatus); // Update the status in the object
 
-            // Now, use FileManager.updateToFile (or a more direct rewrite if that's simpler for your FM)
-            // updateToFile typically expects the full updated object.
-            // For simplicity and consistency with how updateToFile usually works (replacing an existing line
-            // or rewriting the whole file after modification), we'll use it.
-            // Ensure PurchaseOrder has toDataString() and a static fromDataString()
             return fileManager.updateToFile(
                     poToUpdate,
                     fileManager.getPoFilePath(),

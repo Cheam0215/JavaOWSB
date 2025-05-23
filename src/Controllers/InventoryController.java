@@ -8,16 +8,27 @@ import Entities.FinanceManager;
 import Entities.Item;
 import Entities.ItemSupply;
 import Entities.PurchaseOrder;
+import Entities.SalesData;
+import Entities.StockReportData;
 import Entities.User;
 import Interface.InventoryServices;
 import Interface.InventoryVerificationServices;
 import Interface.ItemServices;
 import Interface.ItemSupplyServices;
 import Interface.PurchaseOrderServices;
+import Utility.Remark;
 import Utility.Status;
 import Utility.UserRoles;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -138,7 +149,137 @@ public class InventoryController implements InventoryServices, InventoryVerifica
         System.out.println("Verified inventory items: " + inventoryItems.size());
         return inventoryItems;
     }
+    
+    @Override
+    public StockReportData displayStockReport(List<PurchaseOrder> poList, List<SalesData> salesList, List<Item> itemList, String startDate, String endDate) {
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
+        Map<String, Integer> stockInQty = new HashMap<>();
+        Map<String, Double> stockInValue = new HashMap<>();
+        List<PurchaseOrder> stockInPOs = new ArrayList<>();
+        try {
+            LocalDate start = LocalDate.parse(startDate, dtf);
+            LocalDate end = LocalDate.parse(endDate, dtf);
+            for (PurchaseOrder po : poList) {
+                if (po != null) {
+                    System.out.println("Processing PO: " + po.getPoId() + ", Status: " + po.getStatus() + 
+                                     ", Date: " + po.getRequiredDate() + ", Order Date: " + po.getRequestedDate());
+                    try {
+                        LocalDate requiredDate = LocalDate.parse(po.getRequiredDate(), dtf);
+                        if ((po.getStatus().equals(Status.RECEIVED) || po.getStatus().equals(Status.PAID)) && 
+                            !requiredDate.isBefore(start) && !requiredDate.isAfter(end)) {
+                            stockInPOs.add(po);
+                            stockInQty.merge(po.getItemCode(), po.getQuantity(), Integer::sum);
+                            stockInValue.merge(po.getItemCode(), po.getPaymentAmount(), Double::sum);
+                            System.out.println("Added to Stock In: " + po.getItemCode() + ", Qty: " + po.getQuantity());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error parsing requiredDate for PO " + po.getPoId() + ": " + e.getMessage());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing date range: " + e.getMessage());
+        }
+
+        Map<String, Integer> stockOutQty = new HashMap<>();
+        Map<String, Double> stockOutValue = new HashMap<>();
+        List<SalesData> stockOutSales = new ArrayList<>();
+        try {
+            LocalDate start = LocalDate.parse(startDate, dtf);
+            LocalDate end = LocalDate.parse(endDate, dtf);
+            for (SalesData sales : salesList) {
+                if (sales != null) {
+                    try {
+                        LocalDate saleDate = LocalDate.parse(sales.getDate(), dtf);
+                        if (!saleDate.isBefore(start) && !saleDate.isAfter(end)) {
+                            stockOutSales.add(sales);
+                            stockOutQty.merge(sales.getItemCode(), sales.getQuantitySold(), Integer::sum);
+                            stockOutValue.merge(sales.getItemCode(), sales.getTotalAmount(), Double::sum);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error parsing sale date for Sale " + sales.getSalesId() + ": " + e.getMessage());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing date range: " + e.getMessage());
+        }
+
+
+    return new StockReportData(stockInPOs, stockOutSales, itemList, stockInQty, stockInValue, stockOutQty, stockOutValue);
 }
+    
+    @Override
+    public Map<String, Integer> calculateStockReport(List<Item> itemList, List<PurchaseOrder> poList, List<SalesData> salesList, String startDate, String endDate, DefaultTableModel tableModel, JTable jTable1) {
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
+        Map<String, Integer> stockInQty = new HashMap<>();
+        try {
+            LocalDate start = LocalDate.parse(startDate, dtf);
+            LocalDate end = LocalDate.parse(endDate, dtf);
+            for (PurchaseOrder po : poList) {
+                if (po != null && EnumSet.of(Status.RECEIVED, Status.PAID).contains(po.getStatus())) {
+                    LocalDate requiredDate = LocalDate.parse(po.getRequiredDate(), dtf);
+                    if (!requiredDate.isBefore(start) && !requiredDate.isAfter(end)) {
+                        stockInQty.merge(po.getItemCode(), po.getQuantity(), Integer::sum);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing date range: " + e.getMessage());
+        }
+
+
+        Map<String, Integer> stockOutQty = new HashMap<>();
+        try {
+            LocalDate start = LocalDate.parse(startDate, dtf);
+            LocalDate end = LocalDate.parse(endDate, dtf);
+            for (SalesData sales : salesList) {
+                if (sales != null) {
+                    LocalDate saleDate = LocalDate.parse(sales.getDate(), dtf);
+                    if (!saleDate.isBefore(start) && !saleDate.isAfter(end)) {
+                        stockOutQty.merge(sales.getItemCode(), sales.getQuantitySold(), Integer::sum);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing date range: " + e.getMessage());
+        }
+        System.out.println("Stock Out Qty for range " + startDate + " to " + endDate + ": " + stockOutQty);
+
+        // Populate table
+        tableModel.setRowCount(0); // Clear existing rows
+        for (Item item : itemList) {
+            if (item != null) {
+                String itemCode = item.getItemCode();
+                int currentStock = item.getStockLevel();
+                int stockIn = stockInQty.getOrDefault(itemCode, 0);
+                int stockOut = stockOutQty.getOrDefault(itemCode, 0);
+                int netChange = stockIn - stockOut;
+                int updatedStock = currentStock + netChange;
+
+                tableModel.addRow(new Object[] {
+                    itemCode,
+                    item.getItemName(),
+                    currentStock,
+                    stockIn,
+                    stockOut,
+                    netChange,
+                    updatedStock
+                });
+            }
+        }
+        tableModel.fireTableDataChanged();
+        jTable1.repaint();
+
+        return stockInQty; // Return for potential future use
+    }
+
+}
+
 
 
 
