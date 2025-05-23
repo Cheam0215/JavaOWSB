@@ -514,19 +514,32 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
         for (PurchaseOrder po : poList) {
             if (po != null && po.getPoId().equals(poId)) {
                 if (!po.getStatus().equals(Status.RECEIVED)) {
-                    return "Purchase Order " + poId + " is already " + po.getStatus();
+                    return "Only RECEIVED Purchase Order can be selected.";
                 }
 
                 po.setStatus(Status.PAID);
                 boolean success = fileManager.updateToFile(
                     po, fileManager.getPoFilePath(),
-                    PurchaseOrder::getPoId, 
-                    PurchaseOrder::toString,
-                    PurchaseOrder::fromDataString
+                    PurchaseOrder::getPoId, PurchaseOrder::toString,
+                    line -> {
+                        String[] data = line.split(",");
+                        if (data.length < 11) return null;
+                        try {
+                            return new PurchaseOrder(
+                                data[0], data[1], data[2], data[3],
+                                Integer.parseInt(data[4]), data[5], data[6], data[7],
+                                Status.valueOf(data[8]), Double.parseDouble(data[9]),
+                                Remark.valueOf(data[10])
+                            );
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    }
                 );
                 return success ? "Payment for Purchase Order: " + poId + " was successful." : "Failed to process payment for Purchase Order " + poId;
             }
         }
         return "Purchase Order " + poId + " not found";
     }
+
 }
