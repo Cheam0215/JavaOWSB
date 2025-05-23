@@ -145,7 +145,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
             PurchaseOrder newPo = new PurchaseOrder(
                 poId,                          // poId
                 prId,                          // prId
-                performingUser.getUserID(),    // raisedBy (from Session)
+                "USER" + performingUser.getUserID(),    // raisedBy (from Session)
                 targetPr.getItemCode(),        // itemCode
                 targetPr.getQuantity(),        // quantity
                 supplierCode,                  // supplierCode

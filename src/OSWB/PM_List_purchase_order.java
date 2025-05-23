@@ -212,9 +212,10 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
         backButton1 = new javax.swing.JButton();
         sideBarMenu5 = new javax.swing.JPanel();
-        itemsListPageButton5 = new javax.swing.JButton();
-        supplierPageButton5 = new javax.swing.JButton();
-        purchaseOrderPageButton5 = new javax.swing.JButton();
+        itemsListPageButton4 = new javax.swing.JButton();
+        supplierPageButton4 = new javax.swing.JButton();
+        purchaseOrderPageButton4 = new javax.swing.JButton();
+        purchaseRequisitionPageButton = new javax.swing.JButton();
 
         tittle3.setBackground(new java.awt.Color(0, 102, 255));
 
@@ -378,14 +379,13 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         tittle4Layout.setHorizontalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle4Layout.createSequentialGroup()
-                .addContainerGap(343, Short.MAX_VALUE)
-                .addGroup(tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
-                        .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(330, 330, 330))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
-                        .addComponent(logoutButton)
-                        .addGap(20, 20, 20))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutButton)
+                .addGap(350, 350, 350))
+            .addGroup(tittle4Layout.createSequentialGroup()
+                .addGap(167, 167, 167)
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tittle4Layout.setVerticalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,7 +394,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addComponent(logoutButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         purchaseOrderListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -563,64 +563,62 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addComponent(purchaseRequisitionIDLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(purchaseRequisitionIDTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addComponent(purchaseOrderLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(purchaseOrderTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(supplierIDLabel2)
-                                                    .addComponent(raisedbyLabel)
-                                                    .addComponent(requestedDateLabel1))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(raisedByTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(supplierIDTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(requestedDateTxtField3, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(quantityLabel)
-                                                    .addComponent(statusLabel)
-                                                    .addComponent(itemCodeLabel1))
-                                                .addGap(45, 45, 45)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(itemCodeTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(statusTxtField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(paymentAmountTxtField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(quantityTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(requiredDateLabel2)
-                                                    .addComponent(remarksLabel3))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(requiredDateTxtField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(remarksTxtField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(paymentAmountLabel1)))))
-                                    .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
-                                        .addGap(136, 136, 136)
-                                        .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(backButton1))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(20, 20, 20))
+                        .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                    .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addComponent(purchaseRequisitionIDLabel)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(purchaseRequisitionIDTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addComponent(purchaseOrderLabel)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(purchaseOrderTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(supplierIDLabel2)
+                                                .addComponent(raisedbyLabel)
+                                                .addComponent(requestedDateLabel1))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(raisedByTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(supplierIDTxtField2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(requestedDateTxtField3, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addGap(18, 18, 18)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(quantityLabel)
+                                                .addComponent(statusLabel)
+                                                .addComponent(itemCodeLabel1))
+                                            .addGap(45, 45, 45)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(itemCodeTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(statusTxtField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(paymentAmountTxtField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(quantityTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addGap(18, 18, 18)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(requiredDateLabel2)
+                                                .addComponent(remarksLabel3))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(requiredDateTxtField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(remarksTxtField5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                            .addGap(18, 18, 18)
+                                            .addGroup(purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(paymentAmountLabel1)))))
+                                .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
+                                    .addGap(136, 136, 136)
+                                    .addComponent(searchTxtField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(backButton1)))
+                        .addContainerGap(118, Short.MAX_VALUE))
                     .addGroup(purchaseOrderListTablePanelLayout.createSequentialGroup()
                         .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -629,7 +627,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34))))
+                        .addGap(88, 88, 88))))
         );
         purchaseOrderListTablePanelLayout.setVerticalGroup(
             purchaseOrderListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -687,24 +685,31 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
 
-        itemsListPageButton5.setText("Items");
-        itemsListPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        itemsListPageButton4.setText("Items");
+        itemsListPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemsListPageButton5ActionPerformed(evt);
+                itemsListPageButton4ActionPerformed(evt);
             }
         });
 
-        supplierPageButton5.setText("Supplier");
-        supplierPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        supplierPageButton4.setText("Supplier");
+        supplierPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierPageButton5ActionPerformed(evt);
+                supplierPageButton4ActionPerformed(evt);
             }
         });
 
-        purchaseOrderPageButton5.setText("Purchase Order");
-        purchaseOrderPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        purchaseOrderPageButton4.setText("Purchase Order");
+        purchaseOrderPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                purchaseOrderPageButton5ActionPerformed(evt);
+                purchaseOrderPageButton4ActionPerformed(evt);
+            }
+        });
+
+        purchaseRequisitionPageButton.setText("Purchase Requisition");
+        purchaseRequisitionPageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseRequisitionPageButtonActionPerformed(evt);
             }
         });
 
@@ -713,23 +718,26 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemsListPageButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierPageButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         sideBarMenu5Layout.setVerticalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(itemsListPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(supplierPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
-                .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(144, 144, 144))
+                .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107)
+                .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -739,7 +747,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tittle4, javax.swing.GroupLayout.DEFAULT_SIZE, 1342, Short.MAX_VALUE)
+                    .addComponent(tittle4, javax.swing.GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sideBarMenu5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -779,21 +787,6 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private void profilePageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profilePageButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_profilePageButton3ActionPerformed
-
-    private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose();         // TODO add your handling code here:
-    }//GEN-LAST:event_itemsListPageButton5ActionPerformed
-
-    private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose(); // TODO add your handling code here:
-    }//GEN-LAST:event_supplierPageButton5ActionPerformed
-
-    private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose(); // TODO add your handling code here:
-    }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         int selectedRow = purchaseOrderTable.getSelectedRow();
@@ -1134,6 +1127,26 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         login.setVisible(true);
         
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void itemsListPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton4ActionPerformed
+        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose();         // TODO add your handling code here:
+    }//GEN-LAST:event_itemsListPageButton4ActionPerformed
+
+    private void supplierPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton4ActionPerformed
+        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_supplierPageButton4ActionPerformed
+
+    private void purchaseOrderPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton4ActionPerformed
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseOrderPageButton4ActionPerformed
+
+    private void purchaseRequisitionPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionPageButtonActionPerformed
+        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1185,7 +1198,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private javax.swing.JLabel itemNameLabel;
     private javax.swing.JTextField itemNameTxtField;
     private javax.swing.JButton itemsListPageButton3;
-    private javax.swing.JButton itemsListPageButton5;
+    private javax.swing.JButton itemsListPageButton4;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton logoutButton;
@@ -1196,11 +1209,12 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private javax.swing.JLabel purchaseOrderLabel;
     private javax.swing.JPanel purchaseOrderListTablePanel;
     private javax.swing.JButton purchaseOrderPageButton3;
-    private javax.swing.JButton purchaseOrderPageButton5;
+    private javax.swing.JButton purchaseOrderPageButton4;
     private javax.swing.JTable purchaseOrderTable;
     private javax.swing.JTextField purchaseOrderTxtField1;
     private javax.swing.JLabel purchaseRequisitionIDLabel;
     private javax.swing.JTextField purchaseRequisitionIDTxtField1;
+    private javax.swing.JButton purchaseRequisitionPageButton;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JTextField quantityTxtField1;
     private javax.swing.JTextField raisedByTxtField2;
@@ -1228,7 +1242,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
     private javax.swing.JTextField supplierIDTxtField;
     private javax.swing.JTextField supplierIDTxtField2;
     private javax.swing.JButton supplierPageButton3;
-    private javax.swing.JButton supplierPageButton5;
+    private javax.swing.JButton supplierPageButton4;
     private javax.swing.JPanel tittle3;
     private javax.swing.JPanel tittle4;
     // End of variables declaration//GEN-END:variables

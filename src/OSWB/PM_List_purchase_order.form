@@ -228,7 +228,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="tittle4" pref="1342" max="32767" attributes="0"/>
+                  <Component id="tittle4" pref="1005" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="sideBarMenu5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -267,17 +267,14 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace pref="343" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="pageName" min="-2" pref="669" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="330" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="logoutButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="logoutButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="350" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
+                  <Component id="pageName" min="-2" pref="669" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -288,7 +285,7 @@
                   <Component id="logoutButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pageName" min="-2" pref="92" max="-2" attributes="0"/>
-                  <EmptySpace pref="49" max="32767" attributes="0"/>
+                  <EmptySpace pref="53" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -326,86 +323,83 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane2" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="purchaseRequisitionIDLabel" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="32767" attributes="0"/>
-                                                  <Component id="purchaseRequisitionIDTxtField1" min="-2" pref="257" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="purchaseOrderLabel" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="32767" attributes="0"/>
-                                                  <Component id="purchaseOrderTxtField1" min="-2" pref="257" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="supplierIDLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="raisedbyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="requestedDateLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace min="7" max="32767" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="raisedByTxtField2" min="-2" pref="254" max="-2" attributes="0"/>
-                                                      <Component id="supplierIDTxtField2" min="-2" pref="257" max="-2" attributes="0"/>
-                                                      <Component id="requestedDateTxtField3" min="-2" pref="254" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="purchaseRequisitionIDLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="purchaseRequisitionIDTxtField1" min="-2" pref="257" max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Group type="102" attributes="0">
-                                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="quantityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="statusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="itemCodeLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="itemCodeTxtField1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                          <Component id="statusTxtField2" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                          <Component id="paymentAmountTxtField3" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                          <Component id="quantityTxtField1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                      </Group>
-                                                  </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="purchaseOrderLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="purchaseOrderTxtField1" min="-2" pref="257" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="supplierIDLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="raisedbyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="requestedDateLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                                               </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="requiredDateLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="remarksLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace max="32767" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="requiredDateTxtField4" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                      <Component id="remarksTxtField5" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="1" attributes="0">
-                                                      <Component id="searchButton1" min="-2" pref="60" max="-2" attributes="0"/>
-                                                      <Component id="paymentAmountLabel1" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
+                                              <EmptySpace min="7" max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="raisedByTxtField2" min="-2" pref="254" max="-2" attributes="0"/>
+                                                  <Component id="supplierIDTxtField2" min="-2" pref="257" max="-2" attributes="0"/>
+                                                  <Component id="requestedDateTxtField3" min="-2" pref="254" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                                          <Component id="searchTxtField1" min="-2" pref="285" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="quantityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="statusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="itemCodeLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="itemCodeTxtField1" min="-2" pref="206" max="-2" attributes="0"/>
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="statusTxtField2" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
+                                                      <Component id="paymentAmountTxtField3" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
+                                                      <Component id="quantityTxtField1" min="-2" pref="206" max="-2" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="requiredDateLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="remarksLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="requiredDateTxtField4" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
+                                                  <Component id="remarksTxtField5" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="searchButton1" min="-2" pref="60" max="-2" attributes="0"/>
+                                                  <Component id="paymentAmountLabel1" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
                                       </Group>
-                                      <Component id="backButton1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
+                                      <Component id="searchTxtField1" min="-2" pref="285" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="backButton1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="20" pref="20" max="-2" attributes="0"/>
+                          <EmptySpace pref="118" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="deleteButton" min="-2" pref="90" max="-2" attributes="0"/>
@@ -415,7 +409,7 @@
                           <Component id="saveButton" min="-2" pref="90" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="cancelButton" min="-2" pref="90" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -695,54 +689,65 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="itemsListPageButton5" max="32767" attributes="0"/>
-                      <Component id="supplierPageButton5" max="32767" attributes="0"/>
-                      <Component id="purchaseOrderPageButton5" pref="130" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="purchaseRequisitionPageButton" alignment="1" max="32767" attributes="0"/>
+                      <Component id="itemsListPageButton4" alignment="1" max="32767" attributes="0"/>
+                      <Component id="supplierPageButton4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="purchaseOrderPageButton4" alignment="1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-                  <Component id="itemsListPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                  <Component id="itemsListPageButton4" min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+                  <Component id="supplierPageButton4" min="-2" pref="40" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="supplierPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="126" max="-2" attributes="0"/>
-                  <Component id="purchaseOrderPageButton5" min="-2" pref="40" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="144" max="-2" attributes="0"/>
+                  <Component id="purchaseRequisitionPageButton" min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
+                  <Component id="purchaseOrderPageButton4" min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="itemsListPageButton5">
+        <Component class="javax.swing.JButton" name="itemsListPageButton4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Items"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemsListPageButton5ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemsListPageButton4ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="supplierPageButton5">
+        <Component class="javax.swing.JButton" name="supplierPageButton4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Supplier"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierPageButton5ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="supplierPageButton4ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="purchaseOrderPageButton5">
+        <Component class="javax.swing.JButton" name="purchaseOrderPageButton4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Purchase Order"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="purchaseOrderPageButton5ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="purchaseOrderPageButton4ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="purchaseRequisitionPageButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Purchase Requisition"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="purchaseRequisitionPageButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

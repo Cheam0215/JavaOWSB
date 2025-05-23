@@ -191,6 +191,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
         itemsListPageButton3 = new javax.swing.JButton();
         supplierPageButton3 = new javax.swing.JButton();
         purchaseOrderPageButton3 = new javax.swing.JButton();
+        purchaseRequisitionPageButton = new javax.swing.JButton();
 
         saveButton.setText("Save");
         saveButton.setToolTipText("");
@@ -364,7 +365,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
                         .addComponent(searchTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 130, Short.MAX_VALUE))
+                        .addGap(0, 136, Short.MAX_VALUE))
                     .addGroup(requisitionTablePanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(saveButton1)))
@@ -454,7 +455,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
                 .addGroup(requisitionTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton1)
                     .addComponent(cancelButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         sideBarMenu3.setBackground(new java.awt.Color(51, 51, 51));
@@ -480,28 +481,38 @@ public class PM_List_requisition extends javax.swing.JFrame {
             }
         });
 
+        purchaseRequisitionPageButton.setText("Purchase Requisition");
+        purchaseRequisitionPageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseRequisitionPageButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout sideBarMenu3Layout = new javax.swing.GroupLayout(sideBarMenu3);
         sideBarMenu3.setLayout(sideBarMenu3Layout);
         sideBarMenu3Layout.setHorizontalGroup(
             sideBarMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sideBarMenu3Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addGroup(sideBarMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(purchaseOrderPageButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(itemsListPageButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(supplierPageButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(sideBarMenu3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sideBarMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemsListPageButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierPageButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(purchaseOrderPageButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sideBarMenu3Layout.setVerticalGroup(
             sideBarMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu3Layout.createSequentialGroup()
-                .addGap(92, 92, 92)
+                .addGap(43, 43, 43)
                 .addComponent(itemsListPageButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addGap(110, 110, 110)
                 .addComponent(supplierPageButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107)
                 .addComponent(purchaseOrderPageButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(148, 148, 148))
+                .addGap(72, 72, 72))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -716,6 +727,11 @@ public class PM_List_requisition extends javax.swing.JFrame {
         cancelButton2.setEnabled(false);
     }//GEN-LAST:event_cancelButton2ActionPerformed
 
+    private void purchaseRequisitionPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionPageButtonActionPerformed
+        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -764,6 +780,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     private javax.swing.JButton purchaseOrderPageButton3;
     private javax.swing.JLabel purchaseRequisitionIDLabel;
     private javax.swing.JTextField purchaseRequisitionIDTxtField;
+    private javax.swing.JButton purchaseRequisitionPageButton;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JTextField quantityTxtField;
     private javax.swing.JLabel requestedByLabel2;

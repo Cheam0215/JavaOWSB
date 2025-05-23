@@ -166,9 +166,10 @@ public class PM_Suppliers extends javax.swing.JFrame {
         bankAccountTxtField1 = new javax.swing.JTextField();
         addressTxtField2 = new javax.swing.JTextField();
         sideBarMenu5 = new javax.swing.JPanel();
-        itemsListPageButton5 = new javax.swing.JButton();
-        supplierPageButton5 = new javax.swing.JButton();
-        purchaseOrderPageButton5 = new javax.swing.JButton();
+        itemsListPageButton4 = new javax.swing.JButton();
+        supplierPageButton4 = new javax.swing.JButton();
+        purchaseOrderPageButton4 = new javax.swing.JButton();
+        purchaseRequisitionPageButton = new javax.swing.JButton();
 
         tittle2.setBackground(new java.awt.Color(0, 102, 255));
 
@@ -394,7 +395,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
                                 .addGroup(supplierListTablePanelLayout.createSequentialGroup()
                                     .addComponent(contactNumberLabel)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(contactNumberTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
+                                    .addComponent(contactNumberTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE))
                                 .addGroup(supplierListTablePanelLayout.createSequentialGroup()
                                     .addGroup(supplierListTablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(addressLabel1)
@@ -442,24 +443,31 @@ public class PM_Suppliers extends javax.swing.JFrame {
 
         sideBarMenu5.setBackground(new java.awt.Color(51, 51, 51));
 
-        itemsListPageButton5.setText("Items");
-        itemsListPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        itemsListPageButton4.setText("Items");
+        itemsListPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemsListPageButton5ActionPerformed(evt);
+                itemsListPageButton4ActionPerformed(evt);
             }
         });
 
-        supplierPageButton5.setText("Supplier");
-        supplierPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        supplierPageButton4.setText("Supplier");
+        supplierPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supplierPageButton5ActionPerformed(evt);
+                supplierPageButton4ActionPerformed(evt);
             }
         });
 
-        purchaseOrderPageButton5.setText("Purchase Order");
-        purchaseOrderPageButton5.addActionListener(new java.awt.event.ActionListener() {
+        purchaseOrderPageButton4.setText("Purchase Order");
+        purchaseOrderPageButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                purchaseOrderPageButton5ActionPerformed(evt);
+                purchaseOrderPageButton4ActionPerformed(evt);
+            }
+        });
+
+        purchaseRequisitionPageButton.setText("Purchase Requisition");
+        purchaseRequisitionPageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purchaseRequisitionPageButtonActionPerformed(evt);
             }
         });
 
@@ -468,23 +476,26 @@ public class PM_Suppliers extends javax.swing.JFrame {
         sideBarMenu5Layout.setHorizontalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(itemsListPageButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supplierPageButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         sideBarMenu5Layout.setVerticalGroup(
             sideBarMenu5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sideBarMenu5Layout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(itemsListPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(itemsListPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(supplierPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(supplierPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(121, 121, 121)
-                .addComponent(purchaseOrderPageButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(148, 148, 148))
+                .addComponent(purchaseRequisitionPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107)
+                .addComponent(purchaseOrderPageButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -547,21 +558,6 @@ public class PM_Suppliers extends javax.swing.JFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_backButtonActionPerformed
 
-    private void itemsListPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton5ActionPerformed
-        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose();                 // TODO add your handling code here:
-    }//GEN-LAST:event_itemsListPageButton5ActionPerformed
-
-    private void supplierPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton5ActionPerformed
-        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose(); // TODO add your handling code here:
-    }//GEN-LAST:event_supplierPageButton5ActionPerformed
-
-    private void purchaseOrderPageButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton5ActionPerformed
-       new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose();  // TODO add your handling code here:
-    }//GEN-LAST:event_purchaseOrderPageButton5ActionPerformed
-
     private void supplierCodeTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierCodeTxtFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_supplierCodeTxtFieldActionPerformed
@@ -605,6 +601,26 @@ public class PM_Suppliers extends javax.swing.JFrame {
         bankAccountTxtField1.setText(bankAccount);
     }     // TODO add your handling code here:
     }//GEN-LAST:event_supplierListTableMouseClicked
+
+    private void itemsListPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton4ActionPerformed
+        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose();         // TODO add your handling code here:
+    }//GEN-LAST:event_itemsListPageButton4ActionPerformed
+
+    private void supplierPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton4ActionPerformed
+        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_supplierPageButton4ActionPerformed
+
+    private void purchaseOrderPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton4ActionPerformed
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose(); // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseOrderPageButton4ActionPerformed
+
+    private void purchaseRequisitionPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionPageButtonActionPerformed
+        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -652,13 +668,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JTextField contactNumberTxtField;
     private javax.swing.JButton homeButton2;
     private javax.swing.JButton itemsListPageButton2;
-    private javax.swing.JButton itemsListPageButton5;
+    private javax.swing.JButton itemsListPageButton4;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel pageName;
     private javax.swing.JButton profilePageButton2;
     private javax.swing.JButton purchaseOrderPageButton2;
-    private javax.swing.JButton purchaseOrderPageButton5;
+    private javax.swing.JButton purchaseOrderPageButton4;
+    private javax.swing.JButton purchaseRequisitionPageButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTxtField;
     private javax.swing.JPanel sideBarMenu2;
@@ -670,7 +687,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JLabel supplierNameLabel;
     private javax.swing.JTextField supplierNameTxtField;
     private javax.swing.JButton supplierPageButton2;
-    private javax.swing.JButton supplierPageButton5;
+    private javax.swing.JButton supplierPageButton4;
     private javax.swing.JPanel tittle2;
     private javax.swing.JPanel tittle3;
     // End of variables declaration//GEN-END:variables
