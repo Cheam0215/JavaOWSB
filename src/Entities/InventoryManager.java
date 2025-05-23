@@ -73,6 +73,7 @@ public class InventoryManager extends User{
     Map<String, Integer> stockInQty = new HashMap<>();
     Map<String, Double> stockInValue = new HashMap<>();
     List<PurchaseOrder> stockInPOs = new ArrayList<>();
+    
     try {
         LocalDate start = LocalDate.parse(startDate, dtf);
         LocalDate end = LocalDate.parse(endDate, dtf);
