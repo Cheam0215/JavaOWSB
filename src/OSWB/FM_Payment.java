@@ -83,10 +83,15 @@ public class FM_Payment extends javax.swing.JFrame {
             int selectedRow = jTable2.getSelectedRow();
             if (selectedRow >= 0) {
                 String status = tableModel.getValueAt(selectedRow, 9).toString();
-                if (!status.equals(Status.RECEIVED.toString())) {
+                if (status.equals(Status.REJECTED.toString()) || status.equals(Status.APPROVED.toString())) {
                     jTable2.clearSelection();
                     JOptionPane.showMessageDialog(this, "Only RECEIVED Purchase Orders can be selected.", 
                         "Invalid Selection", JOptionPane.WARNING_MESSAGE);
+                }
+                else if(status.equals(Status.PAID.toString())){
+                    jTable2.clearSelection();
+                    JOptionPane.showMessageDialog(this, "This Purchase Order was already PAID.", 
+                        "PAID Purchase Order", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -226,7 +231,7 @@ public class FM_Payment extends javax.swing.JFrame {
     private void PaymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PaymentBtnActionPerformed
         int selectedRow = jTable2.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a RECEIVED Purchase Order.", 
+            JOptionPane.showMessageDialog(this, "Only RECEIVED Purchase Order can be selected.", 
                 "No Selection", JOptionPane.WARNING_MESSAGE);
             return;
         }
