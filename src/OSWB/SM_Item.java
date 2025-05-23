@@ -584,6 +584,12 @@ public class SM_Item extends javax.swing.JFrame {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
             double unitPrice = Double.parseDouble(unitPriceStr);
+            
+            if (retailPrice <= unitPrice) {
+                JOptionPane.showMessageDialog(this, "Retail price must be larger than unit price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }   
+            
             Item item = new Item(itemCode, itemName, stockLevel, retailPrice);
             itemController.addItem(item, supplierCode, unitPrice); // Use unitPrice from jTextField4
             JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -678,7 +684,13 @@ public class SM_Item extends javax.swing.JFrame {
         try {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
-            double unitPrice = Double.parseDouble(unitPriceStr); // Keep as double for precision
+            double unitPrice = Double.parseDouble(unitPriceStr); 
+            
+            if (retailPrice <= unitPrice) {
+                JOptionPane.showMessageDialog(this, "Retail price must be larger than unit price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
 
             // Assuming updateItem returns a string indicating success or error

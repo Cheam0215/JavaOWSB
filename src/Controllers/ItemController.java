@@ -312,10 +312,7 @@ public class ItemController implements ItemServices{
                 }
             }
 
-            if (!supplyFound) {
-                return "Error: Item with code " + itemCode + " not found in itemSupply.txt.";
-            }
-
+            
             return "Item " + itemCode + " deleted successfully.";
         } catch (Exception e) {
             return "Error deleting item: " + e.getMessage();
