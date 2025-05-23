@@ -4,7 +4,13 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
+import Controllers.PurchaseOrderController;
 import Entities.PurchaseManager;
+import Entities.User;
+import Interface.ItemViewingServices;
+import Interface.PurchaseRequisitionViewServices;
+import Interface.SupplierViewingServices;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -15,17 +21,32 @@ import javax.swing.JFrame;
  * @author User
  */
 public class PM_List_requisition extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
-    private PurchaseManager purchaseManager;
-    private JFrame previousPage;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
+    private final User currentUser;
+    private final JFrame previousPage;
+    private final ItemViewingServices itemViewer;
+    private final PurchaseOrderController purchaseOrderController;  
+    private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
+    private final SupplierViewingServices supplierViewer;
 
-    /**
-     * Creates new form PM_List_requisition
+     /**
+     * Creates new form PM_Items
+     * @param currentUser
+     * @param previousPage
+     * @param itemViewer
+     * @param purchaseOrderController
+     * @param purchaseRequisitionViewer
+     * @param supplierViewer
+     
      */
-    public PM_List_requisition(PurchaseManager loggedInPM, JFrame previousPage) {
-        this.purchaseManager = loggedInPM;    
+    public PM_List_requisition(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
+        this.currentUser = currentUser;
         this.previousPage = previousPage;
+        this.purchaseOrderController = purchaseOrderController;
+        this.itemViewer = itemViewer;
+        this.purchaseRequisitionViewer = purchaseRequisitionViewer;
+        this.supplierViewer = supplierViewer;
         initComponents();
         setupTable();
         loadPR();
@@ -54,7 +75,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }
     private void loadSuppliers() {
         try {
-            List<String[]> suppliers = purchaseManager.viewSuppliers();
+            List<String[]> suppliers = supplierViewer.viewSuppliers();
             String[] supplierCodes = suppliers.stream().map(row -> row[0]).toArray(String[]::new);
             supplierComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(supplierCodes));
         } catch (Exception e) {
@@ -67,7 +88,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
             // Clear existing data from the table model
             model.setRowCount(0);
 
-            List<String[]> PR = purchaseManager.viewPurchaseRequisition(); // Assuming viewItems returns List<String[]>
+            List<String[]> PR = purchaseRequisitionViewer.viewPurchaseRequisition(); // Assuming viewItems returns List<String[]>
             if (PR.isEmpty()) {
                 // Optional: Show a message if the overall item list is empty
                  JOptionPane.showMessageDialog(this, "There are no Purchase Requisition available.", "Load Purchase Requisition", JOptionPane.WARNING_MESSAGE);
@@ -100,7 +121,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allPR = purchaseManager.viewPurchaseRequisition();
+            List<String[]> allPR = purchaseRequisitionViewer.viewPurchaseRequisition();
             boolean foundMatch = false;
             
             for (String[] pr : allPR) {
@@ -527,17 +548,17 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton3ActionPerformed
-        new PM_List_items(purchaseManager,this).setVisible(true);
+        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton3ActionPerformed
 
     private void supplierPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton3ActionPerformed
-        new PM_Suppliers(purchaseManager,this).setVisible(true);
+        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton3ActionPerformed
 
     private void purchaseOrderPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton3ActionPerformed
-        new PM_List_purchase_order(purchaseManager,this).setVisible(true);
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton3ActionPerformed
 
@@ -656,7 +677,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
         }
 
         // Proceed with generating the PurchaseOrder
-        String result = purchaseManager.generatePurchaseOrder(prId, supplierCode);
+        String result = purchaseOrderController.generatePurchaseOrder(prId, supplierCode, currentUser);
         if (result.startsWith("Error")) {
             JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         } else {
@@ -725,12 +746,12 @@ public class PM_List_requisition extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PurchaseManager pr = new PurchaseManager("", "", "");
-                new PM_List_requisition(pr,null).setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                PurchaseManager pr = new PurchaseManager("", "", "");
+//                new PM_List_requisition(pr,null).setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

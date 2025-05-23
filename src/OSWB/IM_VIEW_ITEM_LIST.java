@@ -23,6 +23,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     private DefaultTableModel model;
     private FileManager fileManager;
     private InventoryManager inventoryManager;
+    private Inventory_Manager_Main previousScreen;
     
     private final String[] columnNames = {
         "Item Code", "Item Name", "Stock Level", "Retail Price"
@@ -31,8 +32,9 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     /**
      * Creates new form IM_VIEW_ITEM_LIST
      */
-    public IM_VIEW_ITEM_LIST(InventoryManager inventoryManager) {
+    public IM_VIEW_ITEM_LIST(InventoryManager inventoryManager, Inventory_Manager_Main previousScreen) {
         this.inventoryManager = inventoryManager;
+        this.previousScreen = previousScreen;
         this.fileManager = inventoryManager.getFileManager();
         initComponents();
         setupTable();
@@ -320,8 +322,14 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Inventory_Manager_Main main = new Inventory_Manager_Main(inventoryManager);
-        main.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -361,36 +369,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IM_VIEW_ITEM_LIST.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IM_VIEW_ITEM_LIST.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IM_VIEW_ITEM_LIST.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IM_VIEW_ITEM_LIST.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                InventoryManager im = new InventoryManager("", "", "");
-                new IM_VIEW_ITEM_LIST(im).setVisible(true);
-            }
-        });
+       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

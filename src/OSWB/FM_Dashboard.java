@@ -4,6 +4,11 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
+import Controllers.InventoryController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
 import Entities.FinanceManager;
 
 /**
@@ -12,13 +17,30 @@ import Entities.FinanceManager;
  */
 public class FM_Dashboard extends javax.swing.JFrame {
      private final FinanceManager loggedInFM;
+     private final PurchaseOrderController purchaseOrderController;
+     private final PurchaseRequisitionController purchaseRequisitionController;
+     private final SalesDataController salesDataController;
+    private final InventoryController inventoryController;
+    private final FinanceController financeController;
     /**
      * Creates new form FM_Dashboard2
      * @param loggedInFM
+     * @param purchaseOrderController
+     * @param purchaseRequisitionController
+     * @param salesDataController
+     * @param inventoryController
+     * @param financeController
      */
-    public FM_Dashboard(FinanceManager loggedInFM) {
+    public FM_Dashboard(FinanceManager loggedInFM, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, InventoryController inventoryController, FinanceController financeController) {
         this.loggedInFM = loggedInFM;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.inventoryController = inventoryController;
+        this.financeController = financeController;
         initComponents();
+        
+        
     }
 
     /**
@@ -287,31 +309,31 @@ public class FM_Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void financialReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_financialReportButtonActionPerformed
-        FM_Generate_Financial_Report finReportFrame = new FM_Generate_Financial_Report(loggedInFM);
+        FM_Generate_Financial_Report finReportFrame = new FM_Generate_Financial_Report(loggedInFM, purchaseOrderController, salesDataController, financeController, this);
         finReportFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_financialReportButtonActionPerformed
 
     private void processPaymentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processPaymentButtonActionPerformed
-        FM_Payment prFrame = new FM_Payment(loggedInFM);
+        FM_Payment prFrame = new FM_Payment(loggedInFM, purchaseOrderController, this);
         prFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_processPaymentButtonActionPerformed
 
     private void PRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRButtonActionPerformed
-        FM_View_Purchase_Requisition prFrame = new FM_View_Purchase_Requisition(loggedInFM);
+        FM_View_Purchase_Requisition prFrame = new FM_View_Purchase_Requisition(loggedInFM, purchaseRequisitionController, this);
         prFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_PRButtonActionPerformed
 
     private void POButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_POButtonActionPerformed
-        FM_Approve_Purchase_Order poFrame = new FM_Approve_Purchase_Order(loggedInFM);
+        FM_Approve_Purchase_Order poFrame = new FM_Approve_Purchase_Order(loggedInFM, purchaseOrderController, this);
         poFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_POButtonActionPerformed
 
     private void inventoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventoryButtonActionPerformed
-        FM_View_Inventory inventoryFrame = new FM_View_Inventory(loggedInFM);
+        FM_View_Inventory inventoryFrame = new FM_View_Inventory(loggedInFM, inventoryController, this);
         inventoryFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_inventoryButtonActionPerformed

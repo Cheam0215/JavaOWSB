@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.SalesDataController;
 import Entities.SalesData;
 import Entities.SalesManager;
 import Utility.FileManager;
@@ -23,14 +24,16 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_Daily_Sales extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[] = {"Sales ID", "Item Code", "Quantity Sold", "Retail Price", "Date", "Total Amount"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[] = {"Sales ID", "Item Code", "Quantity Sold", "Retail Price", "Date", "Total Amount"};
+    private final SalesManager salesManager;
     private FileManager fileManager;
-    private Map<String, ItemDetails> itemDetailsMap = new HashMap<>();
+    private final Map<String, ItemDetails> itemDetailsMap = new HashMap<>();
     private boolean isEditing = false;
     private String editingSalesId;
     private String originalItemCode;
+    private final SalesDataController salesDataController;
+    private SM_Main previousScreen;
 
 
     private static class ItemDetails {
@@ -44,9 +47,14 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     }
     /**
      * Creates new form SM_Daily_Sales
+     * @param loggedinSM
+     * @param salesDataController
+     * @param previousScreen
      */
-    public SM_Daily_Sales(SalesManager loggedinSM) {
+    public SM_Daily_Sales(SalesManager loggedinSM, SalesDataController salesDataController, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
+        this.salesDataController = salesDataController;
+        this.previousScreen = previousScreen;
         fileManager = new FileManager();
         initComponents();
         setupTable();
@@ -69,7 +77,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
             // Clear existing data from the table model
             model.setRowCount(0);
 
-            List<String[]> sales = salesManager.viewSalesData(); // Assuming viewItems returns List<String[]>
+            List<String[]> sales = salesDataController.viewSalesData(); // Assuming viewItems returns List<String[]>
             if (sales.isEmpty()) {
                 // Optional: Show a message if the overall item list is empty
                  JOptionPane.showMessageDialog(this, "There are no Sales Data available.", "Load Sales Data", JOptionPane.WARNING_MESSAGE);
@@ -102,7 +110,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allSales = salesManager.viewSalesData();
+            List<String[]> allSales = salesDataController.viewSalesData();
             boolean foundMatch = false;
             
             for (String[] sales : allSales) {
@@ -255,7 +263,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     
     private boolean isItemCodeDateDuplicate(String itemCode, String date) {
         try {
-            List<String[]> sales = salesManager.viewSalesData();
+            List<String[]> sales = salesDataController.viewSalesData();
             for (String[] sale : sales) {
                 String existingItemCode = sale[1]; // Item Code
                 String existingDate = sale[4]; // Date
@@ -578,7 +586,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
                 return;
             }
 
-            salesManager.addSalesData(salesId, itemCode, quantitySold, retailPrice, date, totalAmount);
+            salesDataController.addSalesData(salesId, itemCode, quantitySold, retailPrice, date, totalAmount);
             JOptionPane.showMessageDialog(this, "Sales data added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
@@ -587,9 +595,16 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -616,7 +631,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         }
 
         String salesId = (String) model.getValueAt(selectedRow, 0); // Sales ID is in column 0
-        boolean success = salesManager.deleteSalesData(salesId);
+        boolean success = salesDataController.deleteSalesData(salesId);
 
         if (success) {
             JOptionPane.showMessageDialog(this, "Sales data with ID " + salesId + " deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -694,7 +709,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
             }
 
             SalesData updatedSales = new SalesData(salesId, itemCode, quantitySold, retailPrice, date, totalAmount);
-            boolean success = salesManager.updateSalesData(updatedSales);
+            boolean success = salesDataController.updateSalesData(updatedSales);
 
             if (success) {
                 JOptionPane.showMessageDialog(this, "Sales data with ID " + salesId + " updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -734,13 +749,6 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager sales = new SalesManager("","","");
-                new SM_Daily_Sales(sales).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

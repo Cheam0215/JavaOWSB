@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.Color; // For placeholder text color
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent; // For live search
 import javax.swing.event.DocumentListener; // For live search
@@ -29,13 +30,16 @@ public class ADMIN_USER extends javax.swing.JFrame {
     private DefaultTableModel tableModel; 
     private final String[] columnNames = {"ID", "Username", "Role"}; 
     private final String SEARCH_PLACEHOLDER = "Search by Username or ID";
+    private final JFrame previousScreen;
 
     /**
      * Creates new form ADMIN_USER
      * @param loggedInAdmin
+     * @param previousScreen
      */    
-     public ADMIN_USER(Administrator loggedInAdmin) {
+     public ADMIN_USER(Administrator loggedInAdmin, JFrame previousScreen) {
         this.loggedInAdmin = loggedInAdmin;
+        this.previousScreen = previousScreen;
         initComponents(); 
         setupTable();
         setupSearchAndFilter(); 
@@ -48,6 +52,7 @@ public class ADMIN_USER extends javax.swing.JFrame {
             userTable.requestFocusInWindow();
         }
     });
+        
     }
      
      private void setupSearchAndFilter() {
@@ -483,16 +488,22 @@ public class ADMIN_USER extends javax.swing.JFrame {
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        ADMIN_CREATE_USER adminCreate = new ADMIN_CREATE_USER(loggedInAdmin);
+        ADMIN_CREATE_USER adminCreate = new ADMIN_CREATE_USER(loggedInAdmin, this);
         this.dispose();
         adminCreate.setVisible(true);
         
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        ADMIN_DASHBOARD adminDashboard  = new ADMIN_DASHBOARD(loggedInAdmin);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
-        adminDashboard.setVisible(true);
         
     }//GEN-LAST:event_backButtonActionPerformed
 

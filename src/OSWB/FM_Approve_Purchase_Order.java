@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 
 import Entities.PurchaseOrder;
 import Entities.FinanceManager;
+import Interface.FinanceManagerPOServices;
+import Utility.Remark;
 import Utility.Status;
 /**
  *
@@ -17,10 +19,14 @@ import Utility.Status;
  */
 public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
     private final FinanceManager financeManager;
+    private final FinanceManagerPOServices financeManagerPOServices;
+    private FM_Dashboard previousScreen;
     private DefaultTableModel tableModel;
 
-    public FM_Approve_Purchase_Order(FinanceManager financeManager) {
+    public FM_Approve_Purchase_Order(FinanceManager financeManager, FinanceManagerPOServices financeManagerPOServices, FM_Dashboard previousScreen) {
         this.financeManager = financeManager;
+        this.financeManagerPOServices = financeManagerPOServices;
+        this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
             new Object[][] {},
             new String[] {
@@ -39,7 +45,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
     }
 
     private void populateTable() {
-        List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
+        List<PurchaseOrder> poList = financeManagerPOServices.getAllPOs();
 
         tableModel.setRowCount(0);
 
@@ -208,7 +214,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         }
 
         try {
-            String result = financeManager.approvePurchaseOrder(poId, newQuantity, newSupplierCode);
+            String result = financeManagerPOServices.approvePurchaseOrder(poId, newQuantity, newSupplierCode);
             JOptionPane.showMessageDialog(this, result, "Approval Result", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
         } catch (IllegalArgumentException e) {
@@ -226,8 +232,10 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
 
         String poId = tableModel.getValueAt(selectedRow, 0).toString();
         try {
-            String result = financeManager.rejectPurchaseOrder(poId);
-            JOptionPane.showMessageDialog(this, result, "Rejection Result", JOptionPane.INFORMATION_MESSAGE);
+            Remark rejectionReason = Remark.REJECTED_BY_FINANCE_MANAGER;
+            financeManagerPOServices.rejectPurchaseOrder(poId, rejectionReason);
+            JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -235,8 +243,14 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
     }//GEN-LAST:event_RejectPOBtnActionPerformed
 
     private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
-        FM_Dashboard prFrame = new FM_Dashboard(financeManager);
-        prFrame.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_BackBtnActionPerformed
 
@@ -244,36 +258,6 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FM_Approve_Purchase_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FM_Approve_Purchase_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FM_Approve_Purchase_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FM_Approve_Purchase_Order.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FinanceManager fm = new FinanceManager("", "", "");
-                new FM_Approve_Purchase_Order(fm).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

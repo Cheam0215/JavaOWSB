@@ -8,6 +8,7 @@ import Entities.Administrator;
 import Utility.UserRoles;
 import Utility.FileManager;
 import java.util.Arrays;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,13 +19,16 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
     
     private FileManager fileManager;
     private final Administrator loggedInAdmin;
+    private final JFrame previousScreen;
 
     /**
      * Creates new form ADMIN_CREATE_USER
      * @param loggedInAdmin
+     * @param previousScreen
      */
-    public ADMIN_CREATE_USER(Administrator loggedInAdmin) {
+    public ADMIN_CREATE_USER(Administrator loggedInAdmin, JFrame previousScreen) {
         this.loggedInAdmin = loggedInAdmin;
+        this.previousScreen = previousScreen;
         initComponents();
         // Populate roleField with UserRoles, excluding ADMINISTRATOR
         FileManager fileManager = new FileManager();
@@ -34,6 +38,7 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
                 .map(Enum::name)
                 .toArray(String[]::new);
         roleField.setModel(new javax.swing.DefaultComboBoxModel<>(roleNames));
+        
     }
 
     /**
@@ -263,9 +268,15 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
     }//GEN-LAST:event_regitserButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        ADMIN_USER adminUser = new ADMIN_USER(loggedInAdmin);
+       if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
-        adminUser.setVisible(true);
         
     }//GEN-LAST:event_backButtonActionPerformed
 

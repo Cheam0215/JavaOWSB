@@ -4,10 +4,14 @@
  */
 package Interface;
 
+import Entities.ItemSupply;
+import java.util.List;
+
 /**
  *
  * @author Sheng Ting
  */
-public interface PurchaseOrderInterface {
-    
+public interface ItemSupplyViewingServices {
+    public List<String[]> viewItemSupplies();
+    public List<ItemSupply> getAllItemSupply();
 }

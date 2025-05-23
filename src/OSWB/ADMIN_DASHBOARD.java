@@ -4,6 +4,14 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
+import Controllers.InventoryController;
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
 import Entities.Administrator;
 
 /**
@@ -12,6 +20,16 @@ import Entities.Administrator;
  */
 public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     private Administrator loggedInAdmin;
+    private SupplierController supplierController;
+    private PurchaseOrderController purchaseOrderController;
+    private PurchaseRequisitionController purchaseRequisitionController;
+    private SalesDataController salesDataController;
+    private InventoryController inventoryController;
+    private FinanceController financeController;
+    private ItemSupplyController itemSupplyController;
+    private ItemController itemController;
+    
+    
 
     /**
      * Creates new form ADMIN_DASHBOARD
@@ -20,9 +38,18 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
         initComponents();
     }
     
-    public ADMIN_DASHBOARD(Administrator loggedInAdmin) {
+    public ADMIN_DASHBOARD(Administrator loggedInAdmin, SupplierController supplierController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController,SalesDataController salesDataController, InventoryController inventoryController, FinanceController financeController, ItemSupplyController itemSupplyController, ItemController itemController) {
         this.loggedInAdmin = loggedInAdmin;
+        this.supplierController = supplierController;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.inventoryController = inventoryController;
+        this.financeController = financeController;
+        this.itemSupplyController = itemSupplyController;
+        this.itemController = itemController;
         initComponents();
+        
     }
 
     /**
@@ -124,6 +151,11 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
 
         supplierButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/supplier.png"))); // NOI18N
         supplierButton.setText("jButton2");
+        supplierButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supplierButtonActionPerformed(evt);
+            }
+        });
 
         POButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/po.png"))); // NOI18N
         POButton.setText("jButton3");
@@ -135,6 +167,11 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
 
         PRButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pr.png"))); // NOI18N
         PRButton.setText("jButton4");
+        PRButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PRButtonActionPerformed(evt);
+            }
+        });
 
         InventoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/reports.png"))); // NOI18N
         InventoryButton.setText("jButton5");
@@ -214,11 +251,13 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void POButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_POButtonActionPerformed
-        // TODO add your handling code here:
+        PM_List_purchase_order adminPO = new PM_List_purchase_order(loggedInAdmin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+        this.dispose();
+        adminPO.setVisible(true);
     }//GEN-LAST:event_POButtonActionPerformed
 
     private void userButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userButtonActionPerformed
-        ADMIN_USER adminUser = new ADMIN_USER(loggedInAdmin);
+        ADMIN_USER adminUser = new ADMIN_USER(loggedInAdmin, this);
         adminUser.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_userButtonActionPerformed
@@ -229,6 +268,18 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
         Login login = new Login();
         login.setVisible(true);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void supplierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierButtonActionPerformed
+       SM_Supplier adminSupplier = new SM_Supplier(loggedInAdmin, supplierController, this);
+       this.dispose();
+       adminSupplier.setVisible(true);
+    }//GEN-LAST:event_supplierButtonActionPerformed
+
+    private void PRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRButtonActionPerformed
+        PM_List_requisition adminPO = new PM_List_requisition(loggedInAdmin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+        this.dispose();
+        adminPO.setVisible(true);
+    }//GEN-LAST:event_PRButtonActionPerformed
 
     /**
      * @param args the command line arguments

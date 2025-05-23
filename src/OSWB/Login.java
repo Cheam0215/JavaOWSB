@@ -4,6 +4,14 @@
  */
 package OSWB;
 
+import Controllers.FinanceController;
+import Controllers.InventoryController;
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
 import Entities.Administrator;
 import Entities.FinanceManager;
 import Entities.InventoryManager;
@@ -21,13 +29,46 @@ import javax.swing.JOptionPane;
  * @author Sheng Ting
  */
 public class Login extends javax.swing.JFrame {
+    
+    private ItemController itemController;
+    private ItemSupplyController itemSupplyController;
+    private PurchaseOrderController purchaseOrderController;  
+    private PurchaseRequisitionController  purchaseRequisitionController;
+    private SalesDataController salesDataController;
+    private SupplierController supplierController;
+    private InventoryController inventoryController;
+    private FinanceController financeController;
+    
 
     /**
      * Creates new form Login
      */
     public Login() {
+        FileManager fm = new FileManager();
+        this.itemController = new ItemController(fm);
+        this.itemSupplyController = new ItemSupplyController(fm);
+        this.purchaseOrderController = new PurchaseOrderController(fm);
+        this.purchaseRequisitionController = new PurchaseRequisitionController(fm);
+        this.salesDataController = new SalesDataController(fm);
+        this.supplierController = new SupplierController(fm);
+        this.inventoryController = new InventoryController(this.purchaseOrderController, this.itemController, this.itemSupplyController);
+        this.financeController = new FinanceController(fm);
         initComponents();
     }
+    
+    public Login(ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController, InventoryController inventoryController, FinanceController financeController) {
+        this.itemController = itemController;
+        this.itemSupplyController = itemSupplyController;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.supplierController = supplierController;
+        this.inventoryController = inventoryController;
+        this.financeController = financeController;
+        initComponents();
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -237,14 +278,14 @@ public class Login extends javax.swing.JFrame {
                 switch (role) {
                     case UserRoles.ADMINISTRATOR -> { 
                         Administrator loggedInAdmin = new Administrator(userID, username, password);
-                        ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin);
+                        ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin, supplierController, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController, itemSupplyController, itemController);
                         this.dispose();
                         adminDashboard.setVisible(true);
                         loggedInAdmin.displayMenu();
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
                         FinanceManager loggedInFM = new FinanceManager(userID, username, password);
-                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM);
+                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController);
                         this.dispose();
                         FMDashboard.setVisible(true);
                         loggedInFM.displayMenu();
@@ -252,21 +293,21 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.INVENTORY_MANAGER -> { 
                         InventoryManager loggedInIM = new InventoryManager(userID, username, password);
-                        Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM);
+                        Inventory_Manager_Main IM_MAIN = new Inventory_Manager_Main(loggedInIM, inventoryController, purchaseOrderController);
                         this.dispose();
                         IM_MAIN.setVisible(true);
                         
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
-                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM);
+                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
                         this.dispose();
                         PMOrder.setVisible(true);
                         loggedInPM.displayMenu();
                     }
                     case UserRoles.SALES_MANAGER -> { 
                         SalesManager loggedInSM = new SalesManager(userID, username, password);
-                        SM_Main smMain = new SM_Main(loggedInSM);
+                        SM_Main smMain = new SM_Main(loggedInSM, itemController, itemSupplyController, purchaseOrderController, purchaseRequisitionController, salesDataController, supplierController);
                         this.dispose();
                         smMain.setVisible(true);
                         

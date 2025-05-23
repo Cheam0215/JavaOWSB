@@ -4,6 +4,12 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
+import Controllers.ItemSupplyController;
+import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
+import Controllers.SalesDataController;
+import Controllers.SupplierController;
 import Entities.SalesManager;
 
 /**
@@ -11,13 +17,22 @@ import Entities.SalesManager;
  * @author Edwin Chen
  */
 public class SM_Main extends javax.swing.JFrame {
-    private SalesManager loggedinSM;
-    
-    /**
-     * Creates new form SM_Main
-     */
-    public SM_Main(SalesManager loggedInSM) {
+    private final SalesManager loggedinSM;
+    private final ItemController itemController;
+    private final ItemSupplyController itemSupplyController;
+    private final PurchaseOrderController purchaseOrderController;  
+    private final PurchaseRequisitionController  purchaseRequisitionController;
+    private final SalesDataController salesDataController;
+    private final SupplierController supplierController;
+        
+    public SM_Main(SalesManager loggedInSM, ItemController itemController, ItemSupplyController itemSupplyController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, SupplierController supplierController) {
         this.loggedinSM = loggedInSM;
+        this.itemController = itemController;
+        this.itemSupplyController = itemSupplyController;
+        this.purchaseOrderController = purchaseOrderController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
+        this.salesDataController = salesDataController;
+        this.supplierController = supplierController;
         initComponents();
         if (loggedInSM != null) {
             jLabel1.setText(loggedInSM.getUsername() + " SM Home Page");
@@ -172,79 +187,50 @@ public class SM_Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Login login = new Login();
         login.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        SM_Item smItem = new SM_Item(loggedinSM);
+        SM_Item smItem = new SM_Item(loggedinSM, itemController, this);
         smItem.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        SM_Supplier smSupplier = new SM_Supplier(loggedinSM);
+        SM_Supplier smSupplier = new SM_Supplier(loggedinSM, supplierController, this);
         smSupplier.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM);
+        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM, salesDataController, this);
         smDaily.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        SM_PR smPr = new SM_PR(loggedinSM);
+        SM_PR smPr = new SM_PR(loggedinSM, purchaseRequisitionController, this);
         smPr.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        SM_View_PO smPo = new SM_View_PO(loggedinSM);
+        SM_View_PO smPo = new SM_View_PO(loggedinSM, purchaseOrderController, this);
         smPo.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        SM_ItemSupply smitemsup = new SM_ItemSupply(loggedinSM);
+        SM_ItemSupply smitemsup = new SM_ItemSupply(loggedinSM, itemController, supplierController, itemSupplyController, this);
         smitemsup.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SM_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SM_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SM_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SM_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager sm = new SalesManager("", "", "");
-                new SM_Main(sm).setVisible(true);
-            }
-        });
+     
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

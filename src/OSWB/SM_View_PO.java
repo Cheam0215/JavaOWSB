@@ -5,6 +5,7 @@
 package OSWB;
 
 import Entities.SalesManager;
+import Interface.PurchaseOrderViewServices;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -14,12 +15,16 @@ import javax.swing.JOptionPane;
  * @author Edwin Chen
  */
 public class SM_View_PO extends javax.swing.JFrame {
-    private DefaultTableModel model = new DefaultTableModel();
-    private String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
-    private SalesManager salesManager;
+    private final DefaultTableModel model = new DefaultTableModel();
+    private final String columnName[]= {"Purchase Order ID","Purchase Requisition ID","Raised By","Item Code","Quantity","Supplier Code","Required Date","Requested Date","Status","Payment Amount","Remark"};
+    private final SalesManager salesManager;
+    private final PurchaseOrderViewServices purchaseOrderViewer;
+    private final SM_Main previousScreen;
     
-    public SM_View_PO(SalesManager loggedinSM) {
+    public SM_View_PO(SalesManager loggedinSM, PurchaseOrderViewServices purchaseOrderViewer, SM_Main previousScreen) {
         this.salesManager = loggedinSM;
+        this.purchaseOrderViewer = purchaseOrderViewer;
+        this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadPO();
@@ -33,7 +38,7 @@ public class SM_View_PO extends javax.swing.JFrame {
     private void loadPO() {
         try {
             model.setRowCount(0);
-            List<String[]> PO = salesManager.viewPurchaseOrder();
+            List<String[]> PO = purchaseOrderViewer.viewPurchaseOrder();
             if (PO.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no Purchase Order yet.", "View Purchase Order", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -61,7 +66,7 @@ public class SM_View_PO extends javax.swing.JFrame {
             model.setRowCount(0);
             
             // Get all POs
-            List<String[]> allPOs = salesManager.viewPurchaseOrder();
+            List<String[]> allPOs = purchaseOrderViewer.viewPurchaseOrder();
             boolean foundMatch = false;
             
             for (String[] po : allPOs) {
@@ -233,8 +238,14 @@ public class SM_View_PO extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SM_Main smMain = new SM_Main(salesManager);
-        smMain.setVisible(true);
+        if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -277,13 +288,6 @@ public class SM_View_PO extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SalesManager po = new SalesManager("","","");
-                new SM_View_PO(po).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

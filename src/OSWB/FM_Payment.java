@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Entities.PurchaseOrder;
 import Entities.FinanceManager;
+import Interface.FinanceManagerPOServices;
 import Utility.Status;
 /**
  *
@@ -18,11 +19,18 @@ import Utility.Status;
 public class FM_Payment extends javax.swing.JFrame {
     private final FinanceManager financeManager;
     private DefaultTableModel tableModel;
+    private final FinanceManagerPOServices financeManagerPOServices;
+    private final FM_Dashboard previousScreen;
     /**
      * Creates new form FM_Payment
+     * @param financeManager
+     * @param financeManagerPOServices
+     * @param previousScreen
      */
-    public FM_Payment(FinanceManager financeManager) {
+    public FM_Payment(FinanceManager financeManager, FinanceManagerPOServices financeManagerPOServices, FM_Dashboard previousScreen) {
         this.financeManager = financeManager;
+        this.financeManagerPOServices = financeManagerPOServices;
+        this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
             new Object[][] {},
             new String[] {
@@ -38,10 +46,11 @@ public class FM_Payment extends javax.swing.JFrame {
         initComponents();
         populateTable();
         setupTableSelection();
+        
     }
     
     private void populateTable() {
-        List<PurchaseOrder> poList = financeManager.getPurchaseOrders();
+        List<PurchaseOrder> poList = financeManagerPOServices.getAllPOs();
 
         tableModel.setRowCount(0);
 
@@ -74,10 +83,15 @@ public class FM_Payment extends javax.swing.JFrame {
             int selectedRow = jTable2.getSelectedRow();
             if (selectedRow >= 0) {
                 String status = tableModel.getValueAt(selectedRow, 9).toString();
-                if (!status.equals(Status.APPROVED.toString())) {
+                if (status.equals(Status.REJECTED.toString()) || status.equals(Status.APPROVED.toString())) {
                     jTable2.clearSelection();
-                    JOptionPane.showMessageDialog(this, "Only APPROVED Purchase Orders can be selected.", 
+                    JOptionPane.showMessageDialog(this, "Only RECEIVED Purchase Orders can be selected.", 
                         "Invalid Selection", JOptionPane.WARNING_MESSAGE);
+                }
+                else if(status.equals(Status.PAID.toString())){
+                    jTable2.clearSelection();
+                    JOptionPane.showMessageDialog(this, "This Purchase Order was already PAID.", 
+                        "PAID Purchase Order", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -203,22 +217,28 @@ public class FM_Payment extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
-        FM_Dashboard prFrame = new FM_Dashboard(financeManager);
-        prFrame.setVisible(true);
+         if (this.previousScreen != null) {
+            this.previousScreen.setVisible(true); // Just make the existing one visible
+        } else {
+            // Fallback or error: Should not happen if previousScreen is always passed
+            JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally, recreate Login if truly lost
+            // new Login().setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_BackBtnActionPerformed
 
     private void PaymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PaymentBtnActionPerformed
         int selectedRow = jTable2.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Only APPROVED Purchase Order can be selected.", 
+            JOptionPane.showMessageDialog(this, "Only RECEIVED Purchase Order can be selected.", 
                 "No Selection", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         String poId = tableModel.getValueAt(selectedRow, 0).toString();
         try {
-            String result = financeManager.payPurchaseOrder(poId);
+            String result = financeManagerPOServices.payPurchaseOrder(poId);
             JOptionPane.showMessageDialog(this, result, "Payment Result", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
         } catch (IllegalArgumentException e) {
@@ -230,36 +250,7 @@ public class FM_Payment extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FM_Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FM_Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FM_Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FM_Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FinanceManager fm = new FinanceManager("", "", "");
-                new FM_Payment(fm).setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
