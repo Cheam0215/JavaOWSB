@@ -22,6 +22,35 @@ public class SalesDataController implements SalesDataServices{
     public SalesDataController(FileManager fileManager) {
         this.fileManager = fileManager;
     }
+    @Override
+    public List<SalesData> getSalesData() {
+        List<SalesData> salesList = fileManager.readFile(
+            fileManager.getSalesDataFilePath(),
+            line -> {
+                String[] data = line.split(",");
+                if (data.length < 6) {
+                    System.err.println("Invalid sales data: " + line);
+                    return null;
+                }
+                try {
+                    SalesData sale = new SalesData(
+                        data[0], data[1],
+                        Integer.parseInt(data[2]),
+                        Double.parseDouble(data[3]),
+                        data[4],
+                        Double.parseDouble(data[5])
+                    );
+                    System.out.println("Parsed Sales: " + sale.getSalesId());
+                    return sale;
+                } catch (Exception e) {
+                    System.err.println("Error parsing sales data: " + line + " | Error: " + e.getMessage());
+                    return null;
+                }
+            }
+        );
+        System.out.println("Total Sales read: " + salesList.size());
+        return salesList;
+    }
     
     @Override
     public List<String[]> viewSalesData() {
@@ -342,33 +371,5 @@ public class SalesDataController implements SalesDataServices{
         }
     }
     
-    @Override
-    public List<SalesData> getSalesData() {
-        List<SalesData> salesList = fileManager.readFile(
-            fileManager.getSalesDataFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                if (data.length < 6) {
-                    System.err.println("Invalid sales data: " + line);
-                    return null;
-                }
-                try {
-                    SalesData sale = new SalesData(
-                        data[0], data[1],
-                        Integer.parseInt(data[2]),
-                        Double.parseDouble(data[3]),
-                        data[4],
-                        Double.parseDouble(data[5])
-                    );
-                    System.out.println("Parsed Sales: " + sale.getSalesId());
-                    return sale;
-                } catch (Exception e) {
-                    System.err.println("Error parsing sales data: " + line + " | Error: " + e.getMessage());
-                    return null;
-                }
-            }
-        );
-        System.out.println("Total Sales read: " + salesList.size());
-        return salesList;
-    }
+    
 }

@@ -4,7 +4,9 @@
  */
 package Interface;
 
+import Entities.PurchaseOrder;
 import Utility.Remark;
+import java.util.List;
 
 /**
  *
@@ -12,4 +14,8 @@ import Utility.Remark;
  */
 public interface InventoryManagerPOServices {
     public void rejectPurchaseOrder(String poId, Remark rejectionReason);
+    public List<String[]> viewPurchaseOrder();
+    public List<PurchaseOrder> getAllPOs();
+    PurchaseOrder findApprovedPOByItemCode(String itemCode);
+    PurchaseOrder getPOById(String poId);
 }

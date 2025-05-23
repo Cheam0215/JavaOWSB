@@ -3,9 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package OSWB;
-import Entities.InventoryManager;
+import Controllers.InventoryController;
 import Entities.StockReportData;
-import Utility.FileManager;
+import Entities.User;
+import Interface.InventoryManagerPOServices;
+import Interface.ItemViewingServices;
+import Interface.SalesDataViewingServices;
+import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,22 +23,25 @@ import java.util.Date;
  */
 public class IM_Generate_Report extends javax.swing.JFrame {
 
-    /**
-     * Creates new form IM_Generate_Report
-     */
     
-    private InventoryManager inventoryManager;
-    private Inventory_Manager_Main previousScreen;
-    private FileManager fileManager;
     private DefaultTableModel tableModel;
 
     private final String[] columnNames = {
         "Item Code", "Item Name", "Current Stock", "Stock In", "Stock Out", "Net Change", "Updated Stock"
     };
+    private final User currentUser;
+    private final InventoryController inventoryController;
+    private final InventoryManagerPOServices poViewer;
+    private final ItemViewingServices itemViewer;
+    private final SalesDataViewingServices salesDataViewer;
+    private final JFrame previousScreen;
     
-    public IM_Generate_Report(InventoryManager inventoryManager, Inventory_Manager_Main previousScreen) {
-        this.inventoryManager = inventoryManager;
-        this.fileManager = inventoryManager.getFileManager();
+    public IM_Generate_Report(User currentUser, InventoryController inventoryController, InventoryManagerPOServices poViewer, ItemViewingServices itemViewer, SalesDataViewingServices salesDataViewer, JFrame previousScreen) {
+        this.currentUser = currentUser;
+        this.inventoryController = inventoryController;
+        this.poViewer = poViewer;
+        this.itemViewer = itemViewer;
+        this.salesDataViewer = salesDataViewer;
         this.previousScreen = previousScreen;
         initComponents();
         setupTable();
@@ -52,7 +59,7 @@ public class IM_Generate_Report extends javax.swing.JFrame {
         LocalDate today = LocalDate.now();
         String date = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         System.out.println("Loading stock data for date: " + date);
-        inventoryManager.calculateStockReport(date, date, tableModel, jTable1); // Use same date for start and end
+        inventoryController.calculateStockReport(itemViewer.getAllItems(), poViewer.getAllPOs(), salesDataViewer.getSalesData(), date, date, tableModel, jTable1);
     }
 
     /**
@@ -234,12 +241,11 @@ public class IM_Generate_Report extends javax.swing.JFrame {
             System.out.println("Generating report for range: " + startDate + " to " + endDate);
         }
         
-        String name = inventoryManager.getUsername();
-        StockReportData reportData = inventoryManager.displayStockReport(startDate, endDate);
+        String name = currentUser.getUsername();
+        StockReportData reportData = inventoryController.displayStockReport(poViewer.getAllPOs(), salesDataViewer.getSalesData(), itemViewer.getAllItems(), startDate, endDate);
         IM_REPORT reportFrame = new IM_REPORT(name, startDate, endDate, reportData);
         reportFrame.setVisible(true);
-    } catch (Exception e) {
-        e.printStackTrace();
+    } catch (HeadlessException e) {
         JOptionPane.showMessageDialog(this, "Failed to display report: " + e.getMessage(), 
             "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -262,8 +268,7 @@ public class IM_Generate_Report extends javax.swing.JFrame {
             return;
         }
         
-        System.out.println("Searching stock data for range: " + startDate + " to " + endDate);
-        inventoryManager.calculateStockReport(startDate, endDate, tableModel, jTable1); 
+        inventoryController.calculateStockReport(itemViewer.getAllItems(), poViewer.getAllPOs(), salesDataViewer.getSalesData(), startDate, endDate, tableModel, jTable1);
     }//GEN-LAST:event_dateSearchBtnActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed

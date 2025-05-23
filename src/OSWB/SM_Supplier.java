@@ -5,7 +5,6 @@
 package OSWB;
 
 import Controllers.SupplierController;
-import Entities.SalesManager;
 import Entities.Supplier;
 import Entities.User;
 import javax.swing.table.DefaultTableModel;

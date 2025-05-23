@@ -4,9 +4,7 @@
  */
 package OSWB;
 
-import Controllers.ItemController;
 import Controllers.PurchaseOrderController;
-import Entities.PurchaseManager;
 import Entities.User;
 import Interface.ItemViewingServices;
 import Interface.PurchaseRequisitionViewServices;

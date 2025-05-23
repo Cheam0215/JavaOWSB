@@ -8,12 +8,10 @@ import Controllers.InventoryController;
 import Entities.InventoryManager;
 import Entities.PurchaseOrder;
 import Interface.InventoryManagerPOServices;
-import Utility.FileManager;
 import Utility.Remark;
 import Utility.Status;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
-import java.util.function.Function;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,7 +27,6 @@ public class IM_Update_Stock extends javax.swing.JFrame {
     
     private DefaultTableModel model;
     private InventoryManager inventoryManager;
-    private FileManager fileManager;
     private InventoryController inventoryController;
     private InventoryManagerPOServices poServices;
     private Inventory_Manager_Main previousScreen;
@@ -56,7 +53,6 @@ public class IM_Update_Stock extends javax.swing.JFrame {
         this.inventoryController = inventoryController;
         this.poServices = poServices;
         this.previousScreen = previousScreen;
-        this.fileManager = inventoryManager.getFileManager(); // Initialize fileManager
         initComponents();
         setupTable();
         loadApprovedPOs();
@@ -78,16 +74,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
         model.setRowCount(0);
 
         // Read POs from file
-        List<PurchaseOrder> poList = fileManager.readFile(
-            fileManager.getPoFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                 return new PurchaseOrder(data[0], data[1], data[2], data[3],
-                    Integer.parseInt(data[4]), data[5], data[6], data[7], Status.valueOf(data[8]),
-                    Double.parseDouble(data[9]), Remark.valueOf(data[10]));
-
-            }
-        );
+        List<PurchaseOrder> poList = poServices.getAllPOs();
 
         // Add only APPROVED POs to the table
         for (PurchaseOrder po : poList) {

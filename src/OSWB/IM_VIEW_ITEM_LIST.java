@@ -4,14 +4,15 @@
  */
 package OSWB;
 
-import Entities.InventoryManager;
 import Entities.Item;
-import Utility.FileManager;
+import Entities.User;
+import Interface.ItemViewingServices;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import java.awt.Component;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -21,24 +22,29 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     private DefaultTableModel model;
-    private FileManager fileManager;
-    private InventoryManager inventoryManager;
-    private Inventory_Manager_Main previousScreen;
+    private final User currentUser;
+    private final ItemViewingServices itemViewer;
+    private final JFrame previousScreen;
     
     private final String[] columnNames = {
         "Item Code", "Item Name", "Stock Level", "Retail Price"
     };
+    
 
     /**
      * Creates new form IM_VIEW_ITEM_LIST
+     * @param currentUser
+     * @param itemViewer
+     * @param previousScreen
      */
-    public IM_VIEW_ITEM_LIST(InventoryManager inventoryManager, Inventory_Manager_Main previousScreen) {
-        this.inventoryManager = inventoryManager;
+    public IM_VIEW_ITEM_LIST(User currentUser, ItemViewingServices itemViewer, JFrame previousScreen) {
+        this.currentUser = currentUser;
+        this.itemViewer = itemViewer;
         this.previousScreen = previousScreen;
-        this.fileManager = inventoryManager.getFileManager();
         initComponents();
         setupTable();
         viewTable();
+        
     }
     
     class StockLevelCellRenderer extends DefaultTableCellRenderer {
@@ -78,13 +84,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     private void viewTable(){
         model.setRowCount(0);
         
-        List<Item> itemList = fileManager.readFile(
-                fileManager.getItemFilePath(),
-                line -> {
-                    String[] data = line.split(",");
-                    return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
-                }
-        );
+        List<Item> itemList = itemViewer.getAllItems();
         
         for (Item item : itemList) {
             model.addRow(new Object[] {
@@ -278,13 +278,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       List<Item> itemList = fileManager.readFile(
-            fileManager.getItemFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
-            }
-        );
+       List<Item> itemList = itemViewer.getAllItems();
        
         String searchText = txtSearch.getText().trim();
         
@@ -339,13 +333,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        List<Item> itemList = fileManager.readFile(
-            fileManager.getItemFilePath(),
-            line -> {
-                String[] data = line.split(",");
-                return new Item(data[0], data[1],Integer.parseInt(data[2]), Double.parseDouble(data[3]));
-            }
-        );
+        List<Item> itemList = itemViewer.getAllItems();
        
         
         model.setRowCount(0);
