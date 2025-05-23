@@ -4,6 +4,7 @@
  */
 package OSWB;
 import Entities.InventoryManager;
+import Entities.StockReportData;
 import Utility.FileManager;
 import java.text.SimpleDateFormat;
 import javax.swing.*;
@@ -233,12 +234,14 @@ public class IM_Generate_Report extends javax.swing.JFrame {
         }
         
         String name = inventoryManager.getUsername();
-        inventoryManager.displayStockReport(name, startDate, endDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to display report: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        StockReportData reportData = inventoryManager.displayStockReport(startDate, endDate);
+        IM_REPORT reportFrame = new IM_REPORT(name, startDate, endDate, reportData);
+        reportFrame.setVisible(true);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Failed to display report: " + e.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnGenerateReportActionPerformed
 
     private void dateSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateSearchBtnActionPerformed

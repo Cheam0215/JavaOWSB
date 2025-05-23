@@ -74,8 +74,7 @@ public class IM_VIEW_ITEM_LIST extends javax.swing.JFrame {
             tableItem.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
     }
-    
-    
+      
     private void viewTable(){
         model.setRowCount(0);
         
