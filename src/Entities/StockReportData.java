@@ -9,9 +9,7 @@ package Entities;
  * @author chieu
  */
 
-import com.inventory.model.PurchaseOrder;
-import com.inventory.model.SalesData;
-import com.inventory.model.Item;
+
 import java.util.List;
 import java.util.Map;
 
