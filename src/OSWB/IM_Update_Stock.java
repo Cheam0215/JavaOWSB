@@ -5,14 +5,15 @@
 package OSWB;
 
 import Controllers.InventoryController;
-import Entities.InventoryManager;
 import Entities.PurchaseOrder;
+import Entities.User;
 import Interface.InventoryManagerPOServices;
 import Utility.Remark;
 import Utility.Status;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,10 +27,9 @@ import javax.swing.JPanel;
 public class IM_Update_Stock extends javax.swing.JFrame {
     
     private DefaultTableModel model;
-    private InventoryManager inventoryManager;
-    private InventoryController inventoryController;
-    private InventoryManagerPOServices poServices;
-    private Inventory_Manager_Main previousScreen;
+    private final User currentUser;
+    private final InventoryController inventoryController;
+    private final InventoryManagerPOServices poServices;
         
 
     /**
@@ -39,29 +39,26 @@ public class IM_Update_Stock extends javax.swing.JFrame {
     private final String[] columnNames = {
         "PO ID", "PR ID", "Raised By", "Item Code", "Quantity", "Supplier Code", "Required Date", "Requested Date", "Status", "Payment Amount", "Remarks"
     };
+    private final JFrame previousScreen;
 
     /**
      * Creates new form IM_Update_Stock_Level
-     * @param inventoryManager
+     * @param currentUser
      * @param inventoryController
      * @param poServices
      * @param previousScreen
      */
     
-    public IM_Update_Stock(InventoryManager inventoryManager, InventoryController inventoryController, InventoryManagerPOServices poServices, Inventory_Manager_Main previousScreen) {
-        this.inventoryManager = inventoryManager;
+    public IM_Update_Stock(User currentUser, InventoryController inventoryController, InventoryManagerPOServices poServices, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.inventoryController = inventoryController;
         this.poServices = poServices;
         this.previousScreen = previousScreen;
         initComponents();
         setupTable();
         loadApprovedPOs();
-    }
-    
-    public IM_Update_Stock() {
-        initComponents();
-    }
-    
+        
+    }    
     
     private void setupTable() {
         // Initialize table model with correct columns
@@ -232,7 +229,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
 
         try {
             // Update stock using InventoryManager
-            inventoryController.receiveStockAndUpdateInventory(itemCode, quantity, inventoryManager);
+            inventoryController.receiveStockAndUpdateInventory(itemCode, quantity, currentUser);
             javax.swing.JOptionPane.showMessageDialog(this, "Stock updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             // Refresh table to show only remaining APPROVED POs
             loadApprovedPOs();
@@ -296,35 +293,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IM_Update_Stock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IM_Update_Stock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IM_Update_Stock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IM_Update_Stock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new IM_Update_Stock().setVisible(true);
-            }
-        });
+      
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -8,6 +8,7 @@ import Controllers.ItemController;
 import Entities.Item;
 import Utility.FileManager;
 import Entities.SalesManager;
+import Entities.User;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 /**
  *
@@ -24,19 +26,19 @@ import javax.swing.JTable;
  */
 public class SM_Item extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
+    private final User currentUser;
     private final ItemController itemController;
     private final String columnName[]= {"Item Code","Item Name","Stock Level","Retail Price"};
-    private final SalesManager salesManager;
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingItemCode = null; // Track the item code being edited
-    private SM_Main previousScreen;
+    private final JFrame previousScreen;
     
-    public SM_Item(SalesManager loggedInSM, ItemController itemController, SM_Main previousScreen) {
-        this.salesManager = loggedInSM;       
+    public SM_Item(User currentUser, ItemController itemController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.itemController = itemController;
-        this.previousScreen = previousScreen;
         fileManager = new FileManager();
+        this.previousScreen = previousScreen;
         initComponents();
         initializeFileManager();
         setupTable();
@@ -46,6 +48,7 @@ public class SM_Item extends javax.swing.JFrame {
         addButton.setEnabled(true);
         editBtn.setEnabled(false); 
         saveBtn.setEnabled(false); 
+        
     }
     
     private void setupTable() {

@@ -7,6 +7,7 @@ package OSWB;
 import Controllers.SalesDataController;
 import Entities.SalesData;
 import Entities.SalesManager;
+import Entities.User;
 import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -26,14 +28,14 @@ import javax.swing.JOptionPane;
 public class SM_Daily_Sales extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[] = {"Sales ID", "Item Code", "Quantity Sold", "Retail Price", "Date", "Total Amount"};
-    private final SalesManager salesManager;
     private FileManager fileManager;
     private final Map<String, ItemDetails> itemDetailsMap = new HashMap<>();
     private boolean isEditing = false;
     private String editingSalesId;
     private String originalItemCode;
+    private final User currentUser;
     private final SalesDataController salesDataController;
-    private SM_Main previousScreen;
+    private final JFrame previousScreen;
 
 
     private static class ItemDetails {
@@ -47,12 +49,12 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     }
     /**
      * Creates new form SM_Daily_Sales
-     * @param loggedinSM
+     * @param currentUser
      * @param salesDataController
      * @param previousScreen
      */
-    public SM_Daily_Sales(SalesManager loggedinSM, SalesDataController salesDataController, SM_Main previousScreen) {
-        this.salesManager = loggedinSM;
+    public SM_Daily_Sales(User currentUser, SalesDataController salesDataController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.salesDataController = salesDataController;
         this.previousScreen = previousScreen;
         fileManager = new FileManager();
@@ -65,6 +67,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         setupTableSelectionListener();
         editBtn.setEnabled(false); // Disable Edit button initially
         saveBtn.setEnabled(false); // Disable Save button initially
+        
     }
     
     private void setupTable() {

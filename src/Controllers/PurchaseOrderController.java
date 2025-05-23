@@ -494,7 +494,8 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 po.setStatus(Status.PAID);
                 boolean success = fileManager.updateToFile(
                     po, fileManager.getPoFilePath(),
-                    PurchaseOrder::getPoId, PurchaseOrder::toString,
+                    PurchaseOrder::getPoId, 
+                    PurchaseOrder::toString,
                     line -> {
                         String[] data = line.split(",");
                         if (data.length < 11) return null;

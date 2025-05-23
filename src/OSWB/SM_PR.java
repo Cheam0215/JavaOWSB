@@ -7,6 +7,7 @@ package OSWB;
 import Controllers.PurchaseRequisitionController;
 import Entities.PurchaseRequisition;
 import Entities.SalesManager;
+import Entities.User;
 import Utility.FileManager;
 import Utility.Date;
 import Utility.Status;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.Calendar;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -25,20 +27,21 @@ import javax.swing.JOptionPane;
 public class SM_PR extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
-    private final SalesManager salesManager;
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingPrId = null; // Track the PR ID being edited
+    private final User currentUser;
     private final PurchaseRequisitionController purchaseRequisitionController;
-    private SM_Main previousScreen;
+    private final JFrame previousScreen;
 
     /**
      * Creates new form SM_PR
-     * @param loggedInSM
+     * @param currentUser
      * @param purchaseRequisitionController
+     * @param previousScreen
      */
-    public SM_PR(SalesManager loggedInSM, PurchaseRequisitionController purchaseRequisitionController, SM_Main previousScreen) {
-        this.salesManager = loggedInSM;
+    public SM_PR(User currentUser, PurchaseRequisitionController purchaseRequisitionController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.previousScreen = previousScreen;
         fileManager = new FileManager();
@@ -51,6 +54,7 @@ public class SM_PR extends javax.swing.JFrame {
         setupTableSelectionListener(); // Add listener to manage button states
         editBtn.setEnabled(false); // Disable Edit button initially
         saveBtn.setEnabled(false); // Disable Save button initially
+        
     };
     
     private void setupTable() {
@@ -164,7 +168,7 @@ public class SM_PR extends javax.swing.JFrame {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to get tomorrow's date
         java.util.Date tomorrow = calendar.getTime();
-        jLabel11.setText(salesManager.getUsername()); 
+        jLabel11.setText(currentUser.getUsername()); 
         jLabel12.setText("PENDING");
         Date today = Date.now();
         jLabel7.setText(today.toIsoString());

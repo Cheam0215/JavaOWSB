@@ -9,42 +9,45 @@ import Entities.FinanceManager;
 
 import Entities.PurchaseOrder;
 import Entities.SalesData;
+import Entities.User;
 import Interface.PurchaseOrderViewServices;
 import Interface.SalesDataViewingServices;
 import Utility.Status;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
  * @author Maxcm
  */
 public class FM_Generate_Financial_Report extends javax.swing.JFrame {
-    private final FinanceManager financeManager;
+
+    private final User currentUser;
     private final PurchaseOrderViewServices purchaseOrderViewer;
-    private SalesDataViewingServices salesDataViewer;
+    private final SalesDataViewingServices salesDataViewer;
     private final FinanceController financeController;
-    private final FM_Dashboard previousScreen;
     private DefaultTableModel salesTableModel;
     private DefaultTableModel poTableModel;
+    private final JFrame previousScreen;
     /**
      * Creates new form FM_Generate_Financial_Report
-     * @param financeManager
+     * @param currentUser
      * @param purchaseOrderViewer
      * @param salesDataViewer
      * @param financeController
      * @param previousScreen
      */
-    public FM_Generate_Financial_Report(FinanceManager financeManager, PurchaseOrderViewServices purchaseOrderViewer, SalesDataViewingServices salesDataViewer, FinanceController financeController, FM_Dashboard previousScreen) {
-        this.financeManager = financeManager;
+    public FM_Generate_Financial_Report(User currentUser, PurchaseOrderViewServices purchaseOrderViewer, SalesDataViewingServices salesDataViewer, FinanceController financeController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.purchaseOrderViewer = purchaseOrderViewer;
         this.salesDataViewer = salesDataViewer;
         this.financeController = financeController;
         this.previousScreen = previousScreen;
-        // Initialize table models before initComponents
         setupTables();
         initComponents();
         populateTables();
+        
     }
 
     private void setupTables() {

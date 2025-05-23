@@ -9,10 +9,11 @@ import Controllers.ItemController;
 import Controllers.ItemSupplyController;
 import Controllers.SupplierController;
 import Entities.ItemSupply;
-import Entities.SalesManager;
+import Entities.User;
 import Interface.ItemSupplyServices;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -21,24 +22,25 @@ import javax.swing.JOptionPane;
 public class SM_ItemSupply extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
     private final String columnName[] = {"Item Code", "Supplier Code", "Item Name", "Unit Price"};
-    private final SalesManager salesManager;
     private boolean isEditing = false;
     private String editingItemCode = null;
     private final ItemSupplyServices itemSupplyController;
+    private final User currentUser;
     private final ItemController itemController;
     private final SupplierController supplierController;
-    private final SM_Main previousScreen;
+    private final JFrame previousScreen;
     
     /**
      * Creates new form SM_ItemSupply
-     * @param loggedinSM
+     * @param currentUser
      * @param itemController
      * @param supplierController
      * @param itemSupplyController
+     * @param previousScreen
      
      */
-    public SM_ItemSupply(SalesManager loggedinSM, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController, SM_Main previousScreen) {
-        this.salesManager = loggedinSM;
+    public SM_ItemSupply(User currentUser, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.itemController = itemController;
         this.supplierController = supplierController;
         this.itemSupplyController = itemSupplyController;
@@ -49,6 +51,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         setupButtonListeners();
         loadItemCodes();
         loadSupplierCodes();
+        
     }
     
     private void setupTable() {

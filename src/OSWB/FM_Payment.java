@@ -9,26 +9,27 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import Entities.PurchaseOrder;
-import Entities.FinanceManager;
+import Entities.User;
 import Interface.FinanceManagerPOServices;
 import Utility.Status;
+import javax.swing.JFrame;
 /**
  *
  * @author Maxcm
  */
 public class FM_Payment extends javax.swing.JFrame {
-    private final FinanceManager financeManager;
     private DefaultTableModel tableModel;
+    private final User currentUser;
     private final FinanceManagerPOServices financeManagerPOServices;
-    private final FM_Dashboard previousScreen;
+    private final JFrame previousScreen;
     /**
      * Creates new form FM_Payment
-     * @param financeManager
+     * @param currentUser
      * @param financeManagerPOServices
      * @param previousScreen
      */
-    public FM_Payment(FinanceManager financeManager, FinanceManagerPOServices financeManagerPOServices, FM_Dashboard previousScreen) {
-        this.financeManager = financeManager;
+    public FM_Payment(User currentUser, FinanceManagerPOServices financeManagerPOServices, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.financeManagerPOServices = financeManagerPOServices;
         this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
@@ -46,6 +47,7 @@ public class FM_Payment extends javax.swing.JFrame {
         initComponents();
         populateTable();
         setupTableSelection();
+        
         
     }
     

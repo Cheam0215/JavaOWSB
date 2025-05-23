@@ -244,6 +244,7 @@ public class IM_Generate_Report extends javax.swing.JFrame {
         StockReportData reportData = inventoryController.displayStockReport(poViewer.getAllPOs(), salesDataViewer.getSalesData(), itemViewer.getAllItems(), startDate, endDate);
         IM_REPORT reportFrame = new IM_REPORT(name, startDate, endDate, reportData);
         reportFrame.setVisible(true);
+        
     } catch (HeadlessException e) {
         JOptionPane.showMessageDialog(this, "Failed to display report: " + e.getMessage(), 
             "Error", JOptionPane.ERROR_MESSAGE);

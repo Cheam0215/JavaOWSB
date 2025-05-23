@@ -75,6 +75,10 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
         POButton = new javax.swing.JButton();
         PRButton = new javax.swing.JButton();
         InventoryButton = new javax.swing.JButton();
+        dailySalesButton = new javax.swing.JButton();
+        reportButton = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -175,6 +179,40 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
 
         InventoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/reports.png"))); // NOI18N
         InventoryButton.setText("jButton5");
+        InventoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                InventoryButtonActionPerformed(evt);
+            }
+        });
+
+        dailySalesButton.setBackground(new java.awt.Color(255, 255, 255));
+        dailySalesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/dailySales.png"))); // NOI18N
+        dailySalesButton.setText("jButton5");
+        dailySalesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dailySalesButtonActionPerformed(evt);
+            }
+        });
+
+        reportButton.setBackground(new java.awt.Color(255, 255, 255));
+        reportButton.setForeground(new java.awt.Color(255, 255, 255));
+        reportButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/report.png"))); // NOI18N
+        reportButton.setText("jButton5");
+        reportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel12.setText("Daily Sales");
+
+        jLabel13.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setText("Report");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -197,21 +235,30 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
                             .addComponent(InventoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(userButton, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(74, 74, 74)
-                        .addComponent(supplierButton, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(79, 79, 79)
-                        .addComponent(POButton, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(83, 83, 83)
-                        .addComponent(PRButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(supplierButton, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dailySalesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(78, 78, 78)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(POButton, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(83, 83, 83)
+                                .addComponent(PRButton, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(reportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 116, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addComponent(jLabel11)
+                .addGap(173, 173, 173)
+                .addComponent(jLabel12)
+                .addGap(189, 189, 189)
+                .addComponent(jLabel13)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(userButton, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(supplierButton, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,10 +271,17 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
                         .addComponent(jLabel9)
                         .addComponent(jLabel8)
                         .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addComponent(InventoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel11)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(InventoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dailySalesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(reportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13))
                 .addGap(101, 101, 101))
         );
 
@@ -251,7 +305,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void POButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_POButtonActionPerformed
-        PM_List_purchase_order adminPO = new PM_List_purchase_order(loggedInAdmin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+        ADMIN_PO adminPO = new ADMIN_PO(loggedInAdmin, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, this);
         this.dispose();
         adminPO.setVisible(true);
     }//GEN-LAST:event_POButtonActionPerformed
@@ -276,10 +330,28 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }//GEN-LAST:event_supplierButtonActionPerformed
 
     private void PRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRButtonActionPerformed
-        PM_List_requisition adminPO = new PM_List_requisition(loggedInAdmin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+        ADMIN_PR adminPR = new ADMIN_PR(loggedInAdmin, purchaseRequisitionController, itemController, purchaseOrderController, supplierController, this);
         this.dispose();
-        adminPO.setVisible(true);
+        adminPR.setVisible(true);
     }//GEN-LAST:event_PRButtonActionPerformed
+
+    private void InventoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InventoryButtonActionPerformed
+       ADMIN_INVENTORY adminInventory = new ADMIN_INVENTORY(loggedInAdmin, purchaseOrderController, inventoryController, itemController, supplierController, itemSupplyController, this);
+       this.dispose();
+       adminInventory.setVisible(true);
+    }//GEN-LAST:event_InventoryButtonActionPerformed
+
+    private void dailySalesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dailySalesButtonActionPerformed
+        SM_Daily_Sales adminSales = new SM_Daily_Sales(loggedInAdmin, salesDataController, this);
+        this.dispose();
+        adminSales.setVisible(true);
+    }//GEN-LAST:event_dailySalesButtonActionPerformed
+
+    private void reportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportButtonActionPerformed
+        ADMIN_REPORT adminReport = new ADMIN_REPORT(loggedInAdmin, purchaseOrderController, salesDataController, financeController, inventoryController, itemController, this);
+        this.dispose();
+        adminReport.setVisible(true);
+    }//GEN-LAST:event_reportButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,8 +392,11 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JButton InventoryButton;
     private javax.swing.JButton POButton;
     private javax.swing.JButton PRButton;
+    private javax.swing.JButton dailySalesButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -329,6 +404,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JButton reportButton;
     private javax.swing.JButton supplierButton;
     private javax.swing.JButton userButton;
     // End of variables declaration//GEN-END:variables

@@ -9,22 +9,25 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import Entities.PurchaseOrder;
-import Entities.FinanceManager;
+import Entities.User;
 import Interface.FinanceManagerPOServices;
 import Utility.Remark;
 import Utility.Status;
+import Utility.UserRoles;
+import javax.swing.JFrame;
 /**
  *
  * @author Maxcm
  */
 public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
-    private final FinanceManager financeManager;
-    private final FinanceManagerPOServices financeManagerPOServices;
-    private FM_Dashboard previousScreen;
-    private DefaultTableModel tableModel;
 
-    public FM_Approve_Purchase_Order(FinanceManager financeManager, FinanceManagerPOServices financeManagerPOServices, FM_Dashboard previousScreen) {
-        this.financeManager = financeManager;
+    private final User currentUser;
+    private final FinanceManagerPOServices financeManagerPOServices;
+    private DefaultTableModel tableModel;
+    private final JFrame previousScreen;
+
+    public FM_Approve_Purchase_Order(User currentUser, FinanceManagerPOServices financeManagerPOServices, JFrame previousScreen) {
+        this.currentUser = currentUser;
         this.financeManagerPOServices = financeManagerPOServices;
         this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
@@ -42,6 +45,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         initComponents();
         populateTable();
         setupTableSelection();
+        
     }
 
     private void populateTable() {
@@ -68,9 +72,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
                 rowCount++;
             }
         }
-        System.out.println("Rows added to table: " + rowCount);
         tableModel.fireTableDataChanged(); 
-        System.out.println("Table model row count after update: " + tableModel.getRowCount());
         jTable1.repaint();
     }
     private void setupTableSelection() {
@@ -229,10 +231,14 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
                 "No Selection", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        Remark rejectionReason;
         String poId = tableModel.getValueAt(selectedRow, 0).toString();
         try {
-            Remark rejectionReason = Remark.REJECTED_BY_FINANCE_MANAGER;
+            if (currentUser.getRole() == UserRoles.ADMINISTRATOR) {
+                rejectionReason = Remark.REJECTED_BY_ADMINISTRATOR;
+            }else {
+                rejectionReason = Remark.REJECTED_BY_FINANCE_MANAGER;
+            }
             financeManagerPOServices.rejectPurchaseOrder(poId, rejectionReason);
             JOptionPane.showMessageDialog(this, "PO " + poId + " rejected successfully.",
                     "Success", JOptionPane.INFORMATION_MESSAGE);

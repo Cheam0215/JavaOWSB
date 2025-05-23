@@ -10,6 +10,7 @@ import Entities.PurchaseOrder;
 import Entities.SalesData;
 import Entities.StockReportData;
 import java.text.DecimalFormat;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,11 +26,13 @@ public class IM_REPORT extends javax.swing.JFrame {
      */
     public IM_REPORT() {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Add this line
     }
     
     public IM_REPORT(String manager, String startDate, String endDate, StockReportData reportData) {
         initComponents();
         populateReport(manager, startDate, endDate, reportData);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Add this line
     }
     
     
@@ -126,6 +129,7 @@ public class IM_REPORT extends javax.swing.JFrame {
         inventorySummaryTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel1.setText("Stock Report ");
@@ -230,6 +234,7 @@ public class IM_REPORT extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
