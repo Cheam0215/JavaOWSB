@@ -149,6 +149,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
         profilePageButton2 = new javax.swing.JButton();
         tittle3 = new javax.swing.JPanel();
         pageName = new javax.swing.JLabel();
+        logoutButton = new javax.swing.JButton();
         supplierListTablePanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -273,21 +274,34 @@ public class PM_Suppliers extends javax.swing.JFrame {
         pageName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pageName.setText("Supplier List Page");
 
+        logoutButton.setText("Log out");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout tittle3Layout = new javax.swing.GroupLayout(tittle3);
         tittle3.setLayout(tittle3Layout);
         tittle3Layout.setHorizontalGroup(
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
-                .addGap(217, 217, 217)
+            .addGroup(tittle3Layout.createSequentialGroup()
+                .addGap(187, 187, 187)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(187, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutButton)
+                .addContainerGap())
         );
         tittle3Layout.setVerticalGroup(
             tittle3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle3Layout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
+                .addGap(11, 11, 11)
+                .addComponent(logoutButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         supplierListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -622,6 +636,14 @@ public class PM_Suppliers extends javax.swing.JFrame {
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
 
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        currentUser.logout();
+        Login login = new Login();
+        this.dispose();
+        login.setVisible(true);
+
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -671,6 +693,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private javax.swing.JButton itemsListPageButton4;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton logoutButton;
     private javax.swing.JLabel pageName;
     private javax.swing.JButton profilePageButton2;
     private javax.swing.JButton purchaseOrderPageButton2;

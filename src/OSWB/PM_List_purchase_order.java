@@ -52,6 +52,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         loadPO();
         edit();
         saveButton.setEnabled(false);
+        cancelButton.setEnabled(false);
     }
     
     public PM_List_purchase_order(User currentUser, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
@@ -65,6 +66,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         loadPO();
         edit();
         saveButton.setEnabled(false);
+        cancelButton.setEnabled(false);
     }
     
     public void edit()
@@ -379,22 +381,22 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         tittle4Layout.setHorizontalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle4Layout.createSequentialGroup()
+                .addGap(166, 166, 166)
+                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(170, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logoutButton)
-                .addGap(350, 350, 350))
-            .addGroup(tittle4Layout.createSequentialGroup()
-                .addGap(167, 167, 167)
-                .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         tittle4Layout.setVerticalGroup(
             tittle4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tittle4Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
                 .addComponent(logoutButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(24, 24, 24)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         purchaseOrderListTablePanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -461,6 +463,11 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         searchButton1.setText("Search");
         searchButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        searchButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButton1ActionPerformed(evt);
+            }
+        });
 
         purchaseOrderLabel.setText("Purchase Order ID :");
 
@@ -821,6 +828,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         saveButton.setEnabled(true);
         deleteButton.setEnabled(false);
         editButton.setEnabled(false);
+        cancelButton.setEnabled(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -1101,7 +1109,8 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         // Reset button states
         saveButton.setEnabled(false);
         deleteButton.setEnabled(true);
-        editButton.setEnabled(true);// TODO add your handling code here:
+        editButton.setEnabled(true);
+        cancelButton.setEnabled(false);// TODO add your handling code here:
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -1147,6 +1156,10 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
+
+    private void searchButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButton1ActionPerformed
+      searchPurchaseOrders();// TODO add your handling code here:
+    }//GEN-LAST:event_searchButton1ActionPerformed
     
     /**
      * @param args the command line arguments
