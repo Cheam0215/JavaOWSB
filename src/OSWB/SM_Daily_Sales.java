@@ -567,7 +567,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         String date = sdf.format(jDateChooser1.getDate());
         String totalAmountStr = jLabel13.getText();
 
-        if (itemCode == null || itemCode.isEmpty() || quantityStr.isEmpty() || retailPriceStr.isEmpty() || totalAmountStr.isEmpty()) {
+        if (itemCode == null || itemCode.isEmpty() || quantityStr.isEmpty() || retailPriceStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -702,7 +702,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         String date = sdf.format(jDateChooser1.getDate());
         String totalAmountStr = jLabel13.getText();
 
-        if (itemCode == null || itemCode.isEmpty() || quantityStr.isEmpty() || retailPriceStr.isEmpty() || totalAmountStr.isEmpty()) {
+        if (itemCode == null || itemCode.isEmpty() || quantityStr.isEmpty() || retailPriceStr.isEmpty() ) {
             JOptionPane.showMessageDialog(this, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }

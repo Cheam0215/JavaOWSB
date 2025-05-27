@@ -438,12 +438,23 @@ public class SM_Supplier extends javax.swing.JFrame {
         try {
             int contactNumber = Integer.parseInt(contactNumberStr);
             int bankAccount = Integer.parseInt(bankAccountStr);
+
+            // Validate positive values
+            if (contactNumber <= 0) {
+                JOptionPane.showMessageDialog(this, "Contact number must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (bankAccount <= 0) {
+                JOptionPane.showMessageDialog(this, "Bank account must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Supplier supplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
             supplierController.addSupplier(supplier);
             JOptionPane.showMessageDialog(this, "Supplier added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Contact number and bank account must be a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Contact number and bank account must be positive integers.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addbtnActionPerformed
 
@@ -470,7 +481,7 @@ public class SM_Supplier extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (!isEditing || editingSupplierCode == null) {
+         if (!isEditing || editingSupplierCode == null) {
             JOptionPane.showMessageDialog(this, "No supplier is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -489,6 +500,17 @@ public class SM_Supplier extends javax.swing.JFrame {
         try {
             int contactNumber = Integer.parseInt(contactNumberStr);
             int bankAccount = Integer.parseInt(bankAccountStr); 
+
+            // Validate positive values
+            if (contactNumber <= 0) {
+                JOptionPane.showMessageDialog(this, "Contact number must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (bankAccount <= 0) {
+                JOptionPane.showMessageDialog(this, "Bank account must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Supplier updatedSupplier = new Supplier(supplierCode, supplierName, contactNumber, address, bankAccount);
             if (supplierController.updateSupplier(updatedSupplier)) {
                 JOptionPane.showMessageDialog(this, "Supplier updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -500,7 +522,7 @@ public class SM_Supplier extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Failed to update supplier.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Contact number and bank account must be valid integers.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Contact number and bank account must be positive integers.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 

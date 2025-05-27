@@ -622,18 +622,32 @@ public class SM_Item extends javax.swing.JFrame {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
             double unitPrice = Double.parseDouble(unitPriceStr);
-            
+
+            // Validate positive values
+            if (stockLevel <= 0) {
+                JOptionPane.showMessageDialog(this, "Stock level must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (retailPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Retail price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (unitPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             if (retailPrice <= unitPrice) {
                 JOptionPane.showMessageDialog(this, "Retail price must be larger than unit price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }   
-            
+
             Item item = new Item(itemCode, itemName, stockLevel, retailPrice);
             itemController.addItem(item, supplierCode, unitPrice); // Use unitPrice from jTextField4
             JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Stock level must be integers, unit price and retail price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Stock level must be a positive integer, unit price and retail price must be positive numbers.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -701,7 +715,7 @@ public class SM_Item extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-       if (!isEditing || editingItemCode == null) {
+        if (!isEditing || editingItemCode == null) {
             JOptionPane.showMessageDialog(this, "No item is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -723,12 +737,26 @@ public class SM_Item extends javax.swing.JFrame {
             int stockLevel = Integer.parseInt(stockLevelStr);
             double retailPrice = Double.parseDouble(retailPriceStr);
             double unitPrice = Double.parseDouble(unitPriceStr); 
-            
+
+            // Validate positive values
+            if (stockLevel <= 0) {
+                JOptionPane.showMessageDialog(this, "Stock level must be a positive integer.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (retailPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Retail price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (unitPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             if (retailPrice <= unitPrice) {
                 JOptionPane.showMessageDialog(this, "Retail price must be larger than unit price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             Item updatedItem = new Item(itemCode, itemName, stockLevel, retailPrice);
 
             // Assuming updateItem returns a string indicating success or error
@@ -743,7 +771,7 @@ public class SM_Item extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Stock level must be an integer, and retail price and unit price must be numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Stock level must be a positive integer, and retail price and unit price must be positive numbers.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 

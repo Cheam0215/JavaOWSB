@@ -459,21 +459,27 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please fill all fields and select valid options.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         if (isDuplicateItemSupply(itemCode, supplierCode)) {
             JOptionPane.showMessageDialog(this, "This item code and supplier code combination already exists.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
+
+            // Validate positive value
+            if (unitPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             ItemSupply itemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
             itemSupplyController.addItemSupply(itemSupply);
             JOptionPane.showMessageDialog(this, "Item supply added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Unit price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
@@ -525,6 +531,13 @@ public class SM_ItemSupply extends javax.swing.JFrame {
 
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
+
+            // Validate positive value
+            if (unitPrice <= 0) {
+                JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             ItemSupply updatedItemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
 
             // Assuming updateItemSupply returns a string
@@ -539,7 +552,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Unit price must be a number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 
