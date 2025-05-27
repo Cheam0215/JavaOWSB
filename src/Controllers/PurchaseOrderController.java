@@ -404,7 +404,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     }
     
     @Override
-    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode) throws IllegalArgumentException {
+    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode, Remark approveReason) throws IllegalArgumentException {
         if (poId == null || poId.trim().isEmpty()) {
             throw new IllegalArgumentException("PO ID cannot be empty");
         }
@@ -451,7 +451,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 if (newQuantity > 0) {
                     po.setQuantity(newQuantity);
                 }
-
+                po.setRemark(approveReason);
                 po.setStatus(Status.APPROVED);
                 boolean success = fileManager.updateToFile(
                     po, fileManager.getPoFilePath(),
