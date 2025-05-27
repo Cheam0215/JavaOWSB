@@ -13,6 +13,8 @@ import Entities.User;
 import Interface.FinanceManagerPOServices;
 import Utility.Status;
 import javax.swing.JFrame;
+import Utility.Remark;
+
 /**
  *
  * @author Maxcm
@@ -237,10 +239,11 @@ public class FM_Payment extends javax.swing.JFrame {
                 "No Selection", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        Remark donePayment = Remark.PAID_BY_FINANCE_MANAGER;
 
         String poId = tableModel.getValueAt(selectedRow, 0).toString();
         try {
-            String result = financeManagerPOServices.payPurchaseOrder(poId);
+            String result = financeManagerPOServices.payPurchaseOrder(poId, donePayment);
             JOptionPane.showMessageDialog(this, result, "Payment Result", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
         } catch (IllegalArgumentException e) {

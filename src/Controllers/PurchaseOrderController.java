@@ -478,7 +478,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     }
     
     @Override
-    public String payPurchaseOrder(String poId) throws IllegalArgumentException {
+    public String payPurchaseOrder(String poId, Remark donePayment) throws IllegalArgumentException {
         if (poId == null || poId.trim().isEmpty()) {
             throw new IllegalArgumentException("PO ID cannot be empty");
         }
@@ -490,7 +490,8 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 if (!po.getStatus().equals(Status.RECEIVED)) {
                     return "Only RECEIVED Purchase Order can be selected.";
                 }
-
+                
+                po.setRemark(donePayment);
                 po.setStatus(Status.PAID);
                 boolean success = fileManager.updateToFile(
                     po, fileManager.getPoFilePath(),
