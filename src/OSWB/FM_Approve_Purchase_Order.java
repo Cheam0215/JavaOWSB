@@ -193,8 +193,13 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
 
         String quantityInput = JOptionPane.showInputDialog(this, 
             "Enter new quantity (leave blank to keep " + currentQuantity + "):", currentQuantity);
+        if (quantityInput == null) {
+            System.out.println("Approval canceled at quantity input for PO " + poId);
+            return; // Abort if user cancels
+        }
+
         int newQuantity = currentQuantity;
-        if (quantityInput != null && !quantityInput.trim().isEmpty()) {
+        if (!quantityInput.trim().isEmpty()) {
             try {
                 newQuantity = Integer.parseInt(quantityInput);
                 if (newQuantity < 0) {
@@ -211,14 +216,20 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
 
         String newSupplierCode = JOptionPane.showInputDialog(this, 
             "Enter new supplier code (leave blank to keep " + currentSupplierCode + "):", currentSupplierCode);
-        if (newSupplierCode != null && newSupplierCode.trim().isEmpty()) {
+        if (newSupplierCode == null) {
+            return;
+        }
+        if (newSupplierCode.trim().isEmpty()) {
             newSupplierCode = currentSupplierCode;
         }
 
+        Remark approveReason = Remark.APPROVED_BY_FINANCE_MANAGER;
+
         try {
-            String result = financeManagerPOServices.approvePurchaseOrder(poId, newQuantity, newSupplierCode);
+            String result = financeManagerPOServices.approvePurchaseOrder(poId, newQuantity, newSupplierCode, approveReason);
             JOptionPane.showMessageDialog(this, result, "Approval Result", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
+            jTable1.clearSelection();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
