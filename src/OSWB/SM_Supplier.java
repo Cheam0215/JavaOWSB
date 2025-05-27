@@ -512,11 +512,25 @@ public class SM_Supplier extends javax.swing.JFrame {
         }
 
         String supplierCode = (String) model.getValueAt(selectedRow, 0); // Supplier Code
-        if (supplierController.deleteSupplier(supplierCode)) {
-            JOptionPane.showMessageDialog(this, "Supplier deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            resetTable();
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to delete supplier.", "Error", JOptionPane.ERROR_MESSAGE);
+        String supplierName = (String) model.getValueAt(selectedRow, 1); // Supplier Name for confirmation message
+
+        // Show confirmation dialog
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete supplier '" + supplierName + "' (" + supplierCode + ")?",
+            "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        // Proceed only if the user clicks "Yes"
+        if (response == JOptionPane.YES_OPTION) {
+            if (supplierController.deleteSupplier(supplierCode)) {
+                JOptionPane.showMessageDialog(this, "Supplier deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                resetTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete supplier.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 

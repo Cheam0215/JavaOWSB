@@ -582,10 +582,23 @@ public class SM_PR extends javax.swing.JFrame {
         }
 
         String prId = (String) model.getValueAt(selectedRow, 0); // PR ID is in the first column
-        purchaseRequisitionController.deletePurchaseRequisition(prId);
-        JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        loadPR(); // Refresh the table
-        resetTable();
+
+        // Show confirmation dialog
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete Purchase Requisition '" + prId + "'?",
+            "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        // Proceed only if the user clicks "Yes"
+        if (response == JOptionPane.YES_OPTION) {
+            purchaseRequisitionController.deletePurchaseRequisition(prId);
+            JOptionPane.showMessageDialog(this, "Purchase Requisition deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadPR(); // Refresh the table
+            resetTable();
+        }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed

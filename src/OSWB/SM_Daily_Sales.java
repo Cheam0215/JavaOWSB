@@ -634,14 +634,26 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         }
 
         String salesId = (String) model.getValueAt(selectedRow, 0); // Sales ID is in column 0
-        boolean success = salesDataController.deleteSalesData(salesId);
 
-        if (success) {
-            JOptionPane.showMessageDialog(this, "Sales data with ID " + salesId + " deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadSales(); 
-            resetTable();
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to delete sales data with ID " + salesId + ".", "Error", JOptionPane.ERROR_MESSAGE);
+        // Show confirmation dialog
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete sales data with ID '" + salesId + "'?",
+            "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        // Proceed only if the user clicks "Yes"
+        if (response == JOptionPane.YES_OPTION) {
+            boolean success = salesDataController.deleteSalesData(salesId);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Sales data with ID " + salesId + " deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                loadSales(); 
+                resetTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete sales data with ID " + salesId + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
