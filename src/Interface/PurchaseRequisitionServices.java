@@ -12,7 +12,7 @@ import Utility.Status;
  * @author Sheng Ting
  */
 public interface PurchaseRequisitionServices extends PurchaseRequisitionViewServices{
-    public void addPurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status);
+    public String addPurchaseRequisition(PurchaseRequisition pr);
     public boolean updatePurchaseRequisition(PurchaseRequisition updatedPR);
     public boolean deletePurchaseRequisition(String prId);
       

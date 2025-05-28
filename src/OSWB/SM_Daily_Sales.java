@@ -8,6 +8,7 @@ import Controllers.SalesDataController;
 import Entities.SalesData;
 import Entities.SalesManager;
 import Entities.User;
+import Interface.SalesDataServices;
 import Utility.FileManager;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
@@ -34,8 +35,9 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     private String editingSalesId;
     private String originalItemCode;
     private final User currentUser;
-    private final SalesDataController salesDataController;
+    private final SalesDataServices salesDataController;
     private final JFrame previousScreen;
+    private SalesData SalesData;
 
 
     private static class ItemDetails {
@@ -588,8 +590,9 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Quantity exceeds available stock (" + details.stockLevel + ").", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            salesDataController.addSalesData(salesId, itemCode, quantitySold, retailPrice, date, totalAmount);
+            
+            SalesData salesData = new SalesData(salesId,itemCode,quantitySold,retailPrice,date,totalAmount);
+            salesDataController.addSalesData(salesData);
             JOptionPane.showMessageDialog(this, "Sales data added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             resetTable();
         } catch (NumberFormatException e) {

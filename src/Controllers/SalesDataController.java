@@ -72,17 +72,17 @@ public class SalesDataController implements SalesDataServices{
         return result;
     }
     
-    @Override
-    public void addSalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount) {
+    public String addSalesData(SalesData salesData) {
         try {
-            String filePath = fileManager.getSalesDataFilePath();
-            SalesData newSales = new SalesData(salesId, itemCode, quantitySold, retailPrice, date, totalAmount);
+            // Step 1: Define file paths
+            String salesFilePath = fileManager.getSalesDataFilePath();
+            String itemFilePath = fileManager.getItemFilePath();
 
-            // Append new sales data using FileManager's writeToFile
-            boolean success = fileManager.writeToFile(
-                newSales,
-                filePath,
-                sales -> sales.getSalesId(), // Key function for duplicate check
+            // Step 2: Write to salesDataFile.txt
+            boolean salesAdded = fileManager.writeToFile(
+                salesData,
+                salesFilePath,
+                SalesData::getSalesId, // Key function for duplicate check
                 sales -> String.format("%s,%s,%d,%.2f,%s,%.2f",
                     sales.getSalesId(),
                     sales.getItemCode(),
@@ -92,13 +92,13 @@ public class SalesDataController implements SalesDataServices{
                     sales.getTotalAmount())
             );
 
-            if (!success) {
-                System.out.println("Failed to add sales data for Sales ID: " + salesId);
-                return;
+            if (!salesAdded) {
+                System.out.println("Sales write failed for salesId: " + salesData.getSalesId());
+                return "Error: Failed to add sales data to salesDataFile.txt. Sales ID may already exist or file access issue.";
             }
+            System.out.println("Sales data written successfully for salesId: " + salesData.getSalesId());
 
-            // Update stock level in itemFile.txt
-            String itemFilePath = fileManager.getItemFilePath();
+            // Step 3: Read and update item stock
             List<Item> itemList = fileManager.readFile(
                 itemFilePath,
                 line -> {
@@ -116,15 +116,19 @@ public class SalesDataController implements SalesDataServices{
             );
 
             Item targetItem = itemList.stream()
-                .filter(item -> item != null && item.getItemCode().equals(itemCode))
+                .filter(item -> item != null && item.getItemCode().equals(salesData.getItemCode()))
                 .findFirst()
                 .orElse(null);
 
             if (targetItem != null) {
-                int newStock = targetItem.getStockLevel() - quantitySold;
+                int newStock = targetItem.getStockLevel() - salesData.getQuantitySold();
+                if (newStock < 0) {
+                    return "Error: Insufficient stock for item " + salesData.getItemCode() + ". Current stock: " + targetItem.getStockLevel();
+                }
                 targetItem.setStockLevel(newStock);
 
-                fileManager.updateToFile(
+                System.out.println("Attempting to update item stock for: " + itemFilePath);
+                boolean itemUpdated = fileManager.updateToFile(
                     targetItem,
                     itemFilePath,
                     item -> item.getItemCode(), // Key function
@@ -146,12 +150,20 @@ public class SalesDataController implements SalesDataServices{
                         }
                     }
                 );
+
+                if (!itemUpdated) {
+                    System.out.println("Item stock update failed for itemCode: " + salesData.getItemCode());
+                    return "Error: Failed to update stock level for item " + salesData.getItemCode() + ". File update issue.";
+                }
+                System.out.println("Item stock updated successfully for itemCode: " + salesData.getItemCode());
             } else {
-                System.out.println("Item with code " + itemCode + " not found for stock update.");
+                return "Error: Item with code " + salesData.getItemCode() + " not found for stock update.";
             }
+
+            return "Sales data " + salesData.getSalesId() + " added successfully and stock updated.";
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error adding sales data: " + e.getMessage());
+            System.out.println("Exception during sales data addition: " + e.getMessage());
+            return "Error adding sales data: " + e.getMessage() + ". Please check file paths or permissions.";
         }
     }
 

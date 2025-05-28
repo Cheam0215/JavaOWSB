@@ -8,6 +8,7 @@ import Controllers.PurchaseRequisitionController;
 import Entities.PurchaseRequisition;
 import Entities.SalesManager;
 import Entities.User;
+import Interface.PurchaseRequisitionServices;
 import Utility.FileManager;
 import Utility.Date;
 import Utility.Status;
@@ -31,7 +32,7 @@ public class SM_PR extends javax.swing.JFrame {
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingPrId = null; // Track the PR ID being edited
     private final User currentUser;
-    private final PurchaseRequisitionController purchaseRequisitionController;
+    private final PurchaseRequisitionServices purchaseRequisitionController;
     private final JFrame previousScreen;
 
     /**
@@ -540,7 +541,7 @@ public class SM_PR extends javax.swing.JFrame {
         }
 
         // Add the purchase requisition
-        purchaseRequisitionController.addPurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+        PurchaseRequisition purchaseRequisition = new PurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);        purchaseRequisitionController.addPurchaseRequisition(purchaseRequisition);
         JOptionPane.showMessageDialog(this, "Purchase Requisition added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
         // Clear the form

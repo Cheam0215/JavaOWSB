@@ -50,29 +50,30 @@ public class PurchaseRequisitionController implements PurchaseRequisitionService
         return result;
     }
      
-    @Override
-     public void addPurchaseRequisition(String prId, String itemCode, String requestedBy, int quantity, String requiredDate, String requestedDate, Status status) {
+    public String addPurchaseRequisition(PurchaseRequisition pr) {
         try {
-            String filePath = fileManager.getPrFilePath();
-            String absolutePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + filePath.replace("/", File.separator);
+            String prFilePath = fileManager.getPrFilePath();
+            boolean prAdded = fileManager.writeToFile(
+                pr,
+                prFilePath,
+                PurchaseRequisition::getPrId, // Use prId as the unique key
+                requisition -> String.format("%s,%s,%s,%d,%s,%s,%s",
+                    requisition.getPrId(),
+                    requisition.getItemCode(),
+                    requisition.getRequestedBy(),
+                    requisition.getQuantity(),
+                    requisition.getRequiredDate(),
+                    requisition.getRequestedDate(),
+                    requisition.getStatus().toString())
+            );
 
-            // Append the new purchase requisition
-            try (FileWriter fw = new FileWriter(absolutePath, true);
-                 BufferedWriter bw = new BufferedWriter(fw)) {
-                String prData = String.format("%s,%s,%s,%d,%s,%s,%s",
-                    prId,
-                    itemCode,
-                    requestedBy,
-                    quantity,
-                    requiredDate,
-                    requestedDate,
-                    status.toString());
-                bw.write(prData);
-                bw.newLine();
+            if (!prAdded) {
+                return "Error: Failed to add purchase requisition to prFile.txt. PR ID may already exist.";
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error adding purchase requisition: " + e.getMessage());
+
+            return "Purchase requisition " + pr.getPrId() + " added successfully.";
+        } catch (Exception e) {
+            return "Error adding purchase requisition: " + e.getMessage();
         }
     }
     

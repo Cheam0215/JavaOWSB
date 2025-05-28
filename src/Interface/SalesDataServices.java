@@ -11,7 +11,7 @@ import Entities.SalesData;
  * @author Sheng Ting
  */
 public interface SalesDataServices extends SalesDataViewingServices{
-     public void addSalesData(String salesId, String itemCode, int quantitySold, double retailPrice, String date, double totalAmount);
+     public String addSalesData(SalesData salesData);
      public boolean updateSalesData(SalesData updatedSales);
      public boolean deleteSalesData(String salesId);
 }
