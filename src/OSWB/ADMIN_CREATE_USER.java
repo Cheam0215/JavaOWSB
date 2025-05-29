@@ -5,6 +5,7 @@
 package OSWB;
 
 import Entities.Administrator;
+import Entities.User;
 import Utility.UserRoles;
 import Utility.FileManager;
 import java.util.Arrays;
@@ -251,8 +252,11 @@ public class ADMIN_CREATE_USER extends javax.swing.JFrame {
             return;
         }
         
+        String tempID = "";
+        
         //Register User after validating name, password and role.
-        String resultMessage = this.loggedInAdmin.registerUser(username, password, role);
+        User newUser = new User(tempID, username, password, role);
+        String resultMessage = this.loggedInAdmin.registerUser(newUser);
 
         if (resultMessage == null) { // Indicates success from the Administrator class
             JOptionPane.showMessageDialog(this, "User created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

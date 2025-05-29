@@ -30,14 +30,14 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
     
-    private ItemController itemController;
-    private ItemSupplyController itemSupplyController;
-    private PurchaseOrderController purchaseOrderController;  
-    private PurchaseRequisitionController  purchaseRequisitionController;
-    private SalesDataController salesDataController;
-    private SupplierController supplierController;
-    private InventoryController inventoryController;
-    private FinanceController financeController;
+    private final ItemController itemController;
+    private final ItemSupplyController itemSupplyController;
+    private final PurchaseOrderController purchaseOrderController;  
+    private final PurchaseRequisitionController  purchaseRequisitionController;
+    private final SalesDataController salesDataController;
+    private final SupplierController supplierController;
+    private final InventoryController inventoryController;
+    private final FinanceController financeController;
     
 
     /**
@@ -48,8 +48,8 @@ public class Login extends javax.swing.JFrame {
         this.itemController = new ItemController(fm);
         this.itemSupplyController = new ItemSupplyController(fm);
         this.purchaseOrderController = new PurchaseOrderController(fm);
-        this.purchaseRequisitionController = new PurchaseRequisitionController(fm) {};
-        this.salesDataController = new SalesDataController(fm) {};
+        this.purchaseRequisitionController = new PurchaseRequisitionController(fm);
+        this.salesDataController = new SalesDataController(fm);
         this.supplierController = new SupplierController(fm);
         this.inventoryController = new InventoryController(this.purchaseOrderController, this.itemController, this.itemSupplyController);
         this.financeController = new FinanceController(fm);
@@ -90,7 +90,7 @@ public class Login extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         usernameField = new javax.swing.JTextField();
         CancelButton = new javax.swing.JButton();
-        OKButton = new javax.swing.JButton();
+        login = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
 
@@ -111,7 +111,6 @@ public class Login extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Login");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -147,11 +146,9 @@ public class Login extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Username : ");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Password : ");
 
         passwordField.addActionListener(new java.awt.event.ActionListener() {
@@ -173,10 +170,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        OKButton.setText("OK");
-        OKButton.addActionListener(new java.awt.event.ActionListener() {
+        login.setText("OK");
+        login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OKButtonActionPerformed(evt);
+                loginActionPerformed(evt);
             }
         });
 
@@ -200,7 +197,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(CancelButton)
                 .addGap(61, 61, 61)
-                .addComponent(OKButton)
+                .addComponent(login)
                 .addGap(61, 61, 61))
         );
         jPanel3Layout.setVerticalGroup(
@@ -217,7 +214,7 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 231, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CancelButton)
-                    .addComponent(OKButton))
+                    .addComponent(login))
                 .addGap(22, 22, 22))
         );
 
@@ -251,7 +248,7 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldActionPerformed
 
-    private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
+    private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         String username = usernameField.getText();
         String password = String.valueOf(passwordField.getPassword());
         UserRoles role = FileManager.login(username, password);
@@ -281,14 +278,12 @@ public class Login extends javax.swing.JFrame {
                         ADMIN_DASHBOARD adminDashboard = new ADMIN_DASHBOARD(loggedInAdmin, supplierController, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController, itemSupplyController, itemController);
                         this.dispose();
                         adminDashboard.setVisible(true);
-                        loggedInAdmin.displayMenu();
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
                         FinanceManager loggedInFM = new FinanceManager(userID, username, password);
                         FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController);
                         this.dispose();
                         FMDashboard.setVisible(true);
-                        loggedInFM.displayMenu();
 
                     }
                     case UserRoles.INVENTORY_MANAGER -> { 
@@ -303,7 +298,6 @@ public class Login extends javax.swing.JFrame {
                         PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
                         this.dispose();
                         PMOrder.setVisible(true);
-                        loggedInPM.displayMenu();
                     }
                     case UserRoles.SALES_MANAGER -> { 
                         SalesManager loggedInSM = new SalesManager(userID, username, password);
@@ -320,7 +314,7 @@ public class Login extends javax.swing.JFrame {
             }
         }       
         
-    }//GEN-LAST:event_OKButtonActionPerformed
+    }//GEN-LAST:event_loginActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         this.dispose();
@@ -363,7 +357,6 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CancelButton;
-    private javax.swing.JButton OKButton;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -372,6 +365,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton login;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables

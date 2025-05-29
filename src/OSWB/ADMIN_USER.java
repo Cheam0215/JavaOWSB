@@ -369,122 +369,149 @@ public class ADMIN_USER extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        int selectedRow = userTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a user from the table to update.", "No User Selected", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+       int selectedRow = userTable.getSelectedRow();
+       if (selectedRow == -1) {
+           JOptionPane.showMessageDialog(this, "Please select a user from the table to update.", "No User Selected", JOptionPane.WARNING_MESSAGE);
+           return;
+       }
 
-        String userIdToUpdate = (String) tableModel.getValueAt(selectedRow, 0);
-        String currentUsername = (String) tableModel.getValueAt(selectedRow, 1);
-        UserRoles currentRole = UserRoles.valueOf((String) tableModel.getValueAt(selectedRow, 2));
+       // Get details of the user to be updated from the table
+       String userIdToUpdate = (String) tableModel.getValueAt(selectedRow, 0);
+       String currentUsername = (String) tableModel.getValueAt(selectedRow, 1);
+       UserRoles currentRole = UserRoles.valueOf((String) tableModel.getValueAt(selectedRow, 2));
 
-        // --- Let admin choose what to update ---
-        String[] updateOptions = {"Username", "Password", "Role"};
-        String chosenOption = (String) JOptionPane.showInputDialog(
-                this,
-                "What would you like to update for user: " + currentUsername + " (ID: " + userIdToUpdate + ")?",
-                "Select Update Action",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                updateOptions,
-                updateOptions[0] // Default selection
-        );
+       // --- Let admin choose what to update ---
+       String[] updateOptions = {"Username", "Password", "Role"};
+       String chosenOption = (String) JOptionPane.showInputDialog(
+               this,
+               "What would you like to update for user: " + currentUsername + " (ID: " + userIdToUpdate + ")?",
+               "Select Update Action",
+               JOptionPane.QUESTION_MESSAGE,
+               null, // No icon
+               updateOptions, // Array of choices
+               updateOptions[0] // Default choice
+       );
 
-        if (chosenOption == null) {
-            return; // Admin cancelled
-        }
+       if (chosenOption == null) {
+           return; // Admin cancelled the initial choice dialog
+       }
 
-        // Initialize variables to hold new values; null means no change intended for that field
-        String newUsername = null;
-        String newPassword = null;
-        UserRoles newRole = null;
-        boolean changeAttempted = false; // To track if any update was actually processed
+      
+       String newUsernameForUpdate = null;
+       String newPlainTextPasswordForUpdate = null;
+       UserRoles newRoleForUpdate = null;
+       boolean changeActuallyAttempted = false; 
 
-        // --- Process based on chosen option ---
-        switch (chosenOption) {
-            case "Username" -> {
-                String usernameInput = JOptionPane.showInputDialog(this, "Enter new username:", currentUsername);
-                if (usernameInput != null && !usernameInput.trim().isEmpty() && !usernameInput.trim().equals(currentUsername)) {
-                    newUsername = usernameInput.trim();
-                    changeAttempted = true;
-                } else if (usernameInput == null) { // Cancelled
-                    JOptionPane.showMessageDialog(this, "Username update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                } else { // Entered same username or empty
-                    JOptionPane.showMessageDialog(this, "No change to username.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
+       switch (chosenOption) {
+           case "Username" -> {
+               String usernameInput = JOptionPane.showInputDialog(this, "Enter new username for " + currentUsername + ":", currentUsername);
+               if (usernameInput == null) { // User pressed Cancel
+                   JOptionPane.showMessageDialog(this, "Username update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                   return;
+               }
+               if (usernameInput.trim().isEmpty()) {
+                   JOptionPane.showMessageDialog(this, "New username cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                   return;
+               }
+               if (!usernameInput.trim().equals(currentUsername)) {
+                   newUsernameForUpdate = usernameInput.trim();
+                   changeActuallyAttempted = true;
+               } else {
+                   JOptionPane.showMessageDialog(this, "No change made to username.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                   return; // No actual change
+               }
+               }
 
-            case "Password" -> {
-                JPasswordField pf1 = new JPasswordField(20);
-                JPasswordField pf2 = new JPasswordField(20);
-                JLabel label1 = new JLabel("New Password:");
-                JLabel label2 = new JLabel("Confirm New Password:");
-                Box box = Box.createVerticalBox();
-                box.add(label1); box.add(pf1);
-                box.add(Box.createVerticalStrut(15));
-                box.add(label2); box.add(pf2);
+           case "Password" -> {
+               JPasswordField pf1 = new JPasswordField(20);
+               JPasswordField pf2 = new JPasswordField(20);
+               JLabel label1 = new JLabel("Enter New Password:");
+               JLabel label2 = new JLabel("Confirm New Password:");
 
-                int okCxl = JOptionPane.showConfirmDialog(this, box, "Set New Password for " + currentUsername, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (okCxl == JOptionPane.OK_OPTION) {
-                    String pass1 = String.valueOf(pf1.getPassword());
-                    String pass2 = String.valueOf(pf2.getPassword());
-                    if (pass1.isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "New password cannot be empty.", "Password Error", JOptionPane.ERROR_MESSAGE); return;
-                    }
-                    if (!pass1.equals(pass2)) {
-                        JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Error", JOptionPane.ERROR_MESSAGE); return;
-                    }
-                    if (pass1.length() < 6) {
-                        JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Password Error", JOptionPane.ERROR_MESSAGE); return;
-                    }
-                    newPassword = pass1;
-                    changeAttempted = true;
-                } else {
-                    JOptionPane.showMessageDialog(this, "Password update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-            }
+               Box passwordPanel = Box.createVerticalBox();
+               passwordPanel.add(label1);
+               passwordPanel.add(pf1);
+               passwordPanel.add(Box.createVerticalStrut(15)); // Spacer
+               passwordPanel.add(label2);
+               passwordPanel.add(pf2);
 
-            case "Role" -> {
-                String[] availableRoles = java.util.Arrays.stream(UserRoles.values())
-                        .filter(r -> r != UserRoles.ADMINISTRATOR)
-                        .map(Enum::name)
-                        .toArray(String[]::new);
-                String newRoleString = (String) JOptionPane.showInputDialog(this, "Select new role:",
-                        "Update Role for " + currentUsername, JOptionPane.QUESTION_MESSAGE, null,
-                        availableRoles, currentRole.name());
-                if (newRoleString != null && !UserRoles.valueOf(newRoleString).equals(currentRole)) {
-                    newRole = UserRoles.valueOf(newRoleString);
-                    changeAttempted = true;
-                } else if (newRoleString == null) { // Cancelled
-                    JOptionPane.showMessageDialog(this, "Role update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                } else { // Selected same role
-                    JOptionPane.showMessageDialog(this, "No change to role.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        }
+               int passwordDialogResult = JOptionPane.showConfirmDialog(this, passwordPanel,
+                       "Set New Password for " + currentUsername, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        // If no change was actually attempted (e.g., user cancelled all individual prompts or entered same values)
-        if (!changeAttempted) {
-            // Message was already shown for individual cancellations or no changes.
-            // If choosing "Username" but then cancelling the username input, this path won't be hit due to early returns.
-            // This check is more for a scenario where an option is chosen but results in no effective change.
-            // System.out.println("No effective changes to apply.");
-            return;
-        }
+               if (passwordDialogResult == JOptionPane.OK_OPTION) {
+                   String pass1 = String.valueOf(pf1.getPassword());
+                   String pass2 = String.valueOf(pf2.getPassword());
 
-        // --- Call the update method in Administrator class ---
-        String resultMessage = loggedInAdmin.updateUser(userIdToUpdate, newUsername, newPassword, newRole);
+                   if (pass1.isEmpty()) {
+                       JOptionPane.showMessageDialog(this, "New password cannot be empty.", "Password Error", JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
+                   if (pass1.length() < 6) {
+                       JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Password Error", JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
+                   if (!pass1.equals(pass2)) {
+                       JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Error", JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
+                   newPlainTextPasswordForUpdate = pass1;
+                   changeActuallyAttempted = true;
+               } else { // User pressed Cancel or closed the dialog
+                   JOptionPane.showMessageDialog(this, "Password update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                   return;
+               }
+               }
 
-        if (resultMessage == null) {
-            JOptionPane.showMessageDialog(this, "User ID: " + userIdToUpdate + " updated successfully.", "Update Successful", JOptionPane.INFORMATION_MESSAGE);
-            loadUserTable(); // Refresh the table
-        } else {
-            JOptionPane.showMessageDialog(this, "Error updating user: " + resultMessage, "Update Failed", JOptionPane.ERROR_MESSAGE);
-        }
+           case "Role" -> {
+               String[] availableRoles = java.util.Arrays.stream(UserRoles.values())
+                       .filter(r -> r != UserRoles.ADMINISTRATOR) // Admin cannot change a user to be another Admin via this
+                       .map(Enum::name)
+                       .toArray(String[]::new);
+               String newRoleString = (String) JOptionPane.showInputDialog(this, "Select new role for " + currentUsername + ":",
+                       "Update Role", JOptionPane.QUESTION_MESSAGE, null,
+                       availableRoles, currentRole.name());
+
+               if (newRoleString == null) { // User pressed Cancel
+                   JOptionPane.showMessageDialog(this, "Role update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                   return;
+               }
+               UserRoles selectedNewRole = UserRoles.valueOf(newRoleString);
+               if (selectedNewRole != currentRole) {
+                   newRoleForUpdate = selectedNewRole;
+                   changeActuallyAttempted = true;
+               } else {
+                   JOptionPane.showMessageDialog(this, "No change made to role.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                   return; // No actual change
+               }
+               }
+
+           default -> {
+               // Should not happen with current options
+               return;
+               }
+       }
+
+
+       if (!changeActuallyAttempted) {
+           return;
+       }
+
+       User updatedUserDetails = new User(
+               userIdToUpdate, 
+               newUsernameForUpdate,     
+               newPlainTextPasswordForUpdate, 
+               newRoleForUpdate           
+       );
+
+       // Call the updateUser method in the Administrator class (or UserManagementService)
+       String resultMessage = this.loggedInAdmin.updateUser(userIdToUpdate, updatedUserDetails);
+
+       if (resultMessage == null) { // Indicates success
+           JOptionPane.showMessageDialog(this, "User ID: " + userIdToUpdate + " updated successfully!", "Update Successful", JOptionPane.INFORMATION_MESSAGE);
+           loadUserTable(); // Refresh the table to show changes
+       } else {
+           JOptionPane.showMessageDialog(this, "Error updating user: " + resultMessage, "Update Failed", JOptionPane.ERROR_MESSAGE);
+       }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
@@ -498,10 +525,7 @@ public class ADMIN_USER extends javax.swing.JFrame {
         if (this.previousScreen != null) {
             this.previousScreen.setVisible(true); // Just make the existing one visible
         } else {
-            // Fallback or error: Should not happen if previousScreen is always passed
             JOptionPane.showMessageDialog(this, "Error: Previous screen reference lost.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
-            // Optionally, recreate Login if truly lost
-            // new Login().setVisible(true);
         }
         this.dispose();
         

@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +27,7 @@ public class Administrator extends User {
 
     // Constructor if needed for creating an instance without an initial password (e.g., for operations)
     public Administrator(String userId, String username) {
-        super(userId, username, "INTERNAL_ADMIN_PLACEHOLDER_PASS", UserRoles.ADMINISTRATOR);
+        super(userId, username, "123456", UserRoles.ADMINISTRATOR);
         this.fileManager = new FileManager();
     }
 
@@ -42,60 +41,54 @@ public class Administrator extends User {
      * @param role        The role for the new user.
      * @return null if registration is successful, or an error message string if it fails.
      */
-    public String registerUser(String newUsername, String newPassword, UserRoles role) {
+     /**
+     *
+     * @param newUserObject The User object containing details for the new user.
+     *                     The password in this object should be plain text.
+     * @return null if registration is successful, or an error message string if it fails.
+     */
+    public String registerUser(User newUserObject) {
+        if (newUserObject == null) {
+            return "User object cannot be null.";
+        }
+
+        String newUsername = newUserObject.getUsername();
+        String plainTextPassword = newUserObject.getPassword(); // Assuming getPassword() on newUserObject returns plain text
+        UserRoles role = newUserObject.getRole();
+
         // --- Business Logic Level Input Validation ---
-        // These checks are important even if the UI does some validation,
-        // as this method is the ultimate authority for business rules.
         if (newUsername == null || newUsername.trim().isEmpty()) {
             return "Username cannot be empty.";
         }
-        if (newPassword == null || newPassword.length() < 6) { // Ensure this matches UI or is stricter
+        if (plainTextPassword == null || plainTextPassword.length() < 6) {
             return "Password must be at least 6 characters long.";
         }
         if (role == null) {
             return "A role must be specified for the new user.";
         }
         if (role == UserRoles.ADMINISTRATOR) {
-            // Prevent creating another admin through this specific method,
-            // Admin creation might have a special process or be disabled.
             return "Cannot create an Administrator role through this function. Please select a different role.";
         }
         // --- End Business Logic Level Input Validation ---
 
-
         // Read existing users to check for duplicate username
         List<User> existingUsers = fileManager.readFile(
-            fileManager.getUserFilePath(), // Make sure getUserFilePath() is correct
-            line -> {
-                String[] data = line.split(",", -1); // Use -1 to keep trailing empty strings
+            fileManager.getUserFilePath(),
+            line -> { // Parser logic to create User objects from file lines
+                String[] data = line.split(",", -1);
                 if (data.length < 4) {
                     System.err.println("Skipping invalid user data (not enough fields): " + line);
                     return null;
                 }
-                String storedPasswordFromFile = data[2];
-                String actualPasswordForUserObject = storedPasswordFromFile; // Assume plain text or already processed
-
-                // If passwords in file are Base64 Object Serialized strings:
-                if (isBase64(storedPasswordFromFile)) {
-                    try {
-                        byte[] decodedBytes = Base64.getDecoder().decode(storedPasswordFromFile);
-                        try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(decodedBytes))) {
-                            actualPasswordForUserObject = (String) in.readObject();
-                        }
-                    } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
-                        System.err.println("Password deserialization failed for entry: " + line + ". Using raw value from file. Error: " + e.getMessage());
-                        // Keep actualPasswordForUserObject as storedPasswordFromFile
-                    }
-                }
-                // IMPORTANT: The User constructor should expect the password in the format it's meant to be used with,
-                // NOT necessarily the format it's stored in the file if that format is for persistence only (e.g., hash).
-                // For this example, we're assuming the User object holds the (potentially deserialized) password.
-
+                String storedPasswordFromFile = data[2]; // This is the storable (e.g., Base64) password
+                // For comparison or creating User objects for the list, you might deserialize.
+                // However, for the existingUsers list, the primary goal is just to check username.
+                // The password field here for the User constructor can be the storable one.
                 try {
                     return new User(
                         data[0], // id
                         data[1], // username
-                        actualPasswordForUserObject, // password
+                        storedPasswordFromFile, // password (storable form)
                         UserRoles.valueOf(data[3]) // role
                     );
                 } catch (IllegalArgumentException e) {
@@ -103,20 +96,20 @@ public class Administrator extends User {
                     return null;
                 }
             }
-        ).stream().filter(Objects::nonNull).collect(Collectors.toList()); // Filter out nulls from parsing errors
+        ).stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-        // Check for duplicate username (case-insensitive)
+        // Check for duplicate username
         for (User existingUser : existingUsers) {
             if (existingUser.getUsername().equalsIgnoreCase(newUsername)) {
                 return "Username '" + newUsername + "' already exists. Please choose a different username.";
             }
         }
 
-        // "Serialize" the new password to Base64 (CONSIDER HASHING INSTEAD for security)
+        // "Serialize" the plainTextPassword from newUserObject to its storable format
         String passwordToStoreInFile;
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream out = new ObjectOutputStream(baos)) {
-            out.writeObject(newPassword); // Serialize the plain text password given by the user
+            out.writeObject(plainTextPassword); // Serialize the plain text password
             out.flush();
             passwordToStoreInFile = Base64.getEncoder().encodeToString(baos.toByteArray());
         } catch (IOException e) {
@@ -124,9 +117,8 @@ public class Administrator extends User {
             return "Error processing password. User not created.";
         }
 
-        // Generate a new ID
-        // Simple increment based on current count or max ID.
-        // For more robustness, consider UUIDs or a more sophisticated ID generation.
+        // Generate a new ID (The ID from newUserObject might be ignored or used as a suggestion)
+        // It's safer to generate a new unique ID here to avoid clashes if the UI pre-populates an ID.
         int maxId = 0;
         for (User user : existingUsers) {
             try {
@@ -135,49 +127,40 @@ public class Administrator extends User {
                     maxId = currentId;
                 }
             } catch (NumberFormatException e) {
-                // Handle non-numeric IDs if they can exist, or log error
-                System.err.println("Warning: Non-numeric user ID found: " + user.getUserID() + ". This might affect ID generation.");
+                System.err.println("Warning: Non-numeric user ID found: " + user.getUserID());
             }
         }
-        String newUserID = String.format("%03d", maxId + 1);
+        String finalUserID = String.format("%03d", maxId + 1);
+        // If you trust the ID from newUserObject and it's guaranteed unique by UI (less safe):
+        // String finalUserID = newUserObject.getUserID();
 
-
-        // Create role-specific user object.
-        // The constructor for these role-specific classes should take the password
-        // that is intended to be STORED (i.e., passwordToStoreInFile).
-        User roleSpecificUser;
+        // Create the final user object to be saved, ensuring it has the storable password
+        // and the correct role-specific type.
+        User userToSave;
         switch (role) {
-            case FINANCE_MANAGER:
-                roleSpecificUser = new FinanceManager(newUserID, newUsername, passwordToStoreInFile);
-                break;
-            case INVENTORY_MANAGER:
-                roleSpecificUser = new InventoryManager(newUserID, newUsername, passwordToStoreInFile);
-                break;
-            case PURCHASE_MANAGER:
-                roleSpecificUser = new PurchaseManager(newUserID, newUsername, passwordToStoreInFile);
-                break;
-            case SALES_MANAGER:
-                roleSpecificUser = new SalesManager(newUserID, newUsername, passwordToStoreInFile);
-                break;
-            default:
-                // This case should have been caught by the validation at the beginning of the method.
+            case FINANCE_MANAGER -> userToSave = new FinanceManager(finalUserID, newUsername, passwordToStoreInFile);
+            case INVENTORY_MANAGER -> userToSave = new InventoryManager(finalUserID, newUsername, passwordToStoreInFile);
+            case PURCHASE_MANAGER -> // If PurchaseManager constructor needs more (like injected services), this needs adjustment.
+                // For now, assuming a simple constructor for entity creation.
+                userToSave = new PurchaseManager(finalUserID, newUsername, passwordToStoreInFile);
+            case SALES_MANAGER -> userToSave = new SalesManager(finalUserID, newUsername, passwordToStoreInFile);
+            default -> {
                 return "Internal error: Invalid role specified after validation.";
+            }
         }
 
-        // Write the new user to the file
-        // The lambda here defines how to convert the roleSpecificUser object to a string for the file.
-        // It should use user.getPassword() which should return the passwordToStoreInFile.
+        // Write the userToSave object to the file
         boolean success = fileManager.writeToFile(
-            roleSpecificUser,
+            userToSave,
             fileManager.getUserFilePath(),
-            User::getUserID, // Method reference to get the ID for uniqueness check if writeToFile uses it
+            User::getUserID,
             user -> user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole().name()
         );
 
         if (success) {
-            return null; // Indicates success
+            return null; // Success
         } else {
-            return "There's something wrong";
+            return "Failed to save user data to file.";
         }
     }
     
@@ -312,21 +295,16 @@ public class Administrator extends User {
     }
     
     
-     /**
-     * Updates an existing user's information (e.g., username, role, password).
-     *
-     * @param userIdToUpdate The ID of the user to update.
-     * @param newUsername    The new username (can be null or empty if not changing).
-     * @param newPassword    The new plain text password (can be null or empty if not changing).
-     * @param newRole        The new role (can be null if not changing).
-     * @return null if update is successful, or an error message string if it fails.
-     */
-    public String updateUser(String userIdToUpdate, String newUsername, String newPassword, UserRoles newRole) {
+   
+    public String updateUser(String userIdToUpdate, User updatedUserDetails) {
         if (userIdToUpdate == null || userIdToUpdate.trim().isEmpty()) {
             return "User ID to update cannot be empty.";
         }
+        if (updatedUserDetails == null) {
+            return "Updated user details cannot be null.";
+        }
 
-        User existingUser = getUserById(userIdToUpdate); // This should fetch the user with their current *storable* password
+        User existingUser = getUserById(userIdToUpdate); // Fetches user with current *storable* password
         if (existingUser == null) {
             return "User with ID '" + userIdToUpdate + "' not found.";
         }
@@ -335,37 +313,46 @@ public class Administrator extends User {
             return "Administrator accounts cannot be modified through this function.";
         }
 
-        // --- Prepare updated fields ---
+        // --- Determine final values based on updatedUserDetails and existingUser ---
         String finalUsername = existingUser.getUsername();
-        if (newUsername != null && !newUsername.trim().isEmpty() && !newUsername.trim().equalsIgnoreCase(existingUser.getUsername())) {
-            // Check if the new username is already taken by ANOTHER user
-            List<User> allUsers = getAllUsers(); // Assumes getAllUsers is efficient or cached if called often
+        // Check if a new username is provided and is different
+        if (updatedUserDetails.getUsername() != null &&
+            !updatedUserDetails.getUsername().trim().isEmpty() &&
+            !updatedUserDetails.getUsername().trim().equalsIgnoreCase(existingUser.getUsername())) {
+
+            String proposedNewUsername = updatedUserDetails.getUsername().trim();
+            // Validate new username length (if you have such rules)
+            // Check for duplicate username against OTHER users
+            List<User> allUsers = getAllUsers();
             for (User u : allUsers) {
-                if (!u.getUserID().equals(userIdToUpdate) && u.getUsername().equalsIgnoreCase(newUsername.trim())) {
-                    return "New username '" + newUsername.trim() + "' is already taken by another user.";
+                if (!u.getUserID().equals(userIdToUpdate) && u.getUsername().equalsIgnoreCase(proposedNewUsername)) {
+                    return "New username '" + proposedNewUsername + "' is already taken by another user.";
                 }
             }
-            finalUsername = newUsername.trim();
+            finalUsername = proposedNewUsername;
         }
 
         UserRoles finalRole = existingUser.getRole();
-        if (newRole != null && newRole != existingUser.getRole()) {
-            if (newRole == UserRoles.ADMINISTRATOR) {
+        // Check if a new role is provided and is different
+        if (updatedUserDetails.getRole() != null && updatedUserDetails.getRole() != existingUser.getRole()) {
+            if (updatedUserDetails.getRole() == UserRoles.ADMINISTRATOR) {
                 return "Cannot change role to Administrator through this function.";
             }
-            finalRole = newRole;
+            finalRole = updatedUserDetails.getRole();
         }
 
         String finalStorablePassword = existingUser.getPassword(); // Keep existing password by default
-        if (newPassword != null && !newPassword.isEmpty()) {
-            // Validate new password (e.g., minimum length)
-            if (newPassword.length() < 6) { // Match this with registration validation
+        // Check if a new plain text password is provided in updatedUserDetails
+        // (getPassword() on updatedUserDetails should return plain text for new password)
+        if (updatedUserDetails.getPassword() != null && !updatedUserDetails.getPassword().isEmpty()) {
+            String plainTextNewPassword = updatedUserDetails.getPassword();
+            if (plainTextNewPassword.length() < 6) {
                 return "New password must be at least 6 characters long.";
             }
-            // Process the new plain text password to its storable format (e.g., Base64 serialize)
+            // Process the new plain text password to its storable format
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
                  ObjectOutputStream out = new ObjectOutputStream(baos)) {
-                out.writeObject(newPassword); // Serialize the new plain text password
+                out.writeObject(plainTextNewPassword);
                 out.flush();
                 finalStorablePassword = Base64.getEncoder().encodeToString(baos.toByteArray());
             } catch (IOException e) {
@@ -374,46 +361,40 @@ public class Administrator extends User {
             }
         }
 
-        // --- Reconstruct the User object with updated fields ---
-        // The password used here (finalStorablePassword) MUST be in the format expected by the User constructor
-        // and also the format that will be written to the file.
-        User updatedUserObject;
-        switch (finalRole) { // Use finalRole for instantiation
-            case FINANCE_MANAGER -> updatedUserObject = new FinanceManager(userIdToUpdate, finalUsername, finalStorablePassword);
-            case INVENTORY_MANAGER -> updatedUserObject = new InventoryManager(userIdToUpdate, finalUsername, finalStorablePassword);
-            case PURCHASE_MANAGER -> updatedUserObject = new PurchaseManager(userIdToUpdate, finalUsername, finalStorablePassword);
-            case SALES_MANAGER -> updatedUserObject = new SalesManager(userIdToUpdate, finalUsername, finalStorablePassword);
-            default -> {
-                // This case should ideally not be reached if role validation is done prior
-                // or if existingUser.getRole() is always a valid non-admin role for updatable users.
-                // Fallback to a generic User if User class is not abstract.
-                // If User is abstract, this is an error.
-                // For this example, assuming role has been validated or is one of the above.
-                // If User can be instantiated:
-                // updatedUserObject = new User(userIdToUpdate, finalUsername, finalStorablePassword, finalRole);
-                // break;
+        // --- Reconstruct the User object to be saved with all final values ---
+        User userToSave;
+        // Use userIdToUpdate (the original ID), finalUsername, finalStorablePassword, finalRole
+        switch (finalRole) {
+            case FINANCE_MANAGER:
+                userToSave = new FinanceManager(userIdToUpdate, finalUsername, finalStorablePassword);
+                break;
+            case INVENTORY_MANAGER:
+                userToSave = new InventoryManager(userIdToUpdate, finalUsername, finalStorablePassword);
+                break;
+            case PURCHASE_MANAGER:
+                // If PurchaseManager constructor requires injected services for its *entity state*,
+                // this becomes complex. Usually, for saving, you use a simpler constructor.
+                // If the services are only for *operations*, they aren't part of the saved entity state.
+                userToSave = new PurchaseManager(userIdToUpdate, finalUsername, finalStorablePassword);
+                break;
+            case SALES_MANAGER:
+                userToSave = new SalesManager(userIdToUpdate, finalUsername, finalStorablePassword);
+                break;
+            default:
                 return "Internal error: Invalid role encountered during user update.";
-            }
         }
-        // Use finalRole for instantiation
-                // If your User class constructor doesn't take role but it's set via a setter:
-        // updatedUserObject.setRole(finalRole);
 
-
-        // --- Write to file ---
+        // --- Write to file using your existing updateToFile function ---
         boolean success = fileManager.updateToFile(
-            updatedUserObject,
+            userToSave, // The fully reconstructed object with final values
             fileManager.getUserFilePath(),
-            User::getUserID, // idExtractor
-            user -> user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole().name(), // toStringConverter
-            line -> { // parser for readFile within updateToFile
+            User::getUserID,
+            user -> user.getUserID() + "," + user.getUsername() + "," + user.getPassword() + "," + user.getRole().name(),
+            line -> { // Parser to reconstruct User objects for the list in updateToFile
                 String[] data = line.split(",", -1);
                 if (data.length < 4) return null;
-                // The parser in updateToFile reads all existing users.
-                // The password here (data[2]) is the storable form from the file.
                 try {
-                     // When constructing User objects for the list being modified,
-                     // use the password directly from file (storable form)
+                    // When parsing for updateToFile's internal list, use the storable password from file
                     return new User(data[0], data[1], data[2], UserRoles.valueOf(data[3]));
                 } catch (IllegalArgumentException e) {
                     return null;
@@ -424,6 +405,7 @@ public class Administrator extends User {
         if (success) {
             return null; // Update successful
         } else {
+            // updateToFile prints its own message, but we can return a more general one
             return "Failed to update user with ID '" + userIdToUpdate + "'.";
         }
     }

@@ -43,7 +43,6 @@ public class FileManager {
                 String filePassword = data[2].trim();
                 String fileRole = data[3].trim();
 
-                // Try to deserialize the password; fall back to plain text if it fails
                 String storedPassword = filePassword;
                 try {
                     byte[] decodedBytes = Base64.getDecoder().decode(filePassword);
@@ -52,8 +51,7 @@ public class FileManager {
                         System.out.println("storedPassword " + storedPassword);
                     }
                 } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
-                    // If deserialization fails or not Base64, use the field as plain text
-//                    System.out.println("Password not serialized or invalid Base64: " + filePassword);
+                    System.out.println("Error");
                 }
 
                 // Compare username and password

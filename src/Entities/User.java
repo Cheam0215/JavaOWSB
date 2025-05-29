@@ -62,20 +62,7 @@ public class User {
 
     
     
-    public static boolean login(String userID, String password) {
-        FileManager fileManager = new FileManager();
-        
-        if (userID == null || userID.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            return false;
-        }
-        List<User> userList = fileManager.readFile(
-            fileManager.getUserFilePath(),
-            User::parse
-        );
-        System.out.println(userList.stream());
-        return userList.stream()
-            .anyMatch(user -> user.getUserID().equals(userID) && user.getPassword().equals(password));
-        }
+   
 
     public boolean logout () {
         Session logout = new Session();
@@ -83,7 +70,6 @@ public class User {
         return true;
     }
     
-    public void displayMenu(){};
     
      public static User parse(String line) {
         String[] data = line.split(",");
