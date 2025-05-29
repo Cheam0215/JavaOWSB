@@ -70,9 +70,9 @@
                                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                                               <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
                                               <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jSpinner1" alignment="0" max="32767" attributes="0"/>
                                               <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
                                           </Group>
+                                          <Component id="jTextField2" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -132,7 +132,7 @@
                               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jSpinner1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
@@ -338,8 +338,6 @@
         <Property name="text" type="java.lang.String" value="jLabel11"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="jSpinner1">
-    </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel12">
@@ -359,6 +357,11 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jLabel7"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextField2">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField2ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

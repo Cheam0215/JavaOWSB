@@ -136,7 +136,7 @@ public class SM_PR extends javax.swing.JFrame {
         jTextField1.setText("");
         jLabel9.setText(generateNextPrID());
         jComboBox1.setSelectedIndex(-1);
-        jSpinner1.setValue(0);
+        jTextField2.setText("");
         jDateChooser1.setDate(new java.util.Date());
         isEditing = false;
         editingPrId = null;
@@ -145,6 +145,11 @@ public class SM_PR extends javax.swing.JFrame {
         editBtn.setEnabled(jTable1.getSelectedRow() != -1);
         saveBtn.setEnabled(false);
         deleteBtn.setEnabled(jTable1.getSelectedRow() != -1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1); // Add 1 day to get tomorrow's date
+        java.util.Date tomorrow = calendar.getTime();
+        jDateChooser1.setDate(tomorrow);
+        jDateChooser1.setMinSelectableDate(tomorrow);
     }
     
     private void populateItemCodeComboBox() {
@@ -273,11 +278,11 @@ public class SM_PR extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel12 = new javax.swing.JLabel();
         resetBtn = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -394,6 +399,12 @@ public class SM_PR extends javax.swing.JFrame {
 
         jLabel7.setText("jLabel7");
 
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -438,8 +449,8 @@ public class SM_PR extends javax.swing.JFrame {
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -484,7 +495,7 @@ public class SM_PR extends javax.swing.JFrame {
                                 .addGap(47, 47, 47)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel5)
-                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(45, 45, 45)
                                 .addComponent(jLabel6))
                             .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -511,47 +522,56 @@ public class SM_PR extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        String prId = generateNextPrID();
-        jLabel9.setText(prId);
-        String itemCode = (String) jComboBox1.getSelectedItem();
-        String requestedBy = jLabel11.getText();
-        int quantity = (Integer) jSpinner1.getValue();
-        java.util.Date requiredUtilDate = jDateChooser1.getDate();
-        if (requiredUtilDate == null) {
-            JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.setTime(requiredUtilDate);
-        Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
-                                    cal.get(java.util.Calendar.MONTH) + 1, 
-                                    cal.get(java.util.Calendar.DAY_OF_MONTH));
-        String requiredDateStr = requiredDate.toIsoString();
-        String requestedDate = jLabel7.getText();
-        Status status = Status.valueOf(jLabel12.getText());
+        try {
+            String prId = jLabel9.getText(); // Already generated, no need to regenerate
+            String itemCode = (String) jComboBox1.getSelectedItem();
+            String requestedBy = jLabel11.getText();
+            // Parse quantity from text field
+            int quantity = Integer.parseInt(jTextField2.getText().trim());
+            java.util.Date requiredUtilDate = jDateChooser1.getDate();
 
-        // Validate input
-        if (itemCode == null || itemCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (quantity <= 0) {
-            JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            // Validate required date
+            if (requiredUtilDate == null) {
+                JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        // Add the purchase requisition
-        PurchaseRequisition purchaseRequisition = new PurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);        purchaseRequisitionController.addPurchaseRequisition(purchaseRequisition);
-        JOptionPane.showMessageDialog(this, "Purchase Requisition added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(requiredUtilDate);
+            Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
+                                        cal.get(java.util.Calendar.MONTH) + 1, 
+                                        cal.get(java.util.Calendar.DAY_OF_MONTH));
+            String requiredDateStr = requiredDate.toIsoString();
+            String requestedDate = jLabel7.getText();
+            Status status = Status.valueOf(jLabel12.getText());
 
-        // Clear the form
-        jLabel9.setText("");
-        jComboBox1.setSelectedIndex(0);
-        jSpinner1.setValue(0);
-        Date today = new Date(2025, 5, 3);
-        jDateChooser1.setDate(new java.util.Date());
-        
-        loadPR();
+            // Validate input
+            if (itemCode == null || itemCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Add the purchase requisition
+            PurchaseRequisition purchaseRequisition = new PurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+            String result = purchaseRequisitionController.addPurchaseRequisition(purchaseRequisition);
+            if (result.startsWith("Purchase requisition") && result.endsWith("added successfully.")) {
+                JOptionPane.showMessageDialog(this, "Purchase Requisition added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                resetTable(); // This will handle clearing the form and refreshing the table
+                loadPR(); // Refresh the table
+            } else {
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid number format. Please enter a valid number for quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date or status format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error adding Purchase Requisition: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
         resetTable();
     }//GEN-LAST:event_addBtnActionPerformed
 
@@ -622,7 +642,7 @@ public class SM_PR extends javax.swing.JFrame {
         jLabel9.setText(editingPrId); // PR ID (read-only)
         jComboBox1.setSelectedItem(itemCode); // Item Code (editable)
         jLabel11.setText(requestedBy); // Requested By (read-only)
-        jSpinner1.setValue(Integer.parseInt(quantity)); // Quantity (editable)
+        jTextField2.setText(model.getValueAt(selectedRow,3).toString()); // Quantity (editable)
         try {
             java.util.Date requiredDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(requiredDateStr);
             jDateChooser1.setDate(requiredDate); // Required Date (editable)
@@ -642,59 +662,73 @@ public class SM_PR extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (!isEditing || editingPrId == null) {
-            JOptionPane.showMessageDialog(this, "No Purchase Requisition is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+        try {
+            if (!isEditing || editingPrId == null) {
+                JOptionPane.showMessageDialog(this, "No Purchase Requisition is being edited.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Get updated values from the UI
+            String itemCode = (String) jComboBox1.getSelectedItem();
+            // Parse quantity from text field
+            int quantity = Integer.parseInt(jTextField2.getText().trim());
+            java.util.Date requiredUtilDate = jDateChooser1.getDate();
+
+            // Validate input
+            if (itemCode == null || itemCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (requiredUtilDate == null) {
+                JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Convert required date to string format
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(requiredUtilDate);
+            Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
+                                        cal.get(java.util.Calendar.MONTH) + 1, 
+                                        cal.get(java.util.Calendar.DAY_OF_MONTH));
+            String requiredDateStr = requiredDate.toIsoString();
+
+            // Retrieve original values for uneditable fields
+            String requestedBy = jLabel11.getText();
+            String requestedDate = jLabel7.getText();
+            Status status = Status.valueOf(jLabel12.getText());
+
+            // Create updated PurchaseRequisition object
+            PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+
+            // Update the purchase requisition
+            if (purchaseRequisitionController.updatePurchaseRequisition(updatedPR)) {
+                JOptionPane.showMessageDialog(this, "Purchase Requisition updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                loadPR(); // Refresh the table
+                resetTable(); // Reset the form
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update Purchase Requisition. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid number format. Please enter a valid number for quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date or status format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error updating Purchase Requisition: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        // Get updated values from the UI
-        String itemCode = (String) jComboBox1.getSelectedItem();
-        int quantity = (Integer) jSpinner1.getValue();
-        java.util.Date requiredUtilDate = jDateChooser1.getDate();
-
-        // Validate input
-        if (itemCode == null || itemCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (quantity <= 0) {
-            JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (requiredUtilDate == null) {
-            JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Convert required date to string format
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.setTime(requiredUtilDate);
-        Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
-                                    cal.get(java.util.Calendar.MONTH) + 1, 
-                                    cal.get(java.util.Calendar.DAY_OF_MONTH));
-        String requiredDateStr = requiredDate.toIsoString();
-
-        // Retrieve original values for uneditable fields
-        String requestedBy = jLabel11.getText();
-        String requestedDate = jLabel7.getText();
-        Status status = Status.valueOf(jLabel12.getText());
-
-        // Create updated PurchaseRequisition object
-        PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
-
-        // Update the purchase requisition
-        if (purchaseRequisitionController.updatePurchaseRequisition(updatedPR)) {
-            JOptionPane.showMessageDialog(this, "Purchase Requisition updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            loadPR(); // Refresh the table
-            resetTable(); // Reset the form
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update Purchase Requisition. Check console for details.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        resetTable();
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -746,9 +780,9 @@ public class SM_PR extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JButton resetBtn;
     private javax.swing.JButton saveBtn;
     private javax.swing.JButton searchBtn;
