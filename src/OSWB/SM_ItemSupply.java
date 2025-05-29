@@ -563,13 +563,18 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             return;
         }
 
-        String itemCode = (String) model.getValueAt(selectedRow, 0);
-        int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete item supply " + itemCode + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        String itemCode = (String) model.getValueAt(selectedRow, 0); // Item Code (column 0)
+        String supplierCode = (String) model.getValueAt(selectedRow, 1); // Supplier Code (column 1)
+
+        int dialogResult = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete item supply for Item Code " + itemCode + " and Supplier Code " + supplierCode + "?", 
+            "Confirm Deletion", 
+            JOptionPane.YES_NO_OPTION);
         if (dialogResult != JOptionPane.YES_OPTION) {
             return;
         }
 
-        String result = itemSupplyController.deleteItemSupply(itemCode); // Capture the string result
+        String result = itemSupplyController.deleteItemSupply(itemCode, supplierCode); // Updated to pass both itemCode and supplierCode
         if (result.startsWith("Item supply for item ") && result.endsWith(" deleted successfully.")) {
             JOptionPane.showMessageDialog(this, "Item supply deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             loadItemSupplies(); 

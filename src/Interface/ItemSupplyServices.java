@@ -13,6 +13,6 @@ import Entities.ItemSupply;
 public interface ItemSupplyServices extends ItemSupplyViewingServices{
     public String addItemSupply(ItemSupply itemSupply);
     public String updateItemSupply(ItemSupply updatedItemSupply);
-    public String deleteItemSupply(String itemCode);
+    public String deleteItemSupply(String itemCode, String supplierCode);
     
 }

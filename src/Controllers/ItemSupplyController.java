@@ -180,44 +180,36 @@ public class ItemSupplyController implements ItemSupplyServices{
         }
     }
 
-    @Override
-    public String deleteItemSupply(String itemCode) {
+    
+    public String deleteItemSupply(String itemCode, String supplierCode) {
         try {
-            // Step 1: Delete from itemSupply.txt (remove all entries with matching itemCode)
+            // Step 1: Delete from itemSupply.txt (remove entry with matching itemCode and supplierCode)
             String supplyFilePath = fileManager.getItemSupplyFilePath();
-            boolean supplyFound = false;
+            String uniqueKey = itemCode + "," + supplierCode; // Combine itemCode and supplierCode as the key
 
-            while (true) {
-                boolean deleted = fileManager.deleteFromFile(
-                    itemCode,
-                    supplyFilePath,
-                    supply -> supply.getItemCode(),
-                    line -> {
-                        String[] data = line.split(",");
-                        try {
-                            if (data.length >= 4) {
-                                return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
-                            }
-                            return null;
-                        } catch (Exception e) {
-                            System.out.println("Error parsing item supply data: " + line + " | " + e.getMessage());
-                            return null;
+            boolean deleted = fileManager.deleteFromFile(
+                uniqueKey,
+                supplyFilePath,
+                supply -> supply.getItemCode() + "," + supply.getSupplierCode(), // Key function using both fields
+                line -> {
+                    String[] data = line.split(",");
+                    try {
+                        if (data.length >= 4) {
+                            return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
                         }
+                        return null;
+                    } catch (Exception e) {
+                        System.out.println("Error parsing item supply data: " + line + " | " + e.getMessage());
+                        return null;
                     }
-                );
-
-                if (deleted) {
-                    supplyFound = true;
-                } else {
-                    break;
                 }
+            );
+
+            if (!deleted) {
+                return "Error: Item supply with code " + itemCode + " and supplier " + supplierCode + " not found in itemSupply.txt.";
             }
 
-            if (!supplyFound) {
-                return "Error: Item supply with code " + itemCode + " not found in itemSupply.txt.";
-            }
-
-            return "Item supply for item " + itemCode + " deleted successfully.";
+            return "Item supply for item " + itemCode + " and supplier " + supplierCode + " deleted successfully.";
         } catch (Exception e) {
             return "Error deleting item supply: " + e.getMessage();
         }
