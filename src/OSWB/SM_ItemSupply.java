@@ -554,6 +554,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        resetTable();
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -581,6 +582,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
         }
+        resetTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
