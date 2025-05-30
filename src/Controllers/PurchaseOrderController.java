@@ -57,6 +57,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
         return result;
     }
     
+    
     @Override
     public String generatePurchaseOrder(String prId, String supplierCode, User performingUser) {
         try {
@@ -137,6 +138,28 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                     }
                 }
             }
+            
+            List<ItemSupply> itemSupplies = fileManager.readFile(
+                        fileManager.getItemSupplyFilePath(),
+                        line -> {
+                            String[] data = line.split(",");
+                            if (data.length < 4) return null;
+                            try {
+                                return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
+                            } catch (Exception e) {
+                                return null;
+                            }
+                        }
+                    );
+            
+            double poSupply = 0.0;
+            for (ItemSupply supply : itemSupplies) {
+                        if (supply.getItemCode().equals(targetPr.getItemCode())) {
+                            poSupply = supply.getUnitPrice() * targetPr.getQuantity();
+                            break;
+                        }
+                    }
+            
 
             // Generate next poId (e.g., PO003 for maxPoNumber = 2)
             String poId = String.format("PO%03d", maxPoNumber + 1);
@@ -152,7 +175,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 targetPr.getRequiredDate(),    // requiredDate
                 targetPr.getRequestedDate(),   // requestedDate
                 Status.PENDING,                // status
-                0.0,                           // paymentAmount (default to 0.0)
+                poSupply,                           // paymentAmount (default to 0.0)
                 Remark.NULL                    // remark
             );
 
@@ -178,7 +201,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     }
     
     @Override
-    public boolean editPurchaseOrder(String poId, int newQuantity , double new_payment_amount) {
+    public boolean editPurchaseOrder(String poId, int newQuantity ,String itemCode) {
         try {
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
@@ -214,6 +237,31 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                 System.out.println("Error: Purchase Order " + poId + " cannot be edited. Status is " + targetPo.getStatus() + ", must be PENDING.");
                 return false;
             }
+            
+            List<ItemSupply> itemSupplies = fileManager.readFile(
+                        fileManager.getItemSupplyFilePath(),
+                        line -> {
+                            String[] data = line.split(",");
+                            if (data.length < 4) return null;
+                            try {
+                                return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
+                            } catch (Exception e) {
+                                return null;
+                            }
+                        }
+                    );
+            
+            double new_payment_amount = 0.0;
+            for (ItemSupply supply : itemSupplies) {
+                        if (supply.getItemCode().equals(itemCode)) {
+                            new_payment_amount = supply.getUnitPrice() * newQuantity;
+        System.out.println("DEBUG: Unit price = " + supply.getUnitPrice());
+        System.out.println("DEBUG: Quantity = " + newQuantity);
+        System.out.println("DEBUG: New payment amount = " + new_payment_amount);
+        break;
+                        }
+                    }
+            
 
             // Update quantity
             targetPo.setQuantity(newQuantity);

@@ -813,7 +813,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         // Enable only quantity field for editing
         quantityTxtField1.setEditable(true);
-        paymentAmountTxtField3.setEditable(true);
+        paymentAmountTxtField3.setEditable(false);
         // Disable all other fields
         purchaseOrderTxtField1.setEditable(false);
         purchaseRequisitionIDTxtField1.setEditable(false);
@@ -881,11 +881,11 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         String poId = purchaseOrderTxtField1.getText().trim();
         String quantityStr = quantityTxtField1.getText().trim();
-        String paymentAmountStr = paymentAmountTxtField3.getText().trim();
+        String itemCode = itemCodeTxtField1.getText().trim();
 
         // Validate quantity
         int quantity;
-        double paymentAmount;
+        
         try {
             quantity = Integer.parseInt(quantityStr);
             if (quantity <= 0) {
@@ -897,22 +897,10 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
             return;
         }
 
-        // Validate payment amount
-        try {
-            paymentAmount = Double.parseDouble(paymentAmountStr);
-            if (paymentAmount < 0) {
-                JOptionPane.showMessageDialog(this, "Payment amount cannot be negative.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid payment amount format. Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         // Confirm the update
         String confirmationMessage = String.format(
             "Are you sure you want to update the following Purchase Order?\n" +
-            poId, quantity, paymentAmount
+            poId, quantity
         );
         int response = JOptionPane.showConfirmDialog(
             this,
@@ -928,15 +916,26 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         // Update the Purchase Order
         try {
-            boolean updated = purchaseOrderController.editPurchaseOrder(poId, quantity, paymentAmount);
+            boolean updated = purchaseOrderController.editPurchaseOrder(poId, quantity , itemCode);
             if (updated) {
                 JOptionPane.showMessageDialog(this, "Purchase Order " + poId + " updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                // Update table
+                List<String[]> allPOs = purchaseOrderController.viewPurchaseOrder();
+                
+                double new_payment_amount =0.0;
+                for (String[] po : allPOs) {
+                // Check if PO ID (index 0) or PR ID (index 1) contains the search term
+                    if (po[0].equals(poId)){
+                        new_payment_amount = Double.parseDouble(po[9]);
+                        
+                        break;
+                    }
+                }
+                
                 model.setValueAt(String.valueOf(quantity), selectedRow, 4);
-                model.setValueAt(String.valueOf(paymentAmount), selectedRow, 9);
+                model.setValueAt(String.valueOf(new_payment_amount), selectedRow, 9);
                 // Disable editing
                 quantityTxtField1.setEditable(false);
-                paymentAmountTxtField3.setEditable(false);
+                
                 saveButton.setEnabled(false);
                 deleteButton.setEnabled(true);
                 editButton.setEnabled(true);
@@ -951,7 +950,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 "Error updating Purchase Order " + poId + ": " + e.getMessage(),
                 "Update Exception",
                 JOptionPane.ERROR_MESSAGE);
-        }        // TODO add your handling code here:
+        }   // TODO add your handling code here:
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
