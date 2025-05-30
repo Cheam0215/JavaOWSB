@@ -53,6 +53,8 @@ public class Item {
     public void setRetailPrice(double retailPrice) {
         this.retailPrice = retailPrice;
     }
+    
+    
 
     @Override
     public String toString() {

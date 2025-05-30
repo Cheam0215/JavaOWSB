@@ -4,9 +4,9 @@
  */
 package OSWB;
 
+import Controllers.ItemController;
 import Controllers.SalesDataController;
 import Entities.SalesData;
-import Entities.SalesManager;
 import Entities.User;
 import Interface.SalesDataServices;
 import Utility.FileManager;
@@ -34,10 +34,9 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     private boolean isEditing = false;
     private String editingSalesId;
     private String originalItemCode;
-    private final User currentUser;
     private final SalesDataServices salesDataController;
     private final JFrame previousScreen;
-    private SalesData SalesData;
+    private final ItemController itemController;
 
 
     private static class ItemDetails {
@@ -55,15 +54,16 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
      * @param salesDataController
      * @param previousScreen
      */
-    public SM_Daily_Sales(User currentUser, SalesDataController salesDataController, JFrame previousScreen) {
-        this.currentUser = currentUser;
+    public SM_Daily_Sales(User currentUser, SalesDataController salesDataController, ItemController itemController,JFrame previousScreen) {
         this.salesDataController = salesDataController;
+        this.itemController = itemController;
         this.previousScreen = previousScreen;
         fileManager = new FileManager();
         initComponents();
         setupTable();
         loadSales();
         populateItemCodeComboBox();
+        updateStockLevel();
         setDefaultValues();
         setupListeners();
         setupTableSelectionListener();
@@ -154,6 +154,8 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         jDateChooser1.setDate(new Date());
         jLabel11.setText("");
         jLabel13.setText("");
+        jLabel10.setText(""); 
+        updateStockLevel(); // Update stock level after resetting
         isEditing = false;
         editingSalesId = null;
         originalItemCode = null;
@@ -226,12 +228,33 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     }
 
     private void setupListeners() {
-        jComboBox1.addActionListener(e -> updateRetailPriceAndTotal());
+        jComboBox1.addActionListener(e -> {
+            updateRetailPriceAndTotal();
+            updateStockLevel();
+        });
         jTextField3.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updateRetailPriceAndTotal(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updateRetailPriceAndTotal(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updateRetailPriceAndTotal(); }
         });
+    }
+    
+    private void updateStockLevel() {
+        String itemCode = (String) jComboBox1.getSelectedItem();
+        if (itemCode != null && !itemCode.equals("No items found")) {
+            try {
+                List<String[]> items = itemController.viewItems();
+                for (String[] item : items) {
+                    if (item[0].equals(itemCode)) {
+                        jLabel10.setText(item[2]); 
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error loading item name: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        jLabel10.setText("");
     }
 
     private void updateRetailPriceAndTotal() {
@@ -329,6 +352,8 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -452,48 +477,54 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
 
         jLabel14.setText("RM");
 
+        jLabel5.setText("Stock Level :");
+
+        jLabel10.setText("jLabel10");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addBtn)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(editBtn)
-                        .addGap(41, 41, 41)
-                        .addComponent(saveBtn)
-                        .addGap(39, 39, 39)
-                        .addComponent(deleteBtn))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addBtn)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(editBtn)
+                                .addGap(41, 41, 41)
+                                .addComponent(saveBtn)
+                                .addGap(39, 39, 39)
+                                .addComponent(deleteBtn))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                        .addGap(491, 491, 491)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
@@ -535,7 +566,11 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43)
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10))
+                        .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel11)
@@ -682,6 +717,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
             jDateChooser1.setDate(new Date());
         }
         jLabel13.setText(model.getValueAt(selectedRow, 5).toString()); // Total Amount
+        updateStockLevel();
         updateRetailPriceAndTotal(); // Sync retail price and total
         
         isEditing = true;
@@ -777,6 +813,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -784,6 +821,7 @@ public class SM_Daily_Sales extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;

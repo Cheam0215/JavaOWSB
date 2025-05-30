@@ -191,7 +191,7 @@ public class SM_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        SM_Item smItem = new SM_Item(loggedinSM, itemController, this);
+        SM_Item smItem = new SM_Item(loggedinSM, itemController, purchaseRequisitionController, this);
         smItem.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -203,7 +203,7 @@ public class SM_Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM, salesDataController, this);
+        SM_Daily_Sales smDaily = new SM_Daily_Sales(loggedinSM, salesDataController, itemController, this);
         smDaily.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed

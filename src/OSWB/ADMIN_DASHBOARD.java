@@ -342,7 +342,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }//GEN-LAST:event_InventoryButtonActionPerformed
 
     private void dailySalesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dailySalesButtonActionPerformed
-        SM_Daily_Sales adminSales = new SM_Daily_Sales(loggedInAdmin, salesDataController, this);
+        SM_Daily_Sales adminSales = new SM_Daily_Sales(loggedInAdmin, salesDataController, itemController, this);
         this.dispose();
         adminSales.setVisible(true);
     }//GEN-LAST:event_dailySalesButtonActionPerformed

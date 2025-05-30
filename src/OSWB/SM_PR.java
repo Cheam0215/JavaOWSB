@@ -18,16 +18,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import javax.swing.table.DefaultTableModel;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
+
 /**
  *
  * @author Edwin Chen
  */
 public class SM_PR extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
-    private final String columnName[]= {"Purchase Requisition ID","Item Code","Requested By","Quantity","Required Date","Requested Date","Status"};
+    private final String columnName[] = {"Purchase Requisition ID", "Item Code", "Item Name", "Stock Level", "Requested By", "Quantity", "Required Date", "Requested Date", "Status"};
     private FileManager fileManager;
     private boolean isEditing = false; // Track if we're in editing mode
     private String editingPrId = null; // Track the PR ID being edited
@@ -41,7 +47,7 @@ public class SM_PR extends javax.swing.JFrame {
      * @param purchaseRequisitionController
      * @param previousScreen
      */
-    public SM_PR(User currentUser, PurchaseRequisitionController purchaseRequisitionController, JFrame previousScreen) {
+    public SM_PR(User currentUser, PurchaseRequisitionController purchaseRequisitionController, JFrame previousScreen, String itemCode, String itemName, String stockLevel) {
         this.currentUser = currentUser;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.previousScreen = previousScreen;
@@ -52,15 +58,77 @@ public class SM_PR extends javax.swing.JFrame {
         populateItemCodeComboBox(); 
         setDefaultValues(); 
         initializeFileManager();
-        setupTableSelectionListener(); // Add listener to manage button states
-        editBtn.setEnabled(false); // Disable Edit button initially
-        saveBtn.setEnabled(false); // Disable Save button initially
-        
-    };
+        setupTableSelectionListener();
+        editBtn.setEnabled(false);
+        saveBtn.setEnabled(false);
+
+        // Pre-fill the fields with the passed data
+        if (itemCode != null && !itemCode.isEmpty()) {
+            jComboBox1.setSelectedItem(itemCode); // Set the Item Code in the combo box
+            jLabel14.setText(itemName != null ? itemName : "Unknown"); // Set the Item Name
+            jLabel16.setText(stockLevel != null ? stockLevel : "0");   // Set the Stock Level
+        }
+    }
+    
+    public SM_PR(User currentUser, PurchaseRequisitionController purchaseRequisitionController, JFrame previousScreen) {
+        this(currentUser, purchaseRequisitionController, previousScreen, null, null, null);
+    }
     
     private void setupTable() {
         model.setColumnIdentifiers(columnName);
         jTable1.setModel(model);
+        jTable1.setDefaultRenderer(Object.class, new CustomTableCellRenderer()); // Apply the custom renderer
+    }
+    
+    private class CustomTableCellRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                                                      boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Get the stock level from the Stock Level column (column index 3)
+            Object stockLevelObj = table.getValueAt(row, 3); // Column 3 is Stock Level
+            int stockLevel = 0;
+            try {
+                stockLevel = Integer.parseInt(stockLevelObj.toString());
+            } catch (NumberFormatException e) {
+                System.out.println("Error parsing stock level: " + stockLevelObj);
+            }
+
+            // Set red background if stock level is less than 100
+            if (stockLevel < 100) {
+                cell.setBackground(Color.RED);
+                cell.setForeground(Color.WHITE); // Make text white for contrast
+            } else {
+                cell.setBackground(table.getBackground()); // Reset to default background
+                cell.setForeground(table.getForeground()); // Reset to default foreground
+            }
+
+            // Handle selection color
+            if (isSelected) {
+                cell.setBackground(table.getSelectionBackground());
+                cell.setForeground(table.getSelectionForeground());
+            }
+
+            return cell;
+        }
+    }
+    
+    private Map<String, String[]> getItemDetailsMap() {
+        Map<String, String[]> itemDetailsMap = new HashMap<>();
+        try {
+            String filePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + fileManager.getItemFilePath().replace("/", File.separator);
+            List<String> lines = Files.readAllLines(Paths.get(filePath));
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 3 && parts[0] != null) { // Assuming ItemCode, ItemName, StockLevel
+                    itemDetailsMap.put(parts[0], new String[]{parts[1], parts[2]}); // Map ItemCode to [ItemName, StockLevel]
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading item details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return itemDetailsMap;
     }
     
     private void loadPR() {
@@ -69,12 +137,28 @@ public class SM_PR extends javax.swing.JFrame {
             model.setRowCount(0);
 
             List<String[]> PR = purchaseRequisitionController.viewPurchaseRequisition(); // Assuming viewItems returns List<String[]>
+            Map<String, String[]> itemDetailsMap = getItemDetailsMap();
+
             if (PR.isEmpty()) {
-                // Optional: Show a message if the overall item list is empty
-                 JOptionPane.showMessageDialog(this, "There are no Purchase Requisition available.", "Load Purchase Requisition", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "There are no Purchase Requisition available.", "Load Purchase Requisition", JOptionPane.WARNING_MESSAGE);
             } else {
                 for (String[] pr : PR) {
-                    model.addRow(pr);
+                    String itemCode = pr[1];
+                    String[] itemDetails = itemDetailsMap.getOrDefault(itemCode, new String[]{"Unknown", "0"});
+                    String itemName = itemDetails[0];
+                    String stockLevel = itemDetails[1];
+                    String[] rowData = new String[]{
+                        pr[0], // Purchase Requisition ID
+                        pr[1], // Item Code
+                        itemName, // Item Name
+                        stockLevel, // Stock Level
+                        pr[2], // Requested By
+                        pr[3], // Quantity
+                        pr[4], // Required Date
+                        pr[5], // Requested Date
+                        pr[6]  // Status
+                    };
+                    model.addRow(rowData);
                 }
             }
         } catch (Exception e) {
@@ -82,7 +166,6 @@ public class SM_PR extends javax.swing.JFrame {
                                           "Error loading Purchase Requisition: " + e.getMessage(),
                                           "Load Purchase Requisition Error",
                                           JOptionPane.ERROR_MESSAGE);
-            // Ensure table is empty if loading fails
             model.setRowCount(0);
         }
     }
@@ -97,35 +180,48 @@ public class SM_PR extends javax.swing.JFrame {
         }
         
         try {
-            // Clear current table data
             model.setRowCount(0);
-            
-            // Get all POs
             List<String[]> allPR = purchaseRequisitionController.viewPurchaseRequisition();
+            Map<String, String[]> itemDetailsMap = getItemDetailsMap();
             boolean foundMatch = false;
             
             for (String[] pr : allPR) {
+                String itemCode = pr[1];
+                String[] itemDetails = itemDetailsMap.getOrDefault(itemCode, new String[]{"Unknown", "0"});
+                String itemName = itemDetails[0];
+                String stockLevel = itemDetails[1];
                 if ((pr[0] != null && pr[0].toLowerCase().contains(searchTerm.toLowerCase())) ||
                     (pr[1] != null && pr[1].toLowerCase().contains(searchTerm.toLowerCase())) ||
+                    (itemName.toLowerCase().contains(searchTerm.toLowerCase())) ||
+                    (stockLevel.toLowerCase().contains(searchTerm.toLowerCase())) ||
                     (pr[4] != null && pr[4].toLowerCase().contains(searchTerm.toLowerCase())) ||
                     (pr[6] != null && pr[6].toLowerCase().contains(searchTerm.toLowerCase()))) {
-                    model.addRow(pr);
+                    String[] rowData = new String[]{
+                        pr[0], // Purchase Requisition ID
+                        pr[1], // Item Code
+                        itemName, // Item Name
+                        stockLevel, // Stock Level
+                        pr[2], // Requested By
+                        pr[3], // Quantity
+                        pr[4], // Required Date
+                        pr[5], // Requested Date
+                        pr[6]  // Status
+                    };
+                    model.addRow(rowData);
                     foundMatch = true;
                 }
             }
             
-            // Show message if no results found
             if (!foundMatch) {
                 JOptionPane.showMessageDialog(this, 
-                    "No Purchase Requisiton found matching '" + searchTerm + "'", 
+                    "No Purchase Requisition found matching '" + searchTerm + "'", 
                     "Search Results", 
                     JOptionPane.INFORMATION_MESSAGE);
-                // Reload all data after showing the message
                 loadPR();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                "Error searching Purchase Requistion: " + e.getMessage(), 
+                "Error searching Purchase Requisition: " + e.getMessage(), 
                 "Search Error", 
                 JOptionPane.ERROR_MESSAGE);
             loadPR();
@@ -135,7 +231,7 @@ public class SM_PR extends javax.swing.JFrame {
     private void resetTable() {
         jTextField1.setText("");
         jLabel9.setText(generateNextPrID());
-        jComboBox1.setSelectedIndex(-1);
+        jComboBox1.setSelectedIndex(-1); // This will trigger jComboBox1ActionPerformed to clear jLabel14 and jLabel16
         jTextField2.setText("");
         jDateChooser1.setDate(new java.util.Date());
         isEditing = false;
@@ -152,6 +248,58 @@ public class SM_PR extends javax.swing.JFrame {
         jDateChooser1.setMinSelectableDate(tomorrow);
     }
     
+    private int getStockLevel(String itemCode) {
+        try {
+            String filePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + fileManager.getItemFilePath().replace("/", File.separator);
+            List<String> lines = Files.readAllLines(Paths.get(filePath));
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 3 && parts[0].equals(itemCode)) { // Assuming stockLevel is the 3rd field (index 2)
+                    return Integer.parseInt(parts[2].trim()); // Parse stock level
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading stock levels: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid stock level format for item " + itemCode, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return -1; // Return -1 if not found or error occurs
+    }
+
+    private class ItemCodeRenderer extends JLabel implements ListCellRenderer<String> {
+        public ItemCodeRenderer() {
+            setOpaque(true); // Make the renderer opaque to show background color
+        }
+
+        public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+            setText(value); // Set the text to the item code
+
+            // Default colors
+            Color background = Color.WHITE;
+            Color foreground = Color.BLACK;
+
+            // Check stock level if value is not null
+            if (value != null) {
+                int stockLevel = getStockLevel(value);
+                if (stockLevel >= 0 && stockLevel < 100) {
+                    background = Color.RED; // Red background for stock < 100
+                    foreground = Color.BLACK; // White text for better contrast
+                }
+            }
+
+            // Apply selected colors if the item is selected
+            if (isSelected) {
+                background = list.getSelectionBackground();
+                foreground = list.getSelectionForeground();
+            }
+
+            setBackground(background);
+            setForeground(foreground);
+            return this;
+        }
+    }
+
     private void populateItemCodeComboBox() {
         try {
             String filePath = new File("").getAbsolutePath() + File.separator + "src" + File.separator + fileManager.getItemFilePath().replace("/", File.separator);
@@ -164,11 +312,14 @@ public class SM_PR extends javax.swing.JFrame {
                     jComboBox1.addItem(parts[0]); // Add item code to combo box
                 }
             }
+            // Set the custom renderer
+            jComboBox1.setRenderer(new ItemCodeRenderer());
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading item codes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
 
     private void setDefaultValues() {
         Calendar calendar = Calendar.getInstance();
@@ -180,6 +331,8 @@ public class SM_PR extends javax.swing.JFrame {
         jLabel7.setText(today.toIsoString());
         jDateChooser1.setDate(tomorrow);
         jDateChooser1.setMinSelectableDate(tomorrow);
+        jLabel14.setText(""); // Clear Item Name initially
+        jLabel16.setText(""); // Clear Stock Level initially
     }
     
     private String generateNextPrID() {
@@ -257,6 +410,7 @@ public class SM_PR extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFrame1 = new javax.swing.JFrame();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -283,6 +437,24 @@ public class SM_PR extends javax.swing.JFrame {
         resetBtn = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        FindLowStock = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -405,62 +577,103 @@ public class SM_PR extends javax.swing.JFrame {
             }
         });
 
+        jLabel13.setText("Item Name :");
+
+        jLabel14.setText("jLabel14");
+
+        jLabel15.setText("Stock Level : ");
+
+        jLabel16.setText("jLabel16");
+
+        FindLowStock.setText("Find Low Stock");
+        FindLowStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FindLowStockActionPerformed(evt);
+            }
+        });
+
+        jPanel8.setBackground(new java.awt.Color(255, 51, 51));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel17.setText("Low Stock");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6)
-                                    .addComponent(addBtn)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(42, 42, 42)))
+                                    .addComponent(addBtn))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGroup(layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(editBtn)
-                                        .addGap(267, 267, 267))
+                                        .addComponent(editBtn))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(34, 34, 34)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addComponent(jDateChooser1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                        .addGap(108, 108, 108)
-                                                        .addComponent(saveBtn)))
+                                                .addGap(108, 108, 108)
+                                                .addComponent(saveBtn)
                                                 .addGap(55, 55, 55)
                                                 .addComponent(deleteBtn))
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 13, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27)
                                 .addComponent(searchBtn)
                                 .addGap(18, 18, 18)
-                                .addComponent(resetBtn))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(resetBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel17)
+                                .addGap(18, 18, 18)
+                                .addComponent(FindLowStock))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(32, 32, 32))
         );
         layout.setVerticalGroup(
@@ -470,25 +683,46 @@ public class SM_PR extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addBtn)
-                            .addComponent(editBtn)
-                            .addComponent(saveBtn)
-                            .addComponent(deleteBtn))
-                        .addGap(50, 50, 50)
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(addBtn)
+                                .addComponent(editBtn)
+                                .addComponent(saveBtn)
+                                .addComponent(deleteBtn))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(searchBtn)
+                                .addComponent(resetBtn))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17)
+                            .addComponent(FindLowStock))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel9))
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14))
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel9))
-                                .addGap(40, 40, 40)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(47, 47, 47)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel16))
+                                .addGap(41, 41, 41)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel11))
@@ -498,23 +732,22 @@ public class SM_PR extends javax.swing.JFrame {
                                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(45, 45, 45)
                                 .addComponent(jLabel6))
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(181, 181, 181)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(51, 51, 51)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(jLabel7))
-                        .addGap(54, 54, 54)
+                        .addGap(49, 49, 49)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel12)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchBtn)
-                            .addComponent(resetBtn))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 48, Short.MAX_VALUE))
+                            .addComponent(jLabel12))
+                        .addGap(76, 76, 76))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37))))
         );
 
         pack();
@@ -632,17 +865,17 @@ public class SM_PR extends javax.swing.JFrame {
         // Get PR details from the selected row
         editingPrId = (String) model.getValueAt(selectedRow, 0); // PR ID
         String itemCode = (String) model.getValueAt(selectedRow, 1);
-        String requestedBy = (String) model.getValueAt(selectedRow, 2);
-        String quantity = (String) model.getValueAt(selectedRow, 3);
-        String requiredDateStr = (String) model.getValueAt(selectedRow, 4);
-        String requestedDate = (String) model.getValueAt(selectedRow, 5);
-        String status = (String) model.getValueAt(selectedRow, 6);
+        String requestedBy = (String) model.getValueAt(selectedRow, 4);
+        String quantity = (String) model.getValueAt(selectedRow, 5);
+        String requiredDateStr = (String) model.getValueAt(selectedRow, 6);
+        String requestedDate = (String) model.getValueAt(selectedRow, 7);
+        String status = (String) model.getValueAt(selectedRow, 8);
 
         // Populate the UI fields
         jLabel9.setText(editingPrId); // PR ID (read-only)
         jComboBox1.setSelectedItem(itemCode); // Item Code (editable)
         jLabel11.setText(requestedBy); // Requested By (read-only)
-        jTextField2.setText(model.getValueAt(selectedRow,3).toString()); // Quantity (editable)
+        jTextField2.setText(quantity); // Quantity (editable)
         try {
             java.util.Date requiredDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(requiredDateStr);
             jDateChooser1.setDate(requiredDate); // Required Date (editable)
@@ -723,12 +956,66 @@ public class SM_PR extends javax.swing.JFrame {
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        String selectedItemCode = (String) jComboBox1.getSelectedItem();
+        if (selectedItemCode != null) {
+            Map<String, String[]> itemDetailsMap = getItemDetailsMap();
+            String[] itemDetails = itemDetailsMap.getOrDefault(selectedItemCode, new String[]{"Unknown", "0"});
+            jLabel14.setText(itemDetails[0]); // Set Item Name
+            jLabel16.setText(itemDetails[1]); // Set Stock Level
+        } else {
+            jLabel14.setText(""); // Clear Item Name if no selection
+            jLabel16.setText(""); // Clear Stock Level if no selection
+        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void FindLowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindLowStockActionPerformed
+        try {
+            model.setRowCount(0); // Clear the table
+            List<String[]> allPR = purchaseRequisitionController.viewPurchaseRequisition();
+            Map<String, String[]> itemDetailsMap = getItemDetailsMap();
+            boolean foundLowStock = false;
+
+            for (String[] pr : allPR) {
+                String itemCode = pr[1]; // Item Code is the second column (index 1)
+                String[] itemDetails = itemDetailsMap.getOrDefault(itemCode, new String[]{"Unknown", "0"});
+                int stockLevel = Integer.parseInt(itemDetails[1].trim()); // Stock level from itemDetails[1]
+                if (stockLevel < 100) {
+                    String itemName = itemDetails[0];
+                    String[] rowData = new String[]{
+                        pr[0], // Purchase Requisition ID
+                        pr[1], // Item Code
+                        itemName, // Item Name
+                        itemDetails[1], // Stock Level
+                        pr[2], // Requested By
+                        pr[3], // Quantity
+                        pr[4], // Required Date
+                        pr[5], // Requested Date
+                        pr[6]  // Status
+                    };
+                    model.addRow(rowData);
+                    foundLowStock = true;
+                }
+            }
+
+            if (!foundLowStock) {
+                JOptionPane.showMessageDialog(this,
+                    "No purchase requisitions with stock level below 100 found.",
+                    "Low Stock Search",
+                    JOptionPane.INFORMATION_MESSAGE);
+                loadPR(); // Reload all purchase requisitions if none found
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error searching low stock purchase requisitions: " + e.getMessage(),
+                "Search Error",
+                JOptionPane.ERROR_MESSAGE);
+            loadPR(); // Reload all purchase requisitions on error
+        }
+    }//GEN-LAST:event_FindLowStockActionPerformed
 
     /**
      * @param args the command line arguments
@@ -760,16 +1047,23 @@ public class SM_PR extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton FindLowStock;
     private javax.swing.JButton addBtn;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton editBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -779,6 +1073,13 @@ public class SM_PR extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

@@ -11,8 +11,10 @@ import Controllers.SupplierController;
 import Entities.ItemSupply;
 import Entities.User;
 import Interface.ItemSupplyServices;
+import java.util.HashMap;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
@@ -21,7 +23,7 @@ import javax.swing.JOptionPane;
  */
 public class SM_ItemSupply extends javax.swing.JFrame {
     private final DefaultTableModel model = new DefaultTableModel();
-    private final String columnName[] = {"Item Code", "Supplier Code", "Item Name", "Unit Price"};
+    private final String columnName[] = {"Item Code", "Supplier Code", "Item Name", "Supplier Name", "Unit Price"};
     private boolean isEditing = false;
     private String editingItemCode = null;
     private final ItemSupplyServices itemSupplyController;
@@ -67,17 +69,19 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             saveBtn.setEnabled(isEditing); // Save
             addBtn.setEnabled(!isEditing); // Add
         });
-        jComboBox1.addActionListener(e -> updateItemName());
+        jComboBox1.addActionListener(e -> updateItemNameRetailPrice());
+        jComboBox2.addActionListener(e -> updateSupplierName());
     }
     
-    private void updateItemName() {
+    private void updateItemNameRetailPrice() {
         String itemCode = (String) jComboBox1.getSelectedItem();
         if (itemCode != null && !itemCode.equals("No items found")) {
             try {
                 List<String[]> items = itemController.viewItems();
                 for (String[] item : items) {
                     if (item[0].equals(itemCode)) {
-                        jLabel6.setText(item[1]); // Set Item Name from viewItems
+                        jLabel6.setText(item[1]); 
+                        jLabel11.setText(item[3]);
                         return;
                     }
                 }
@@ -86,17 +90,62 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             }
         }
         jLabel6.setText("");
+        jLabel11.setText("");
+    }
+    
+    private void updateSupplierName() {
+        String supplierCode = (String) jComboBox2.getSelectedItem();
+        if (supplierCode != null && !supplierCode.equals("No suppliers found")) {
+            try {
+                List<String[]> suppliers = supplierController.viewSuppliers();
+                for (String[] supplier : suppliers) {
+                    if (supplier[0].equals(supplierCode)) {
+                        jLabel9.setText(supplier[1]); // Set Supplier Name from viewSuppliers
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error loading supplier name: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        jLabel9.setText("");
+    }
+
+    private Map<String, String> getSupplierCodeToNameMap() {
+        Map<String, String> supplierMap = new HashMap<>();
+        try {
+            List<String[]> suppliers = supplierController.viewSuppliers();
+            for (String[] supplier : suppliers) {
+                if (supplier.length >= 2) {
+                    supplierMap.put(supplier[0], supplier[1]); // Map SupplierCode to SupplierName
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading supplier mapping: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return supplierMap;
     }
 
     private void loadItemSupplies() {
         try {
             model.setRowCount(0);
             List<String[]> itemSupplies = itemSupplyController.viewItemSupplies();
+            Map<String, String> supplierMap = getSupplierCodeToNameMap();
+
             if (itemSupplies.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "There are no item supplies available.", "Load Item Supplies", JOptionPane.WARNING_MESSAGE);
             } else {
                 for (String[] itemSupply : itemSupplies) {
-                    model.addRow(itemSupply);
+                    String supplierCode = itemSupply[1];
+                    String supplierName = supplierMap.getOrDefault(supplierCode, "Unknown");
+                    String[] rowData = new String[]{
+                        itemSupply[0], // Item Code
+                        itemSupply[1], // Supplier Code
+                        itemSupply[2], // Item Name
+                        supplierName,  // Supplier Name
+                        itemSupply[3]  // Unit Price
+                    };
+                    model.addRow(rowData);
                 }
             }
         } catch (Exception e) {
@@ -123,7 +172,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error loading item codes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             jComboBox1.addItem("No items found");
         }
-        updateItemName();
+        updateItemNameRetailPrice();
     }
 
     private void loadSupplierCodes() {
@@ -140,6 +189,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error loading supplier codes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             jComboBox2.addItem("No suppliers found");
         }
+        updateSupplierName();
     }
     
     private boolean isDuplicateItemSupply(String itemCode, String supplierCode) {
@@ -166,12 +216,22 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         try {
             model.setRowCount(0);
             List<String[]> itemSupplies = itemSupplyController.viewItemSupplies();
+            Map<String, String> supplierMap = getSupplierCodeToNameMap();
             boolean foundMatch = false;
             for (String[] itemSupply : itemSupplies) {
+                String supplierName = supplierMap.getOrDefault(itemSupply[1], "Unknown");
                 if (itemSupply[0].toLowerCase().contains(searchTerm.toLowerCase()) ||
                     itemSupply[1].toLowerCase().contains(searchTerm.toLowerCase()) ||
-                    itemSupply[2].toLowerCase().contains(searchTerm.toLowerCase())) {
-                    model.addRow(itemSupply);
+                    itemSupply[2].toLowerCase().contains(searchTerm.toLowerCase()) ||
+                    supplierName.toLowerCase().contains(searchTerm.toLowerCase())) {
+                    String[] rowData = new String[]{
+                        itemSupply[0], // Item Code
+                        itemSupply[1], // Supplier Code
+                        itemSupply[2], // Item Name
+                        supplierName,  // Supplier Name
+                        itemSupply[3]  // Unit Price
+                    };
+                    model.addRow(rowData);
                     foundMatch = true;
                 }
             }
@@ -184,12 +244,11 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             loadItemSupplies();
         }
     }
-
+    
     private void resetTable() {
         jTextField2.setText("");
         jComboBox1.setSelectedIndex(0);
         jComboBox2.setSelectedIndex(0);
-        jLabel6.setText("");
         jTextField1.setText("");
         isEditing = false;
         editingItemCode = null;
@@ -236,6 +295,10 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         searchBtn = new javax.swing.JButton();
         resetBtn = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -339,6 +402,14 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setText("Retail Price : ");
+
+        jLabel9.setText("jLabel9");
+
+        jLabel10.setText("Supplier Name : ");
+
+        jLabel11.setText("jLabel11");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -349,15 +420,6 @@ public class SM_ItemSupply extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(232, 232, 232))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -370,16 +432,40 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                                 .addComponent(deleteBtn))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(39, 39, 39)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel7)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 3, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(59, 59, 59)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(232, 232, 232))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(180, 180, 180))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -389,7 +475,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                         .addComponent(resetBtn)
                         .addGap(239, 239, 239)
                         .addComponent(jButton5)
-                        .addContainerGap(30, Short.MAX_VALUE))
+                        .addContainerGap(27, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36))))
@@ -416,19 +502,27 @@ public class SM_ItemSupply extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(50, 50, 50)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(51, 51, 51)
+                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(jLabel6))
-                        .addGap(50, 50, 50)
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel9))
+                        .addGap(49, 49, 49)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jLabel7)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel11))))
                 .addGap(36, 36, 36))
         );
 
@@ -453,6 +547,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         String supplierCode = (String) jComboBox2.getSelectedItem();
         String itemName = jLabel6.getText().trim();
         String unitPriceStr = jTextField1.getText().trim();
+        String retailPriceStr = jLabel11.getText().trim();
 
         if (itemCode == null || itemCode.equals("No items found") || supplierCode == null || supplierCode.equals("No suppliers found") ||
             itemName.isEmpty() || unitPriceStr.isEmpty()) {
@@ -467,12 +562,19 @@ public class SM_ItemSupply extends javax.swing.JFrame {
 
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
+            double retailPrice = Double.parseDouble(retailPriceStr);
 
             // Validate positive value
             if (unitPrice <= 0) {
                 JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            // Validate that unit price is less than retail price
+            if (unitPrice >= retailPrice) {
+                JOptionPane.showMessageDialog(this, "Unit price must be less than retail price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
 
             ItemSupply itemSupply = new ItemSupply(itemCode, supplierCode, itemName, unitPrice);
             itemSupplyController.addItemSupply(itemSupply);
@@ -495,7 +597,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         jComboBox1.setSelectedItem(editingItemCode);
         jComboBox2.setSelectedItem(model.getValueAt(selectedRow, 1)); // Supplier Code
         jLabel6.setText((String) model.getValueAt(selectedRow, 2)); // Item Name
-        jTextField1.setText(model.getValueAt(selectedRow, 3).toString()); // Unit Price
+        jTextField1.setText(model.getValueAt(selectedRow, 4).toString()); // Unit Price
         updateButtonStates();
     }//GEN-LAST:event_editBtnActionPerformed
 
@@ -509,6 +611,7 @@ public class SM_ItemSupply extends javax.swing.JFrame {
         String supplierCode = (String) jComboBox2.getSelectedItem();
         String itemName = jLabel6.getText().trim();
         String unitPriceStr = jTextField1.getText().trim();
+        String retailPriceStr = jLabel11.getText().trim();
 
         if (itemCode == null || itemCode.equals("No items found") || supplierCode == null || supplierCode.equals("No suppliers found") ||
             itemName.isEmpty() || unitPriceStr.isEmpty()) {
@@ -531,10 +634,17 @@ public class SM_ItemSupply extends javax.swing.JFrame {
 
         try {
             double unitPrice = Double.parseDouble(unitPriceStr);
-
+            double retailPrice = Double.parseDouble(retailPriceStr);
+            
             // Validate positive value
             if (unitPrice <= 0) {
                 JOptionPane.showMessageDialog(this, "Unit price must be a positive number.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Validate that unit price is less than retail price
+            if (unitPrice >= retailPrice) {
+                JOptionPane.showMessageDialog(this, "Unit price must be less than retail price.", "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -632,12 +742,16 @@ public class SM_ItemSupply extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
