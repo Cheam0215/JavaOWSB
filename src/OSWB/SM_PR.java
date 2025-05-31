@@ -399,6 +399,20 @@ public class SM_PR extends javax.swing.JFrame {
         String nextPrID = generateNextPrID();
         jLabel9.setText(nextPrID);
     }
+    
+    private boolean isDuplicateItemCodeOnSameDay(String itemCode, String requestedDate) {
+        try {
+            List<String[]> allPR = purchaseRequisitionController.viewPurchaseRequisition();
+            for (String[] pr : allPR) {
+                if (pr[1].equals(itemCode) && pr[5].equals(requestedDate)) { // pr[1] is Item Code, pr[5] is Requested Date
+                    return true; // Duplicate found
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error checking duplicate purchase requisitions: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false; // No duplicate found
+    }
 
 
     /**
@@ -788,6 +802,12 @@ public class SM_PR extends javax.swing.JFrame {
                 return;
             }
 
+            // Check for duplicate item code on the same day
+            if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate)) {
+                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Add the purchase requisition
             PurchaseRequisition purchaseRequisition = new PurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
             String result = purchaseRequisitionController.addPurchaseRequisition(purchaseRequisition);
@@ -934,6 +954,12 @@ public class SM_PR extends javax.swing.JFrame {
             String requestedDate = jLabel7.getText();
             Status status = Status.valueOf(jLabel12.getText());
 
+            // Check for duplicate item code on the same day, excluding the current PR being edited
+            if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate)) {
+                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Create updated PurchaseRequisition object
             PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
 
@@ -952,7 +978,6 @@ public class SM_PR extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error updating Purchase Requisition: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        resetTable();
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
