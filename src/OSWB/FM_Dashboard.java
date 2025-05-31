@@ -6,6 +6,7 @@ package OSWB;
 
 import Controllers.FinanceController;
 import Controllers.InventoryController;
+import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
 import Controllers.PurchaseRequisitionController;
 import Controllers.SalesDataController;
@@ -20,8 +21,10 @@ public class FM_Dashboard extends javax.swing.JFrame {
      private final PurchaseOrderController purchaseOrderController;
      private final PurchaseRequisitionController purchaseRequisitionController;
      private final SalesDataController salesDataController;
-    private final InventoryController inventoryController;
-    private final FinanceController financeController;
+     private final InventoryController inventoryController;
+     private final FinanceController financeController;
+    private final ItemSupplyController itemSupplyController;
+     
     /**
      * Creates new form FM_Dashboard2
      * @param loggedInFM
@@ -30,14 +33,17 @@ public class FM_Dashboard extends javax.swing.JFrame {
      * @param salesDataController
      * @param inventoryController
      * @param financeController
+     * @param itemSupplyController
      */
-    public FM_Dashboard(FinanceManager loggedInFM, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, InventoryController inventoryController, FinanceController financeController) {
+    public FM_Dashboard(FinanceManager loggedInFM, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SalesDataController salesDataController, InventoryController inventoryController, FinanceController financeController, ItemSupplyController itemSupplyController) {
         this.loggedInFM = loggedInFM;
         this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.salesDataController = salesDataController;
         this.inventoryController = inventoryController;
         this.financeController = financeController;
+        this.itemSupplyController = itemSupplyController;
+
         initComponents();
         
         
@@ -327,7 +333,7 @@ public class FM_Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_PRButtonActionPerformed
 
     private void POButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_POButtonActionPerformed
-        FM_Approve_Purchase_Order poFrame = new FM_Approve_Purchase_Order(loggedInFM, purchaseOrderController, this);
+        FM_Approve_Purchase_Order poFrame = new FM_Approve_Purchase_Order(loggedInFM, purchaseOrderController, itemSupplyController, this);
         poFrame.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_POButtonActionPerformed

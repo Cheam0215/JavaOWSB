@@ -4,6 +4,7 @@
  */
 package Interface;
 
+import Entities.ItemSupply;
 import Entities.PurchaseOrder;
 import Utility.Remark;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface FinanceManagerPOServices {
     public List<PurchaseOrder> getAllPOs();
-    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode, Remark approveReason);
+    public String approvePurchaseOrder(List<ItemSupply> itemSupplies, String poId, int newQuantity, String newSupplierCode, Remark approveReason);
     public void rejectPurchaseOrder(String poId, Remark rejectionReason);
     public String payPurchaseOrder(String poId, Remark donePayment);
 }

@@ -281,7 +281,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.FINANCE_MANAGER -> { 
                         FinanceManager loggedInFM = new FinanceManager(userID, username, password);
-                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController);
+                        FM_Dashboard FMDashboard = new FM_Dashboard(loggedInFM, purchaseOrderController, purchaseRequisitionController, salesDataController, inventoryController, financeController, itemSupplyController);
                         this.dispose();
                         FMDashboard.setVisible(true);
 

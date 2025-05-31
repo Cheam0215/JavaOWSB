@@ -452,7 +452,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     }
     
     @Override
-    public String approvePurchaseOrder(String poId, int newQuantity, String newSupplierCode, Remark approveReason) throws IllegalArgumentException {
+    public String approvePurchaseOrder(List<ItemSupply> itemSupplies, String poId, int newQuantity, String newSupplierCode, Remark approveReason) throws IllegalArgumentException {
         if (poId == null || poId.trim().isEmpty()) {
             throw new IllegalArgumentException("PO ID cannot be empty");
         }
@@ -461,6 +461,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
         }
 
         List<PurchaseOrder> poList = this.getAllPOs();
+        double unitPriceForItem = 0.0;
 
         for (PurchaseOrder po : poList) {
             if (po != null && po.getPoId().equals(poId)) {
@@ -468,24 +469,15 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                     return "Purchase Order " + poId + " is already " + po.getStatus();
                 }
 
-                if (newSupplierCode != null && !newSupplierCode.isEmpty() && !newSupplierCode.equals(po.getSupplierCode())) {
-                    List<ItemSupply> itemSupplies = fileManager.readFile(
-                        fileManager.getItemSupplyFilePath(),
-                        line -> {
-                            String[] data = line.split(",");
-                            if (data.length < 4) return null;
-                            try {
-                                return new ItemSupply(data[0], data[1], data[2], Double.parseDouble(data[3]));
-                            } catch (Exception e) {
-                                return null;
-                            }
-                        }
-                    );
+                if (newSupplierCode != null && !newSupplierCode.isEmpty()) {
+                    System.out.println("Here");
                     boolean validSupplier = false;
                     for (ItemSupply supply : itemSupplies) {
                         if (supply != null && 
                             supply.getItemCode().equals(po.getItemCode()) && 
                             supply.getSupplierCode().equals(newSupplierCode)) {
+                            System.out.println("Unit Price for Item" + supply.getUnitPrice());
+                            unitPriceForItem = supply.getUnitPrice();
                             validSupplier = true;
                             break;
                         }
@@ -495,9 +487,12 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
                     }
                     po.setSupplierCode(newSupplierCode);
                 }
-
+                
                 if (newQuantity > 0) {
+                    double newPaymentAmount = newQuantity * unitPriceForItem;
+                    System.out.println("new payment" +newPaymentAmount);
                     po.setQuantity(newQuantity);
+                    po.setPaymentAmount(newPaymentAmount);
                 }
                 po.setRemark(approveReason);
                 po.setStatus(Status.APPROVED);

@@ -305,7 +305,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void POButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_POButtonActionPerformed
-        ADMIN_PO adminPO = new ADMIN_PO(loggedInAdmin, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, this);
+        ADMIN_PO adminPO = new ADMIN_PO(loggedInAdmin, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, itemSupplyController, this);
         this.dispose();
         adminPO.setVisible(true);
     }//GEN-LAST:event_POButtonActionPerformed
@@ -336,7 +336,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }//GEN-LAST:event_PRButtonActionPerformed
 
     private void InventoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InventoryButtonActionPerformed
-       ADMIN_INVENTORY adminInventory = new ADMIN_INVENTORY(loggedInAdmin, purchaseOrderController, inventoryController, itemController, supplierController, itemSupplyController, this);
+       ADMIN_INVENTORY adminInventory = new ADMIN_INVENTORY(loggedInAdmin, purchaseOrderController, inventoryController, itemController, supplierController, itemSupplyController, purchaseRequisitionController, this);
        this.dispose();
        adminInventory.setVisible(true);
     }//GEN-LAST:event_InventoryButtonActionPerformed

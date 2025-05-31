@@ -8,6 +8,7 @@ import Controllers.InventoryController;
 import Controllers.ItemController;
 import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
+import Controllers.PurchaseRequisitionController;
 import Controllers.SupplierController;
 import Entities.Administrator;
 import javax.swing.JFrame;
@@ -25,16 +26,18 @@ public class ADMIN_INVENTORY extends javax.swing.JFrame {
     private final ItemController itemController;
     private final SupplierController supplierController;
     private final ItemSupplyController itemSupplyController;
+    private final PurchaseRequisitionController purchaseRequisitionController;
     private final JFrame previousScreen;
 
    
-    public ADMIN_INVENTORY(Administrator admin, PurchaseOrderController purchaseOrderController, InventoryController inventoryController, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController, JFrame previousScreen) {
+    public ADMIN_INVENTORY(Administrator admin, PurchaseOrderController purchaseOrderController, InventoryController inventoryController, ItemController itemController, SupplierController supplierController, ItemSupplyController itemSupplyController, PurchaseRequisitionController purchaseRequisitionController, JFrame previousScreen) {
         this.admin = admin;
         this.purchaseOrderController = purchaseOrderController;
         this.inventoryController = inventoryController;
         this.itemController = itemController;
         this.supplierController = supplierController;
         this.itemSupplyController = itemSupplyController;
+        this.purchaseRequisitionController = purchaseRequisitionController;
         this.previousScreen = previousScreen;
         initComponents();
     }
@@ -171,7 +174,7 @@ public class ADMIN_INVENTORY extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        SM_Item adminItem = new SM_Item(admin, itemController, this);
+        SM_Item adminItem = new SM_Item(admin, itemController, purchaseRequisitionController, this);
         this.dispose();
         adminItem.setVisible(true);
         

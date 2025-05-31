@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import Entities.PurchaseOrder;
 import Entities.User;
 import Interface.FinanceManagerPOServices;
+import Interface.ItemSupplyViewingServices;
 import Utility.Remark;
 import Utility.Status;
 import Utility.UserRoles;
@@ -24,11 +25,13 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
     private final User currentUser;
     private final FinanceManagerPOServices financeManagerPOServices;
     private DefaultTableModel tableModel;
+    private final ItemSupplyViewingServices itemSupplyViewer;
     private final JFrame previousScreen;
 
-    public FM_Approve_Purchase_Order(User currentUser, FinanceManagerPOServices financeManagerPOServices, JFrame previousScreen) {
+    public FM_Approve_Purchase_Order(User currentUser, FinanceManagerPOServices financeManagerPOServices, ItemSupplyViewingServices itemSupplyViewer, JFrame previousScreen) {
         this.currentUser = currentUser;
         this.financeManagerPOServices = financeManagerPOServices;
+        this.itemSupplyViewer = itemSupplyViewer;
         this.previousScreen = previousScreen;
         tableModel = new DefaultTableModel(
             new Object[][] {},
@@ -226,7 +229,7 @@ public class FM_Approve_Purchase_Order extends javax.swing.JFrame {
         Remark approveReason = Remark.APPROVED_BY_FINANCE_MANAGER;
 
         try {
-            String result = financeManagerPOServices.approvePurchaseOrder(poId, newQuantity, newSupplierCode, approveReason);
+            String result = financeManagerPOServices.approvePurchaseOrder(itemSupplyViewer.getAllItemSupply() ,poId, newQuantity, newSupplierCode, approveReason);
             JOptionPane.showMessageDialog(this, result, "Approval Result", JOptionPane.INFORMATION_MESSAGE);
             populateTable();
             jTable1.clearSelection();

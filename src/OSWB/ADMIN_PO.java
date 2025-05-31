@@ -5,6 +5,7 @@
 package OSWB;
 
 import Controllers.ItemController;
+import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
 import Controllers.PurchaseRequisitionController;
 import Controllers.SupplierController;
@@ -23,16 +24,18 @@ public class ADMIN_PO extends javax.swing.JFrame {
     private final PurchaseOrderController purchaseOrderController;
     private final PurchaseRequisitionController purchaseRequisitionController;
     private final SupplierController supplierController;
+    private final ItemSupplyController itemSupplyController;
     private final JFrame previousScreen;
     
 
     
-    public ADMIN_PO(Administrator admin, ItemController itemController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SupplierController supplierController, JFrame previousScreen) {
+    public ADMIN_PO(Administrator admin, ItemController itemController, PurchaseOrderController purchaseOrderController, PurchaseRequisitionController purchaseRequisitionController, SupplierController supplierController, ItemSupplyController itemSupplyController, JFrame previousScreen) {
         this.admin = admin;
         this.itemController = itemController;
         this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.supplierController = supplierController;
+        this.itemSupplyController = itemSupplyController;
         this.previousScreen = previousScreen;
         initComponents();
     }
@@ -169,7 +172,7 @@ public class ADMIN_PO extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        FM_Approve_Purchase_Order adminApprove = new FM_Approve_Purchase_Order(admin, purchaseOrderController, this);
+        FM_Approve_Purchase_Order adminApprove = new FM_Approve_Purchase_Order(admin, purchaseOrderController, itemSupplyController, this);
         this.dispose();
         adminApprove.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
