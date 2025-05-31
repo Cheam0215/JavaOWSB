@@ -774,29 +774,32 @@ public class SM_PR extends javax.swing.JFrame {
         try {
             String prId = jLabel9.getText(); // Already generated, no need to regenerate
             String itemCode = (String) jComboBox1.getSelectedItem();
-            String requestedBy = jLabel11.getText();
-            // Parse quantity from text field
-            int quantity = Integer.parseInt(jTextField2.getText().trim());
+            String quantityStr = jTextField2.getText().trim(); // Get quantity as string for initial validation
             java.util.Date requiredUtilDate = jDateChooser1.getDate();
+            String requestedBy = jLabel11.getText();
+            String requestedDate = jLabel7.getText();
+            Status status = Status.valueOf(jLabel12.getText());
 
-            // Validate required date
+            // Step 1: Validate all required fields are filled
+            if (itemCode == null || itemCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (quantityStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (requiredUtilDate == null) {
                 JOptionPane.showMessageDialog(this, "Please specify a required date.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            java.util.Calendar cal = java.util.Calendar.getInstance();
-            cal.setTime(requiredUtilDate);
-            Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
-                                        cal.get(java.util.Calendar.MONTH) + 1, 
-                                        cal.get(java.util.Calendar.DAY_OF_MONTH));
-            String requiredDateStr = requiredDate.toIsoString();
-            String requestedDate = jLabel7.getText();
-            Status status = Status.valueOf(jLabel12.getText());
-
-            // Validate input
-            if (itemCode == null || itemCode.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Step 2: Validate number format and quantity value
+            int quantity;
+            try {
+                quantity = Integer.parseInt(quantityStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid number format. Please enter a valid number for quantity.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (quantity <= 0) {
@@ -804,13 +807,20 @@ public class SM_PR extends javax.swing.JFrame {
                 return;
             }
 
-            // Check for duplicate item code on the same day (no PR to exclude for add)
+            // Step 3: Check for duplicate item code on the same day
             if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate, null)) {
-                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today (" + requestedDate + ").", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Add the purchase requisition
+            // Step 4: Convert required date and add the purchase requisition
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(requiredUtilDate);
+            Date requiredDate = new Date(cal.get(java.util.Calendar.YEAR), 
+                                        cal.get(java.util.Calendar.MONTH) + 1, 
+                                        cal.get(java.util.Calendar.DAY_OF_MONTH));
+            String requiredDateStr = requiredDate.toIsoString();
+
             PurchaseRequisition purchaseRequisition = new PurchaseRequisition(prId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
             String result = purchaseRequisitionController.addPurchaseRequisition(purchaseRequisition);
             if (result.startsWith("Purchase requisition") && result.endsWith("added successfully.")) {
@@ -820,8 +830,6 @@ public class SM_PR extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid number format. Please enter a valid number for quantity.", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, "Invalid date or status format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
