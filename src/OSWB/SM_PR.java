@@ -40,6 +40,7 @@ public class SM_PR extends javax.swing.JFrame {
     private final User currentUser;
     private final PurchaseRequisitionServices purchaseRequisitionController;
     private final JFrame previousScreen;
+    private String originalItemCode;
 
     /**
      * Creates new form SM_PR
@@ -400,10 +401,11 @@ public class SM_PR extends javax.swing.JFrame {
         jLabel9.setText(nextPrID);
     }
     
-    private boolean isDuplicateItemCodeOnSameDay(String itemCode, String requestedDate) {
+    private boolean isDuplicateItemCodeOnSameDay(String itemCode, String requestedDate, String excludePrId) {
         try {
             List<String[]> allPR = purchaseRequisitionController.viewPurchaseRequisition();
             for (String[] pr : allPR) {
+                if (excludePrId != null && pr[0].equals(excludePrId)) continue; // Skip the current PR only if excludePrId is provided
                 if (pr[1].equals(itemCode) && pr[5].equals(requestedDate)) { // pr[1] is Item Code, pr[5] is Requested Date
                     return true; // Duplicate found
                 }
@@ -802,8 +804,8 @@ public class SM_PR extends javax.swing.JFrame {
                 return;
             }
 
-            // Check for duplicate item code on the same day
-            if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate)) {
+            // Check for duplicate item code on the same day (no PR to exclude for add)
+            if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate, null)) {
                 JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -884,7 +886,7 @@ public class SM_PR extends javax.swing.JFrame {
 
         // Get PR details from the selected row
         editingPrId = (String) model.getValueAt(selectedRow, 0); // PR ID
-        String itemCode = (String) model.getValueAt(selectedRow, 1);
+        String originalItemCode = (String) model.getValueAt(selectedRow, 1); // Original Item Code
         String requestedBy = (String) model.getValueAt(selectedRow, 4);
         String quantity = (String) model.getValueAt(selectedRow, 5);
         String requiredDateStr = (String) model.getValueAt(selectedRow, 6);
@@ -893,7 +895,7 @@ public class SM_PR extends javax.swing.JFrame {
 
         // Populate the UI fields
         jLabel9.setText(editingPrId); // PR ID (read-only)
-        jComboBox1.setSelectedItem(itemCode); // Item Code (editable)
+        jComboBox1.setSelectedItem(originalItemCode); // Item Code (editable)
         jLabel11.setText(requestedBy); // Requested By (read-only)
         jTextField2.setText(quantity); // Quantity (editable)
         try {
@@ -905,6 +907,9 @@ public class SM_PR extends javax.swing.JFrame {
         }
         jLabel7.setText(requestedDate); // Requested Date (read-only)
         jLabel12.setText(status); // Status (read-only)
+
+        // Store the original item code for validation
+        this.originalItemCode = originalItemCode; // Add this as a class field (declare it at the class level)
 
         // Enter editing mode
         isEditing = true;
@@ -922,13 +927,13 @@ public class SM_PR extends javax.swing.JFrame {
             }
 
             // Get updated values from the UI
-            String itemCode = (String) jComboBox1.getSelectedItem();
+            String newItemCode = (String) jComboBox1.getSelectedItem();
             // Parse quantity from text field
             int quantity = Integer.parseInt(jTextField2.getText().trim());
             java.util.Date requiredUtilDate = jDateChooser1.getDate();
 
             // Validate input
-            if (itemCode == null || itemCode.isEmpty()) {
+            if (newItemCode == null || newItemCode.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please select an item code.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -954,14 +959,14 @@ public class SM_PR extends javax.swing.JFrame {
             String requestedDate = jLabel7.getText();
             Status status = Status.valueOf(jLabel12.getText());
 
-            // Check for duplicate item code on the same day, excluding the current PR being edited
-            if (isDuplicateItemCodeOnSameDay(itemCode, requestedDate)) {
-                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + itemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+            // Validate if the item code has changed and check for duplicates
+            if (!newItemCode.equals(originalItemCode) && isDuplicateItemCodeOnSameDay(newItemCode, requestedDate, editingPrId)) {
+                JOptionPane.showMessageDialog(this, "A purchase requisition for item code " + newItemCode + " already exists for today.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             // Create updated PurchaseRequisition object
-            PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, itemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
+            PurchaseRequisition updatedPR = new PurchaseRequisition(editingPrId, newItemCode, requestedBy, quantity, requiredDateStr, requestedDate, status);
 
             // Update the purchase requisition
             if (purchaseRequisitionController.updatePurchaseRequisition(updatedPR)) {
@@ -978,6 +983,7 @@ public class SM_PR extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error updating Purchase Requisition: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        resetTable();
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
