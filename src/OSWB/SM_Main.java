@@ -126,7 +126,7 @@ public class SM_Main extends javax.swing.JFrame {
             }
         });
 
-        jButton7.setText("Item Supply");
+        jButton7.setText("Item Source");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
