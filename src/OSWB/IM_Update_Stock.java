@@ -139,7 +139,7 @@ public class IM_Update_Stock extends javax.swing.JFrame {
             }
         });
 
-        btnApprove.setText("Approve");
+        btnApprove.setText("Received");
         btnApprove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnApproveActionPerformed(evt);
