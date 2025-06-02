@@ -295,7 +295,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     case UserRoles.PURCHASE_MANAGER -> { 
                         PurchaseManager loggedInPM = new PurchaseManager(userID, username, password);
-                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+                        PM_List_purchase_order PMOrder = new PM_List_purchase_order(loggedInPM, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, itemSupplyController);
                         this.dispose();
                         PMOrder.setVisible(true);
                     }

@@ -4,6 +4,7 @@
  */
 package OSWB;
 
+import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
 import javax.swing.table.DefaultTableModel;
 import Entities.User;
@@ -25,6 +26,7 @@ public class PM_Suppliers extends javax.swing.JFrame {
     private final ItemViewingServices itemViewer;
     private final PurchaseOrderController purchaseOrderController;  
     private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
+    private final ItemSupplyController itemSupplyController;
     private final SupplierViewingServices supplierViewer;
 
     /**
@@ -35,13 +37,15 @@ public class PM_Suppliers extends javax.swing.JFrame {
      * @param purchaseOrderController
      * @param supplierViewer
      * @param purchaseRequisitionViewer
+     * @param itemSupplyController
      */
-    public PM_Suppliers(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
+    public PM_Suppliers(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer, ItemSupplyController itemSupplyController) {
         this.currentUser = currentUser;
         this.previousPage = previousPage;
         this.itemViewer = itemViewer;
         this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionViewer = purchaseRequisitionViewer;
+        this.itemSupplyController = itemSupplyController;
         this.supplierViewer = supplierViewer;
         initComponents();
         setupTable();
@@ -617,22 +621,22 @@ public class PM_Suppliers extends javax.swing.JFrame {
     }//GEN-LAST:event_supplierListTableMouseClicked
 
     private void itemsListPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton4ActionPerformed
-        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose();         // TODO add your handling code here:
+        new PM_List_items(currentUser, this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
+        this.dispose();       // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton4ActionPerformed
 
     private void supplierPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton4ActionPerformed
-        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_Suppliers(currentUser, this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton4ActionPerformed
 
     private void purchaseOrderPageButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton4ActionPerformed
-        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton4ActionPerformed
 
     private void purchaseRequisitionPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionPageButtonActionPerformed
-        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
 

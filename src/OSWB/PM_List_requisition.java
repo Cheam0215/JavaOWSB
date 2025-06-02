@@ -5,6 +5,8 @@
 package OSWB;
 
 import Controllers.PurchaseOrderController;
+import Controllers.ItemSupplyController;
+import Entities.ItemSupply;
 import Entities.User;
 import Interface.ItemViewingServices;
 import Interface.PurchaseRequisitionViewServices;
@@ -26,6 +28,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     private final ItemViewingServices itemViewer;
     private final PurchaseOrderController purchaseOrderController;  
     private final PurchaseRequisitionViewServices purchaseRequisitionViewer;
+    private final ItemSupplyController itemSupplyController;
     private final SupplierViewingServices supplierViewer;
 
      /**
@@ -36,19 +39,21 @@ public class PM_List_requisition extends javax.swing.JFrame {
      * @param purchaseOrderController
      * @param purchaseRequisitionViewer
      * @param supplierViewer
+     * @param itemSupplyController
      
      */
-    public PM_List_requisition(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer) {
+    public PM_List_requisition(User currentUser, JFrame previousPage, ItemViewingServices itemViewer, PurchaseOrderController purchaseOrderController, PurchaseRequisitionViewServices purchaseRequisitionViewer, SupplierViewingServices supplierViewer, ItemSupplyController itemSupplyController) {
         this.currentUser = currentUser;
         this.previousPage = previousPage;
-        this.purchaseOrderController = purchaseOrderController;
         this.itemViewer = itemViewer;
+        this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionViewer = purchaseRequisitionViewer;
         this.supplierViewer = supplierViewer;
+        this.itemSupplyController = itemSupplyController; // This is the crucial line
+
         initComponents();
         setupTable();
         loadPR();
-        loadSuppliers();
         edit();
         makePOButton2.setEnabled(true);
         saveButton1.setEnabled(false);
@@ -71,15 +76,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
         model.setColumnIdentifiers(columnName);
         requisitionTable.setModel(model);
     }
-    private void loadSuppliers() {
-        try {
-            List<String[]> suppliers = supplierViewer.viewSuppliers();
-            String[] supplierCodes = suppliers.stream().map(row -> row[0]).toArray(String[]::new);
-            supplierComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(supplierCodes));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error loading suppliers: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    
     
     private void loadPR() {
         try {
@@ -149,7 +146,6 @@ public class PM_List_requisition extends javax.swing.JFrame {
             loadPR();
         }
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -571,17 +567,17 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void itemsListPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsListPageButton3ActionPerformed
-        new PM_List_items(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
-        this.dispose();         // TODO add your handling code here:
+        new PM_List_items(currentUser, this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_itemsListPageButton3ActionPerformed
 
     private void supplierPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supplierPageButton3ActionPerformed
-        new PM_Suppliers(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_Suppliers(currentUser, this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_supplierPageButton3ActionPerformed
 
     private void purchaseOrderPageButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseOrderPageButton3ActionPerformed
-        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_purchase_order(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose(); // TODO add your handling code here:
     }//GEN-LAST:event_purchaseOrderPageButton3ActionPerformed
 
@@ -646,10 +642,21 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void makePOButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePOButton2ActionPerformed
-        supplierComboBox1.setEnabled(true);
-        saveButton1.setEnabled(true);
-        cancelButton2.setEnabled(true);
-        makePOButton2.setEnabled(false);
+        String itemCode = itemCodeTxtField.getText().trim();
+        
+        List<String[]> itemsupply = itemSupplyController.viewItemSupplies();
+            
+            
+            for (String[] item : itemsupply) {
+                if (item[1].equals(itemCode)){
+                    supplierComboBox1.addItem(item[0]);
+                }
+            }
+            saveButton1.setEnabled(true);
+            cancelButton2.setEnabled(true);
+            makePOButton2.setEnabled(false);
+        
+    
                 // TODO add your handling code here:
     }//GEN-LAST:event_makePOButton2ActionPerformed
 
@@ -742,7 +749,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButton2ActionPerformed
 
     private void purchaseRequisitionPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseRequisitionPageButtonActionPerformed
-        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer).setVisible(true);
+        new PM_List_requisition(currentUser,this, itemViewer, purchaseOrderController, purchaseRequisitionViewer, supplierViewer, itemSupplyController).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_purchaseRequisitionPageButtonActionPerformed
 
