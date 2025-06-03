@@ -64,6 +64,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         this.itemViewer = itemViewer;
         this.purchaseOrderController = purchaseOrderController;
         this.purchaseRequisitionViewer = purchaseRequisitionViewer;
+        this.itemSupplyController = itemSupplyController;
         this.supplierViewer = supplierViewer;
         initComponents();
         setupTable();

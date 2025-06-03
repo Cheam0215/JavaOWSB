@@ -222,7 +222,7 @@ public class PM_List_requisition extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
                 .addGap(211, 211, 211)
                 .addComponent(pageName, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(161, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tittle4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logoutButton)
@@ -325,7 +325,6 @@ public class PM_List_requisition extends javax.swing.JFrame {
             }
         });
 
-        supplierComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         supplierComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 supplierComboBox1ActionPerformed(evt);
@@ -642,21 +641,21 @@ public class PM_List_requisition extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void makePOButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePOButton2ActionPerformed
+        saveButton1.setEnabled(true);
+        cancelButton2.setEnabled(true);
+        makePOButton2.setEnabled(false);
+        supplierComboBox1.setEnabled(true);
+        
         String itemCode = itemCodeTxtField.getText().trim();
         
         List<String[]> itemsupply = itemSupplyController.viewItemSupplies();
             
             
             for (String[] item : itemsupply) {
-                if (item[1].equals(itemCode)){
-                    supplierComboBox1.addItem(item[0]);
+                if (item[0].equals(itemCode)){
+                    supplierComboBox1.addItem(item[1]);
                 }
             }
-            saveButton1.setEnabled(true);
-            cancelButton2.setEnabled(true);
-            makePOButton2.setEnabled(false);
-        
-    
                 // TODO add your handling code here:
     }//GEN-LAST:event_makePOButton2ActionPerformed
 
