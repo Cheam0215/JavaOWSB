@@ -712,7 +712,13 @@ public class PM_List_requisition extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
             loadPR(); // Refresh table to reflect updated PR status
-        }     // TODO add your handling code here:
+        } 
+        
+        makePOButton2.setEnabled(true);
+        saveButton1.setEnabled(false);
+        cancelButton2.setEnabled(false);
+        supplierComboBox1.setEnabled(false);
+// TODO add your handling code here:
     }//GEN-LAST:event_saveButton1ActionPerformed
 
     private void cancelButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButton2ActionPerformed
