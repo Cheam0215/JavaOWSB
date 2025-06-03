@@ -13,7 +13,7 @@ import Utility.Status;
  */
 public interface PurchaseOrderServices extends PurchaseOrderViewServices{
     public String generatePurchaseOrder(String prId, String supplierCode, User performingUser);
-    public boolean editPurchaseOrder(String poId, int newQuantity , String itemCode);
+    public boolean editPurchaseOrder(String poId, int newQuantity , String itemCode, String supplierCode);
     public boolean deletePurchaseOrder(String poId);
     boolean updatePurchaseOrderStatus(String poId, Status newStatus);
 }

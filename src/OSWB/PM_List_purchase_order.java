@@ -899,6 +899,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
         String poId = purchaseOrderTxtField1.getText().trim();
         String quantityStr = quantityTxtField1.getText().trim();
         String itemCode = itemCodeTxtField1.getText().trim();
+        String supplierCode = supplierIDTxtField2.getText().trim();
 
         // Validate quantity
         int quantity;
@@ -933,7 +934,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
 
         // Update the Purchase Order
         try {
-            boolean updated = purchaseOrderController.editPurchaseOrder(poId, quantity , itemCode);
+            boolean updated = purchaseOrderController.editPurchaseOrder(poId, quantity , itemCode, supplierCode);
             if (updated) {
                 JOptionPane.showMessageDialog(this, "Purchase Order " + poId + " updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 List<String[]> allPOs = purchaseOrderController.viewPurchaseOrder();
@@ -950,6 +951,7 @@ public class PM_List_purchase_order extends javax.swing.JFrame {
                 
                 model.setValueAt(String.valueOf(quantity), selectedRow, 4);
                 model.setValueAt(String.valueOf(new_payment_amount), selectedRow, 9);
+                paymentAmountTxtField3.setText(String.valueOf(new_payment_amount));
                 // Disable editing
                 quantityTxtField1.setEditable(false);
                 

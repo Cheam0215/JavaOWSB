@@ -166,7 +166,7 @@ public class ADMIN_PO extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        PM_List_purchase_order adminPO = new PM_List_purchase_order(admin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+        PM_List_purchase_order adminPO = new PM_List_purchase_order(admin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, itemSupplyController);
         this.dispose();
         adminPO.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed

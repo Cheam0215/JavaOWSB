@@ -154,7 +154,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
             
             double poSupply = 0.0;
             for (ItemSupply supply : itemSupplies) {
-                        if (supply.getItemCode().equals(targetPr.getItemCode())) {
+                        if (supply.getItemCode().equals(targetPr.getItemCode()) && supply.getSupplierCode().equals(supplierCode)) {
                             poSupply = supply.getUnitPrice() * targetPr.getQuantity();
                             break;
                         }
@@ -201,7 +201,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
     }
     
     @Override
-    public boolean editPurchaseOrder(String poId, int newQuantity ,String itemCode) {
+    public boolean editPurchaseOrder(String poId, int newQuantity , String itemCode, String supplierCode) {
         try {
             // Validate poId
             if (poId == null || poId.trim().isEmpty()) {
@@ -253,7 +253,7 @@ public class PurchaseOrderController implements PurchaseOrderServices, Inventory
             
             double new_payment_amount = 0.0;
             for (ItemSupply supply : itemSupplies) {
-                        if (supply.getItemCode().equals(itemCode)) {
+                        if (supply.getItemCode().equals(itemCode) && supply.getSupplierCode().equals(supplierCode)) {
                             new_payment_amount = supply.getUnitPrice() * newQuantity;
         System.out.println("DEBUG: Unit price = " + supply.getUnitPrice());
         System.out.println("DEBUG: Quantity = " + newQuantity);

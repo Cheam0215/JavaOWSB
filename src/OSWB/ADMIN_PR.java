@@ -5,6 +5,7 @@
 package OSWB;
 
 import Controllers.ItemController;
+import Controllers.ItemSupplyController;
 import Controllers.PurchaseOrderController;
 import Controllers.PurchaseRequisitionController;
 import Controllers.SupplierController;
@@ -22,6 +23,7 @@ public class ADMIN_PR extends javax.swing.JFrame {
     private final PurchaseRequisitionController purchaseRequisitionController;
     private final ItemController itemController;
     private final PurchaseOrderController purchaseOrderController;
+    private ItemSupplyController itemSupplyController;
     private final SupplierController supplierController;
     private final JFrame previousScreen;
     /**
@@ -33,11 +35,12 @@ public class ADMIN_PR extends javax.swing.JFrame {
      * @param supplierController
      * @param previousScreen
      */
-    public ADMIN_PR(Administrator admin, PurchaseRequisitionController purchaseRequisitionController, ItemController itemController, PurchaseOrderController purchaseOrderController, SupplierController supplierController, JFrame previousScreen) {
+    public ADMIN_PR(Administrator admin, PurchaseRequisitionController purchaseRequisitionController, ItemController itemController, PurchaseOrderController purchaseOrderController, SupplierController supplierController, JFrame previousScreen,  ItemSupplyController itemSupplyController) {
         this.admin = admin;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.itemController = itemController;
         this.purchaseOrderController = purchaseOrderController;
+        this.itemSupplyController = itemSupplyController;
         this.supplierController = supplierController;
         this.previousScreen = previousScreen;
         initComponents();
@@ -162,7 +165,7 @@ public class ADMIN_PR extends javax.swing.JFrame {
     }//GEN-LAST:event_crudPRActionPerformed
 
     private void pendingPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pendingPRActionPerformed
-       PM_List_requisition adminPO = new PM_List_requisition(admin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController);
+       PM_List_requisition adminPO = new PM_List_requisition(admin, this, itemController, purchaseOrderController, purchaseRequisitionController, supplierController, itemSupplyController);
        this.dispose();
        adminPO.setVisible(true);
     }//GEN-LAST:event_pendingPRActionPerformed
