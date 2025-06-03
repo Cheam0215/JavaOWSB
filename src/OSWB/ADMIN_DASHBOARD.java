@@ -330,7 +330,7 @@ public class ADMIN_DASHBOARD extends javax.swing.JFrame {
     }//GEN-LAST:event_supplierButtonActionPerformed
 
     private void PRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRButtonActionPerformed
-        ADMIN_PR adminPR = new ADMIN_PR(loggedInAdmin, purchaseRequisitionController, itemController, purchaseOrderController, supplierController, this);
+        ADMIN_PR adminPR = new ADMIN_PR(loggedInAdmin, purchaseRequisitionController, itemController, purchaseOrderController, supplierController, itemSupplyController, this);
         this.dispose();
         adminPR.setVisible(true);
     }//GEN-LAST:event_PRButtonActionPerformed

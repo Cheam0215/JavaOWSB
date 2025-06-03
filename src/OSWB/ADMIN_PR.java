@@ -33,9 +33,10 @@ public class ADMIN_PR extends javax.swing.JFrame {
      * @param itemController
      * @param purchaseOrderController
      * @param supplierController
+     * @param itemSupplyController
      * @param previousScreen
      */
-    public ADMIN_PR(Administrator admin, PurchaseRequisitionController purchaseRequisitionController, ItemController itemController, PurchaseOrderController purchaseOrderController, SupplierController supplierController, JFrame previousScreen,  ItemSupplyController itemSupplyController) {
+    public ADMIN_PR(Administrator admin, PurchaseRequisitionController purchaseRequisitionController, ItemController itemController, PurchaseOrderController purchaseOrderController, SupplierController supplierController,  ItemSupplyController itemSupplyController, JFrame previousScreen ) {
         this.admin = admin;
         this.purchaseRequisitionController = purchaseRequisitionController;
         this.itemController = itemController;
